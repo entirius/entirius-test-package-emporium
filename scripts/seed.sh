@@ -193,6 +193,15 @@ u.set_password('testuser123'); u.is_active = True; u.save()
 print('testuser', 'created' if created else 'reset')
 \""
 
+step "Step 3c: Suppliers E2E Prep"
+# Preset suppliers (incl. "novatrade") + anchor product for the @suppliers scenarios;
+# without it the suite depends on suppliers pre-existing in the environment.
+if docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python -c \"import django, os; os.environ.setdefault('DJANGO_SETTINGS_MODULE','main.settings'); django.setup(); from django.apps import apps; apps.get_app_config('django_suppliers')\"" > /dev/null 2>&1; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-suppliers-e2e.py"
+else
+    echo "Skipping suppliers prep (django_suppliers not installed)"
+fi
+
 step "Step 4: Import Package Data"
 docker exec -e SVC_DIR="$SVC_DIR" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
 

@@ -1,0 +1,12 @@
+- model: django_accounts.channel
+  pk: 1
+  fields:
+    idx: default-local
+    label: Default Local
+    language: 2
+- model: django_accounts.channel
+  pk: 2
+  fields:
+    idx: default-europe
+    label: Default Europe
+    language: 2

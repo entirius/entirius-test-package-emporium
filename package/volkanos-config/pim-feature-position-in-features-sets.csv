@@ -1,0 +1,15 @@
+feature-idx,feature-set-idx,position
+series,furniture,10
+options,furniture,20
+badge,furniture,30
+brand,furniture,40
+weight_kg,furniture,50
+is_handcrafted,furniture,60
+material_composition,furniture,70
+specifications,furniture,80
+weight_kg,premium,10
+is_handcrafted,premium,20
+material_composition,premium,30
+specifications,premium,40
+series,premium,50
+options,premium,60

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>CXB-1</sku>
+    <name>Crossover B</name>
+    <price currency="EUR">105.00</price>
+    <stock>100</stock>
+    <ean>5900000000021</ean>
+    <weight_g>1500</weight_g>
+  </product></catalog>

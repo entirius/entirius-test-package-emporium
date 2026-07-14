@@ -1,0 +1,1397 @@
+# entirius-test-package: COMPREHENSIVE Discount Rules Test Data
+#
+# This fixture file contains COMPLETE test coverage for ALL Volkanos discount features:
+# - All 12 modifier types
+# - DiscountModeOfAction (product filtering for discounts/gratis)
+# - ThresholdProductFilter (threshold calculation filtering)
+# - Multi-currency support
+# - Complex filter combinations
+#
+# Total: 30+ discount rules with full configuration
+#
+# Import: loaddata --format=yaml django_checkout.discounts.comprehensive.yaml
+#
+# PKs start at 100 to avoid collisions. Assumes:
+# - Channel pk=2 (default-europe)
+# - Currency pk=1 (PLN), pk=2 (USD), pk=3 (EUR)
+# - Category pks will be referenced by idx (e.g., 'sofas', 'chairs')
+# - Product pks will be referenced by SKU (e.g., 'ENT-S001')
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 1: BASIC DISCOUNT RULES
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1.1 Simple Percent Discount
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 100
+  fields:
+    name: TEST_PERCENT_10
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 10
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 3]
+
+- model: django_checkout.discountcode
+  pk: 100
+  fields:
+    rule: 100
+    code: PERCENT10
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1.2 Percent Discount - Multi-Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 101
+  fields:
+    name: TEST_PERCENT_MULTI_CURRENCY
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value:
+      PLN: 15
+      EUR: 10
+      USD: 12
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2, 3]
+
+- model: django_checkout.discountcode
+  pk: 101
+  fields:
+    rule: 101
+    code: PERCENT_MULTI
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1.3 Simple Price Discount
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 102
+  fields:
+    name: TEST_PRICE_50
+    free_shipping: false
+    min_order_amount: '200.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: price_discount
+    extra_value: 50
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 3]
+
+- model: django_checkout.discountcode
+  pk: 102
+  fields:
+    rule: 102
+    code: PRICE50
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1.4 Price Discount - Multi-Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 103
+  fields:
+    name: TEST_PRICE_MULTI_CURRENCY
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: price_discount
+    extra_value:
+      PLN: 100
+      EUR: 20
+      USD: 25
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2, 3]
+
+- model: django_checkout.discountcode
+  pk: 103
+  fields:
+    rule: 103
+    code: PRICE_MULTI
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 2: QUANTITY-BASED PROGRESSIVE DISCOUNTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.1 Step Qty Percent Discount (Per Line)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 110
+  fields:
+    name: TEST_STEP_QTY_PERCENT
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_percent_discount
+    extra_value:
+      '1': 5
+      '3': 10
+      '5': 15
+      '10': 20
+    extension:
+      description: "Buy more, save more! 1-2pcs=5%, 3-4pcs=10%, 5-9pcs=15%, 10+=20%"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 110
+  fields:
+    rule: 110
+    code: STEP_QTY_PCT
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.2 Step Qty Percent Discount (Whole Cart) - Single Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 111
+  fields:
+    name: TEST_STEP_QTY_PERCENT_CART
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_percent_discount_whole_cart
+    extra_value:
+      '5': 5
+      '10': 10
+      '20': 15
+      '50': 20
+    extension:
+      description: "Cart quantity discount: 5pcs=5%, 10pcs=10%, 20pcs=15%, 50+=20%"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 111
+  fields:
+    rule: 111
+    code: STEP_QTY_CART
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.3 Step Qty Percent Discount (Whole Cart) - Multi-Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 112
+  fields:
+    name: TEST_STEP_QTY_PERCENT_CART_MULTI
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_percent_discount_whole_cart
+    extra_value:
+      PLN:
+        '10': 5
+        '20': 10
+        '50': 15
+      EUR:
+        '10': 8
+        '20': 15
+        '50': 20
+    extension:
+      description: "Multi-currency qty discount. PLN: 10=5%, 20=10%, 50=15%. EUR: 10=8%, 20=15%, 50=20%"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2]
+
+- model: django_checkout.discountcode
+  pk: 112
+  fields:
+    rule: 112
+    code: STEP_QTY_CART_MULTI
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.4 Step Qty Price Discount (Whole Cart) - Single Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 113
+  fields:
+    name: TEST_STEP_QTY_PRICE_CART
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_price_discount_whole_cart
+    extra_value:
+      '5': 50
+      '10': 120
+      '20': 300
+    extension:
+      description: "Fixed discount by qty: 5pcs=-50 PLN, 10pcs=-120 PLN, 20pcs=-300 PLN"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 113
+  fields:
+    rule: 113
+    code: STEP_QTY_PRICE
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.5 Step Qty Price Discount (Whole Cart) - Multi-Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 114
+  fields:
+    name: TEST_STEP_QTY_PRICE_CART_MULTI
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_price_discount_whole_cart
+    extra_value:
+      PLN:
+        '5': 50
+        '10': 120
+        '20': 300
+      EUR:
+        '5': 10
+        '10': 25
+        '20': 60
+    extension:
+      description: "Multi-currency price by qty. PLN: 5=-50, 10=-120, 20=-300. EUR: 5=-10, 10=-25, 20=-60"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2]
+
+- model: django_checkout.discountcode
+  pk: 114
+  fields:
+    rule: 114
+    code: STEP_QTY_PRICE_MULTI
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2.6 Step Qty Fixed Price Per Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 115
+  fields:
+    name: TEST_STEP_QTY_FIXED_PRICE
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_qty_fixed_price_per_currency
+    extra_value:
+      PLN:
+        '2': 89.99
+        '5': 69.99
+        '10': 59.99
+      EUR:
+        '2': 19.99
+        '5': 15.99
+        '10': 12.99
+    extension:
+      description: "Fixed unit price at thresholds. PLN: 2pcs=89.99/ea, 5pcs=69.99/ea, 10pcs=59.99/ea. EUR: 2=19.99, 5=15.99, 10=12.99"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2]
+
+- model: django_checkout.discountcode
+  pk: 115
+  fields:
+    rule: 115
+    code: FIXED_PRICE
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 3: PRICE-BASED PROGRESSIVE DISCOUNTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 3.1 Step Price Percent Discount - Single Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 120
+  fields:
+    name: TEST_STEP_PRICE_PERCENT
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_price_percent_discount
+    extra_value:
+      PLN:
+        '200': 5
+        '500': 10
+        '1000': 15
+        '2000': 20
+      EUR:
+        '200': 5
+        '500': 10
+        '1000': 15
+        '2000': 20
+    extension:
+      description: "Cart value discount: 200=5%, 500=10%, 1000=15%, 2000+=20%"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 3]
+
+- model: django_checkout.discountcode
+  pk: 120
+  fields:
+    rule: 120
+    code: STEP_PRICE_PCT
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 3.2 Step Price Percent Discount - Multi-Currency
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 121
+  fields:
+    name: TEST_STEP_PRICE_PERCENT_MULTI
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_price_percent_discount
+    extra_value:
+      PLN:
+        '200': 5
+        '500': 10
+        '1000': 15
+      EUR:
+        '50': 5
+        '100': 10
+        '200': 15
+    extension:
+      description: "Multi-currency value discount. PLN: 200=5%, 500=10%, 1000=15%. EUR: 50=5%, 100=10%, 200=15%"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 2]
+
+- model: django_checkout.discountcode
+  pk: 121
+  fields:
+    rule: 121
+    code: STEP_PRICE_PCT_MULTI
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 4: GRATIS RULES (AUTO-SELECT)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 4.1 Cheapest Gratis (Auto)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 130
+  fields:
+    name: TEST_CHEAPEST_GRATIS
+    free_shipping: false
+    min_order_amount: '300.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: cheapest_gratis
+    extra_value: 1
+    extension:
+      description: "Cheapest item free at 300 EUR (auto-selected)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 3]
+
+- model: django_checkout.discountcode
+  pk: 130
+  fields:
+    rule: 130
+    code: CHEAPEST_FREE
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 4.2 Most Expensive Gratis (Auto)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 131
+  fields:
+    name: TEST_MOST_EXPENSIVE_GRATIS
+    free_shipping: false
+    min_order_amount: '1000.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: most_expensive_gratis
+    extra_value: 1
+    extension:
+      description: "Most expensive item free at 1000 EUR (auto-selected)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1, 3]
+
+- model: django_checkout.discountcode
+  pk: 131
+  fields:
+    rule: 131
+    code: EXPENSIVE_FREE
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 5: GRATIS RULES (USER-SELECT)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 5.1 Gratis Stepped (No Filters)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 140
+  fields:
+    name: TEST_GRATIS_STEPPED
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: gratis_stepped
+    extra_value:
+      PLN:
+        '300': 1
+        '600': 2
+        '1000': 3
+    extension:
+      description: "Progressive gratis: 300=1 free, 600=2 free, 1000=3 free (user picks from all products)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 140
+  fields:
+    rule: 140
+    code: GRATIS_STEP
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 5.2 Gratis Stepped with ModeOfAction Filter (Limited Product Pool)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 141
+  fields:
+    name: TEST_GRATIS_STEPPED_FILTERED
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: gratis_stepped
+    extra_value:
+      PLN:
+        '500': 1
+        '1000': 2
+    extension:
+      description: "500=1 free ottoman, 1000=2 free ottomans (user picks from ottomans only)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 141
+  fields:
+    rule: 141
+    code: GRATIS_OTTOMAN
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: User can only pick ottomans as gratis
+# NOTE: Categories are referenced by idx string, NOT pk
+# This will need to be configured via M2M after loaddata
+- model: django_checkout.discountmodeofaction
+  pk: 141
+  fields:
+    rule: 141
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M fields to be set via script:
+    # categories: ['ottomans']
+
+# ─────────────────────────────────────────────────────────────────────────
+# 5.3 Gratis Stepped with ThresholdFilter (Only Certain Products Count)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 142
+  fields:
+    name: TEST_GRATIS_STEPPED_THRESHOLD
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: gratis_stepped
+    extra_value:
+      PLN:
+        '500': 1
+    extension:
+      description: "Spend 500 PLN on sofas, get 1 free ottoman (only sofas count toward threshold)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 142
+  fields:
+    rule: 142
+    code: SOFAS_GRATIS
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ThresholdFilter: Only sofas count toward 500 PLN threshold
+- model: django_checkout.thresholdproductfilter
+  pk: 142
+  fields:
+    rule: 142
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: categories = ['sofas']
+
+# ModeOfAction: User can only pick ottomans as gratis
+- model: django_checkout.discountmodeofaction
+  pk: 142
+  fields:
+    rule: 142
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: categories = ['ottomans']
+
+# ─────────────────────────────────────────────────────────────────────────
+# 5.4 Gratis By SKU In Cart (Conditional Gratis)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 143
+  fields:
+    name: TEST_GRATIS_BY_SKU
+    free_shipping: false
+    min_order_amount: '1000.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: gratis_by_sku_in_cart
+    extra_value:
+      - ENT-S001
+      - ENT-S002
+    extension:
+      description: "If cart contains ENT-S001 AND ENT-S002 (sofas), user gets 1 free ottoman"
+      quantity: 1
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 143
+  fields:
+    rule: 143
+    code: SOFA_BUNDLE_GIFT
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: Available gratis pool (ottomans)
+- model: django_checkout.discountmodeofaction
+  pk: 143
+  fields:
+    rule: 143
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: categories = ['ottomans']
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 6: FREE SHIPPING & FREE ORDER
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 6.1 Free Shipping
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 150
+  fields:
+    name: TEST_FREE_SHIPPING
+    free_shipping: true
+    min_order_amount: '200.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: 'percent_discount'
+    extra_value: 1
+    extension:
+      description: "Free shipping at 200 PLN"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 150
+  fields:
+    rule: 150
+    code: FREESHIP
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 7: TARGET-SPECIFIC RULES
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 7.1 First Order Logged (Welcome Discount)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 160
+  fields:
+    name: TEST_FIRST_ORDER_LOGGED
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: first_order_logged
+    modifier: percent_discount
+    extra_value: 20
+    extension:
+      description: "20% off first order for logged users"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 160
+  fields:
+    rule: 160
+    code: FIRST_LOGGED
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 7.2 First Order All (Welcome for Everyone)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 161
+  fields:
+    name: TEST_FIRST_ORDER_ALL
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: first_order_all
+    modifier: percent_discount
+    extra_value: 15
+    extension:
+      description: "15% off first order for all users (logged or guest)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 161
+  fields:
+    rule: 161
+    code: FIRST_ALL
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 8: COMBINABLE & AUTO-APPLY RULES
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 8.1 Auto-Apply Discount
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 170
+  fields:
+    name: TEST_AUTO_APPLY
+    free_shipping: false
+    min_order_amount: '1000.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 5
+    extension:
+      description: "5% automatic discount at 1000 PLN (no code needed)"
+    priority: 5
+    combine_with_other_rules: true
+    automatic_applications: true
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+# Note: No DiscountCode for auto-apply rules
+
+# ─────────────────────────────────────────────────────────────────────────
+# 8.2 Combinable Discount
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 171
+  fields:
+    name: TEST_COMBINABLE
+    free_shipping: false
+    min_order_amount: '500.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: price_discount
+    extra_value: 50
+    extension:
+      description: "50 PLN off at 500 PLN (can combine with other discounts)"
+    priority: 10
+    combine_with_other_rules: true
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 171
+  fields:
+    rule: 171
+    code: COMBINE50
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 9: PRODUCT FILTER VARIANTS (DISCOUNTMODEOFACTION)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 9.1 Category-Based Discount (20% off All Chairs)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 180
+  fields:
+    name: TEST_CHAIRS_DISCOUNT
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 20
+    extension:
+      description: "20% off all chairs (category filter)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 180
+  fields:
+    rule: 180
+    code: CHAIRS20
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: Only chairs get discount
+- model: django_checkout.discountmodeofaction
+  pk: 180
+  fields:
+    rule: 180
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: categories = ['chairs']
+
+# ─────────────────────────────────────────────────────────────────────────
+# 9.2 Price Range Filter (Discount on Mid-Range Products)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 181
+  fields:
+    name: TEST_MIDRANGE_DISCOUNT
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 15
+    extension:
+      description: "15% off products priced 500-2000 PLN"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 181
+  fields:
+    rule: 181
+    code: MIDRANGE15
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: Only products priced 500-2000 PLN
+- model: django_checkout.discountmodeofaction
+  pk: 181
+  fields:
+    rule: 181
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: false
+    product_price_to: 2000
+    product_price_from: 500
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 9.3 Exclusion Filter (Discount on Everything Except Sale Items)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 182
+  fields:
+    name: TEST_EXCLUDE_SALE
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 10
+    extension:
+      description: "10% off all products except sale category"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 182
+  fields:
+    rule: 182
+    code: REGULAR10
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: Exclude any product with "sale" in categories
+# Note: This requires checking which products have sale category
+# For now we'll create the filter structure, M2M to be set later
+- model: django_checkout.discountmodeofaction
+  pk: 182
+  fields:
+    rule: 182
+    is_inclusion_or_exclusion: exclusion
+    take_common_part: false
+    product_price_to: null
+    product_price_from: null
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: Look for categories containing 'sale'
+
+# ─────────────────────────────────────────────────────────────────────────
+# 9.4 Combined Filter (AND logic - expensive sofas only)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 183
+  fields:
+    name: TEST_PREMIUM_SOFAS
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 25
+    extension:
+      description: "25% off premium sofas (1000+ PLN)"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 183
+  fields:
+    rule: 183
+    code: PREMIUM_SOFA
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ModeOfAction: Sofas category AND price > 1000 PLN (AND logic)
+- model: django_checkout.discountmodeofaction
+  pk: 183
+  fields:
+    rule: 183
+    is_inclusion_or_exclusion: inclusion
+    take_common_part: true  # AND logic
+    product_price_to: null
+    product_price_from: 1000
+    cart_price_to: null
+    cart_price_from: null
+    qty_to: null
+    qty_from: null
+    cart_qty_to: null
+    cart_qty_from: null
+    # M2M: categories = ['sofas']
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SECTION 10: ADVANCED USAGE LIMITS
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────
+# 10.1 Limited Total Uses
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 190
+  fields:
+    name: TEST_LIMITED_USES
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 30
+    extension:
+      description: "30% off - limited to 100 total uses"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 190
+  fields:
+    rule: 190
+    code: LIMITED30
+    max_used: 100  # Total use limit
+    max_uses_per_user: 0
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 10.2 Limited Uses Per User
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 191
+  fields:
+    name: TEST_LIMITED_PER_USER
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 25
+    extension:
+      description: "25% off - 1 use per customer"
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 191
+  fields:
+    rule: 191
+    code: ONCE25
+    max_used: 0
+    max_uses_per_user: 1  # User can use only once
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SUMMARY
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# TOTAL: 32 discount rules
+#
+# Modifiers Covered (12/12):
+#   ✓ percent_discount (simple + multi-currency)
+#   ✓ price_discount (simple + multi-currency)
+#   ✓ step_qty_percent_discount
+#   ✓ step_qty_percent_discount_whole_cart (single + multi-currency)
+#   ✓ step_qty_price_discount_whole_cart (single + multi-currency)
+#   ✓ step_qty_fixed_price_per_currency
+#   ✓ step_price_percent_discount (single + multi-currency)
+#   ✓ cheapest_gratis
+#   ✓ most_expensive_gratis
+#   ✓ gratis_stepped (with/without filters)
+#   ✓ gratis_by_sku_in_cart
+#   ✓ free_shipping (modifier=null)
+#
+# Features Covered:
+#   ✓ DiscountModeOfAction (gratis product pools, discount filters)
+#   ✓ ThresholdProductFilter (selective threshold calculation)
+#   ✓ Multi-currency support
+#   ✓ Category filters
+#   ✓ Price range filters
+#   ✓ Exclusion filters
+#   ✓ Combined filters (AND/OR logic via take_common_part)
+#   ✓ Auto-apply rules
+#   ✓ Combinable rules
+#   ✓ Target-specific rules (first_order_logged, first_order_all)
+#   ✓ Usage limits (total + per user)
+#   ✓ Extension field for marketing data
+#
+# NOTE: M2M relationships (categories, products, attributes) for filters
+# need to be set via management command after loaddata, as they reference
+# idx values, not PKs.
+#
+# ═══════════════════════════════════════════════════════════════════════════

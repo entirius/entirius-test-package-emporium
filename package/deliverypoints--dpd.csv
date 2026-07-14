@@ -1,0 +1,4 @@
+delivery-point-code,delivery-point-name,delivery-point-x,delivery-point-y,delivery-point-address,delivery-point-city,delivery-point-postcode,delivery-point-hint
+DPD-WAW-001,DPD Pickup Warszawa Centrum,21.0185,52.2320,ul. Nowy Swiat 25,Warszawa,00-029,Wejscie od Chmielnej
+DPD-KRK-001,DPD Pickup Krakow Glowne,19.9455,50.0647,ul. Pawia 5,Krakow,31-154,Galeria Krakowska poziom 0
+DPD-GDA-001,DPD Pickup Gdansk Wrzeszcz,18.6028,54.3812,ul. Grunwaldzka 76,Gdansk,80-244,Obok dworca SKM

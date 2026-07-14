@@ -1,0 +1,18 @@
+.PHONY: help install check fix test bdd
+.DEFAULT_GOAL := help
+
+help:  ## List targets
+	@grep -E '^[a-z-]+:.*##' $(firstword $(MAKEFILE_LIST)) | awk -F':.*##' '{printf "  %-16s %s\n", $$1, $$2}'
+install:  ## Sync dependencies (uv, incl. extras)
+	uv sync --all-extras
+check:  ## Lint + format-check (ruff) + canonical .gitleaks.toml
+	@grep -q "forbidden-names" .gitleaks.toml 2>/dev/null || { echo "Missing or non-canonical .gitleaks.toml - symlink the config per the internal secret-scanning standard"; exit 1; }
+	uv run ruff check .
+	uv run ruff format --check .
+fix:  ## Auto-fix lint + format
+	uv run ruff check --fix .
+	uv run ruff format .
+test:  ## Bind steps to scenarios without hitting an API (behave dry-run)
+	uv run behave --dry-run --tags=-@spec-first --no-summary -f progress
+bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
+	uv run behave --tags=-@spec-first $(if $(TAGS),--tags=$(TAGS),)

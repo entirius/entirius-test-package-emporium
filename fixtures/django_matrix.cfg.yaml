@@ -1,0 +1,223 @@
+- model: django_matrix.channel
+  pk: 1
+  fields:
+    created_at: 2025-01-01 00:00:00+00:00
+    modified_at: 2025-01-01 00:00:00+00:00
+    idx: default-local
+    label: default-local
+    default_language: 2
+    default_currency: 2
+    default_country: 30
+    default_order: on_stock
+    default_order_direction: ASC
+    languages:
+    - 2
+    currencies:
+    - 2
+    countries:
+    - 30
+- model: django_matrix.channel
+  pk: 2
+  fields:
+    created_at: 2025-01-01 00:00:00+00:00
+    modified_at: 2025-01-01 00:00:00+00:00
+    idx: default-europe
+    label: default-europe
+    default_language: 2
+    default_currency: 3
+    default_country: 5
+    default_order: on_stock
+    default_order_direction: ASC
+    languages:
+    - 2
+    - 4
+    - 7
+    - 1
+    currencies:
+    - 3
+    - 1
+    countries:
+    - 5
+    - 21
+    - 8
+    - 10
+# FilterableFeatures — default-europe (channel pk=2)
+- model: django_matrix.filterablefeatures
+  pk: 1
+  fields:
+    channel: 2
+    feature: 17
+    position: 10
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 2
+  fields:
+    channel: 2
+    feature: 18
+    position: 20
+    is_or_filter: true
+- model: django_matrix.filterablefeatures
+  pk: 3
+  fields:
+    channel: 2
+    feature: 5
+    position: 30
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 4
+  fields:
+    channel: 2
+    feature: 6
+    position: 40
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 5
+  fields:
+    channel: 2
+    feature: 21
+    position: 50
+    is_or_filter: false
+# FilterableFeatures — default-local (channel pk=1)
+- model: django_matrix.filterablefeatures
+  pk: 6
+  fields:
+    channel: 1
+    feature: 17
+    position: 10
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 7
+  fields:
+    channel: 1
+    feature: 18
+    position: 20
+    is_or_filter: true
+- model: django_matrix.filterablefeatures
+  pk: 8
+  fields:
+    channel: 1
+    feature: 5
+    position: 30
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 9
+  fields:
+    channel: 1
+    feature: 6
+    position: 40
+    is_or_filter: false
+- model: django_matrix.filterablefeatures
+  pk: 10
+  fields:
+    channel: 1
+    feature: 21
+    position: 50
+    is_or_filter: false
+# SearchableFeatures
+- model: django_matrix.searchablefeatures
+  pk: 1
+  fields:
+    channel: 2
+    feature: 22
+- model: django_matrix.searchablefeatures
+  pk: 2
+  fields:
+    channel: 1
+    feature: 22
+- model: django_matrix.searchablefeatures
+  pk: 3
+  fields:
+    channel: 2
+    feature: 1
+- model: django_matrix.searchablefeatures
+  pk: 4
+  fields:
+    channel: 1
+    feature: 1
+# VisibilityFeatures — default-europe (channel pk=2)
+- model: django_matrix.visibilityfeatures
+  pk: 1
+  fields:
+    channel: 2
+    feature: 17
+    position: 10
+- model: django_matrix.visibilityfeatures
+  pk: 2
+  fields:
+    channel: 2
+    feature: 18
+    position: 20
+- model: django_matrix.visibilityfeatures
+  pk: 3
+  fields:
+    channel: 2
+    feature: 6
+    position: 30
+- model: django_matrix.visibilityfeatures
+  pk: 4
+  fields:
+    channel: 2
+    feature: 20
+    position: 40
+- model: django_matrix.visibilityfeatures
+  pk: 5
+  fields:
+    channel: 2
+    feature: 21
+    position: 50
+- model: django_matrix.visibilityfeatures
+  pk: 6
+  fields:
+    channel: 2
+    feature: 22
+    position: 60
+# VisibilityFeatures — default-local (channel pk=1)
+- model: django_matrix.visibilityfeatures
+  pk: 7
+  fields:
+    channel: 1
+    feature: 17
+    position: 10
+- model: django_matrix.visibilityfeatures
+  pk: 8
+  fields:
+    channel: 1
+    feature: 18
+    position: 20
+- model: django_matrix.visibilityfeatures
+  pk: 9
+  fields:
+    channel: 1
+    feature: 6
+    position: 30
+- model: django_matrix.visibilityfeatures
+  pk: 10
+  fields:
+    channel: 1
+    feature: 20
+    position: 40
+- model: django_matrix.visibilityfeatures
+  pk: 11
+  fields:
+    channel: 1
+    feature: 21
+    position: 50
+- model: django_matrix.visibilityfeatures
+  pk: 12
+  fields:
+    channel: 1
+    feature: 22
+    position: 60
+# SortableFeatures
+- model: django_matrix.sortablefeatures
+  pk: 1
+  fields:
+    channel: 2
+    feature: 20
+    position: 10
+- model: django_matrix.sortablefeatures
+  pk: 2
+  fields:
+    channel: 1
+    feature: 20
+    position: 10

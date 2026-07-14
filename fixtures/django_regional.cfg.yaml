@@ -1,0 +1,53 @@
+- model: django_regional.currency
+  pk: 1
+  fields:
+    iso3: PLN
+    name_en: Polish zloty
+    name_pl: Polski złoty
+    symbol: zł
+- model: django_regional.currency
+  pk: 2
+  fields:
+    iso3: USD
+    name_en: United States dollar
+    name_pl: Dolar amerykański
+    symbol: $
+- model: django_regional.currency
+  pk: 3
+  fields:
+    iso3: EUR
+    name_en: Euro
+    name_pl: Euro
+    symbol: €
+- model: django_regional.language
+  pk: 1
+  fields:
+    iso2: pl
+    iso3: pol
+    name_en: polish
+    name_pl: polski
+    name_source: Polski
+- model: django_regional.language
+  pk: 2
+  fields:
+    iso2: en
+    iso3: eng
+    name_en: english
+    name_pl: angielski
+    name_source: English
+- model: django_regional.language
+  pk: 4
+  fields:
+    iso2: es
+    iso3: spa
+    name_en: spanish
+    name_pl: hiszpański
+    name_source: español
+- model: django_regional.language
+  pk: 7
+  fields:
+    iso2: de
+    iso3: ger
+    name_en: german
+    name_pl: niemiecki
+    name_source: deutsch

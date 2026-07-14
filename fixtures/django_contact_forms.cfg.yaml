@@ -1,0 +1,153 @@
+# =========================================================================
+# django_contact_forms seed — 2 channels matching PIM/email: default-local,
+# default-europe. Each channel gets an API key, the general/product/default
+# form-type catalog, and notification configs (admin + client-copy demo).
+#
+# NOTE: APIKey.key is normally generated in save(); loaddata bypasses save(),
+# so the key is provided explicitly here. Use these values as X-API-KEY.
+# default_language references django_regional.language pk (pl=1, en=2).
+# =========================================================================
+
+# --- Channels ---
+- model: django_contact_forms.channel
+  pk: 1
+  fields:
+    idx: default-europe
+    label: Default Europe Forms
+    admin_email: forms-europe@entirius.com
+    default_language: 2
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_contact_forms.channel
+  pk: 2
+  fields:
+    idx: default-local
+    label: Default Local Forms
+    admin_email: forms-local@entirius.com
+    default_language: 1
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- API keys (use as X-API-KEY header) ---
+- model: django_contact_forms.apikey
+  pk: 1
+  fields:
+    channel: 1
+    key: "1111111111111111111111111111111111111111111111111111111111111111"
+    scope: contact_form
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_contact_forms.apikey
+  pk: 2
+  fields:
+    channel: 2
+    key: "2222222222222222222222222222222222222222222222222222222222222222"
+    scope: contact_form
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Form types: general / product / default (is_default) per channel ---
+- model: django_contact_forms.formtype
+  pk: 1
+  fields:
+    channel: 1
+    code: general
+    label: General
+    is_default: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formtype
+  pk: 2
+  fields:
+    channel: 1
+    code: product
+    label: Product enquiry
+    is_default: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formtype
+  pk: 3
+  fields:
+    channel: 1
+    code: default
+    label: Default
+    is_default: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formtype
+  pk: 4
+  fields:
+    channel: 2
+    code: general
+    label: General
+    is_default: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formtype
+  pk: 5
+  fields:
+    channel: 2
+    code: product
+    label: Product enquiry
+    is_default: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formtype
+  pk: 6
+  fields:
+    channel: 2
+    code: default
+    label: Default
+    is_default: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Notification configs ---
+# Channel-level: admin email on, client copy off (the safe baseline).
+- model: django_contact_forms.formnotificationconfig
+  pk: 1
+  fields:
+    channel: 1
+    form_type: ""
+    slug: ""
+    send_email: true
+    send_client_copy: false
+    recipient_email: ""
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formnotificationconfig
+  pk: 2
+  fields:
+    channel: 2
+    form_type: ""
+    slug: ""
+    send_email: true
+    send_client_copy: false
+    recipient_email: ""
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+# Product type-level: client copy on, so a product enquiry confirms to the sender.
+- model: django_contact_forms.formnotificationconfig
+  pk: 3
+  fields:
+    channel: 1
+    form_type: product
+    slug: ""
+    send_email: true
+    send_client_copy: true
+    recipient_email: ""
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+- model: django_contact_forms.formnotificationconfig
+  pk: 4
+  fields:
+    channel: 2
+    form_type: product
+    slug: ""
+    send_email: true
+    send_client_copy: true
+    recipient_email: ""
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

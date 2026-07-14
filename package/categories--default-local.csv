@@ -1,0 +1,39 @@
+idx,parent,name pl,name en,description pl,description en,url key pl,url key en,position,is in menu,is active
+root,,Root,Root,Root,Root,root,root,0,true,true,true
+sofas,root,Sofas,Sofas,Sofy premium,Premium sofas for every space,sofas,sofas,1,true,true
+living-room-sofas,sofas,Living Room Sofas,Living Room Sofas,Sofy do salonu,Living room sofa collection,living-room-sofas,living-room-sofas,1,true,true
+corner-sofas,living-room-sofas,Corner Sofas,Corner Sofas,Sofy narożne,Corner sofa designs,corner-sofas,corner-sofas,1,true,true
+modular-corner,corner-sofas,Modular Corner Sofas,Modular Corner Sofas,Narożniki modułowe,Modular corner configurations,modular-corner,modular-corner,1,true,true
+small-modular,modular-corner,Small Modular Sofas,Small Modular Sofas,Małe konfiguracje modułowe,Small modular configurations,small-modular,small-modular,1,true,true
+large-modular,modular-corner,Large Modular Sofas,Large Modular Sofas,Duże konfiguracje modułowe,Large modular configurations,large-modular,large-modular,2,true,true
+l-shaped,corner-sofas,L-Shaped Sofas,L-Shaped Sofas,Sofy w kształcie L,L-shaped sofa designs,l-shaped,l-shaped,2,true,true
+straight-sofas,living-room-sofas,Straight Sofas,Straight Sofas,Klasyczne sofy proste,Classic straight sofas,straight-sofas,straight-sofas,2,true,true
+sofa-beds,sofas,Sofa Beds,Sofa Beds,Sofy z funkcją spania,Convertible sofa beds,sofa-beds,sofa-beds,2,true,true
+chairs,root,Chairs,Chairs,Wygodne krzesła,Comfortable chairs for any room,chairs,chairs,2,true,true
+office-chairs,chairs,Office Chairs,Office Chairs,Krzesła biurowe,Office seating solutions,office-chairs,office-chairs,1,true,true
+ergonomic,office-chairs,Ergonomic Chairs,Ergonomic Chairs,Krzesła ergonomiczne,Ergonomic office chairs,ergonomic,ergonomic,1,true,true
+mesh-back,ergonomic,Mesh Back Chairs,Mesh Back Chairs,Krzesła z siatką na oparciu,Mesh back ergonomic chairs,mesh-back,mesh-back,1,true,true
+high-back-mesh,mesh-back,High Back Mesh Chairs,High Back Mesh Chairs,Krzesła wysokie z siatką,High back mesh chairs,high-back-mesh,high-back-mesh,1,true,true
+leather-ergonomic,ergonomic,Leather Ergonomic Chairs,Leather Ergonomic Chairs,Skórzane krzesła ergonomiczne,Leather ergonomic chairs,leather-ergonomic,leather-ergonomic,2,true,true
+executive,office-chairs,Executive Chairs,Executive Chairs,Krzesła gabinetowe,Executive office chairs,executive,executive,2,true,true
+dining-chairs,chairs,Dining Chairs,Dining Chairs,Krzesła do jadalni,Dining room chairs,dining-chairs,dining-chairs,2,true,true
+ottomans,root,Ottomans,Ottomans,Pufy i podnóżki,Versatile ottomans and footrests,ottomans,ottomans,3,true,true
+bedroom,root,Bedroom,Bedroom,Meble do sypialni,Bedroom furniture collection,bedroom,bedroom,4,true,true
+beds,bedroom,Beds,Beds,Kolekcja łóżek,Bed collection,beds,beds,1,true,true
+platform-beds,beds,Platform Beds,Platform Beds,Łóżka platformowe,Platform bed designs,platform-beds,platform-beds,1,true,true
+nightstands,bedroom,Nightstands,Nightstands,Stoliki nocne,Nightstand collection,nightstands,nightstands,2,true,true
+dressers,bedroom,Dressers,Dressers,Kolekcja komod,Dresser collection,dressers,dressers,3,true,true
+office,root,Office,Office,Meble biurowe,Office furniture for productivity,office,office,5,true,true
+desks,office,Desks,Desks,Kolekcja biurek,Desk collection,desks,desks,1,true,true
+standing-desks,desks,Standing Desks,Standing Desks,Biurka do pracy stojącej,Standing desk collection,standing-desks,standing-desks,1,true,true
+office-storage,office,Office Storage,Office Storage,Regały i szafki biurowe,Office storage solutions,office-storage,office-storage,2,true,true
+outdoor,root,Outdoor,Outdoor,Meble ogrodowe,Outdoor furniture collection,outdoor,outdoor,6,true,true
+sale,root,Sale,Sale,Wyprzedaż,Items on sale,sale,sale,7,true,true
+lighting,root,Station Lighting,Station Lighting,Systemy oświetlenia stacji,Station lighting array systems,station-lighting,station-lighting,8,true,true
+wall-decor,root,Wall Decor,Wall Decor,Kolekcja dekoracji ściennych,Wall decor and hangings collection,wall-decor,wall-decor,9,true,true
+cargo-storage,root,Cargo Storage,Cargo Storage,Systemy magazynów ładunkowych,Cargo storage vault systems,cargo-storage,cargo-storage,10,true,true
+galley,root,Galley Furnishings,Galley Furnishings,Kolekcja wyposażenia kambuza,Galley furnishing collection,galley-furnishings,galley-furnishings,11,true,true
+study,root,Study & Training,Study & Training,Wyposażenie do nauki i szkoleń,Study and training equipment,study-training,study-training,12,true,true
+bathroom,root,Bathroom Fittings,Bathroom Fittings,Wyposażenie armatury łazienkowej,Bathroom fitting furnishings,bathroom-fittings,bathroom-fittings,13,true,true
+hydroponics,root,Hydroponics Decor,Hydroponics Decor,Kolekcja dekoracji hydroponicznych,Hydroponics decoration collection,hydroponics-decor,hydroponics-decor,14,true,true
+command-deck,root,Command Deck Workspace,Command Deck Workspace,Wyposażenie stanowiska mostka,Command deck workspace equipment,command-deck-workspace,command-deck-workspace,15,true,true

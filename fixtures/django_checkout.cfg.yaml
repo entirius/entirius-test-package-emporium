@@ -1,0 +1,281 @@
+- model: django_checkout.channel
+  pk: 1
+  fields:
+    idx: default-local
+    label: Default Local
+    default_language: 2
+    default_currency: 2
+    default_country: 30
+    discount_mode_of_action_price_restriction_type: brutto
+    order_pretty_id_prefix: null
+    feature_idxs_for_split_order: ''
+    default_attr_split: ''
+    force_splitting_order_in_checkout: false
+    split_order_shipping_cost_mechanism: attribute_based_shipping_cost_assignment
+    default_attr_split_shipping: ''
+    split_order_payment_fee_mechanism: attribute_based_payment_fee_assignment
+    default_attr_split_payment_fee: ''
+    min_order_price: 0
+    discount_apply_type: after
+    split_order_mechanism: CLOSE_AND_SPLIT
+    languages:
+    - 2
+    currencies:
+    - 2
+    countries:
+    - 30
+- model: django_checkout.channel
+  pk: 2
+  fields:
+    idx: default-europe
+    label: Default Europe
+    default_language: 2
+    default_currency: 3
+    default_country: 5
+    discount_mode_of_action_price_restriction_type: brutto
+    order_pretty_id_prefix: null
+    feature_idxs_for_split_order: ''
+    default_attr_split: ''
+    force_splitting_order_in_checkout: false
+    split_order_shipping_cost_mechanism: attribute_based_shipping_cost_assignment
+    default_attr_split_shipping: ''
+    split_order_payment_fee_mechanism: attribute_based_payment_fee_assignment
+    default_attr_split_payment_fee: ''
+    min_order_price: 0
+    discount_apply_type: after
+    split_order_mechanism: CLOSE_AND_SPLIT
+    languages:
+    - 2
+    - 4
+    - 7
+    - 1
+    currencies:
+    - 3
+    - 1
+    countries:
+    - 5
+    - 21
+    - 8
+    - 10
+- model: django_checkout.shippingmethod
+  pk: 1
+  fields:
+    channel: 1
+    method_type: default
+    code: standard-shipping
+    image: ''
+    name_t9n:
+      en: Standard Shipping
+    description_t9n: null
+    price_type: fixed
+    max_weight: null
+    priority: 0
+- model: django_checkout.shippingmethod
+  pk: 2
+  fields:
+    channel: 2
+    method_type: default
+    code: europe-standard
+    image: ''
+    name_t9n:
+      en: Europe Standard
+      de: Europa Standard
+      es: Europa Estándar
+      pl: Europa Standard
+    description_t9n: null
+    price_type: fixed
+    max_weight: null
+    priority: 0
+- model: django_checkout.shippingoption
+  pk: 1
+  fields:
+    method: 1
+    country: 30
+    country_code: CH
+    currency: 2
+    tax_rate: '0.00'
+    price_brutto: '9.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '200.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+- model: django_checkout.shippingoption
+  pk: 2
+  fields:
+    method: 2
+    country: 5
+    country_code: DE
+    currency: 3
+    tax_rate: '0.00'
+    price_brutto: '9.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '150.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+- model: django_checkout.shippingoption
+  pk: 3
+  fields:
+    method: 2
+    country: 21
+    country_code: PL
+    currency: 1
+    tax_rate: '0.00'
+    price_brutto: '39.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '500.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+- model: django_checkout.orderstatuslabel
+  pk: 1
+  fields:
+    channel: 1
+    status: new
+    name_t9n:
+      en: New
+- model: django_checkout.orderstatuslabel
+  pk: 2
+  fields:
+    channel: 1
+    status: confirmed
+    name_t9n:
+      en: Confirmed
+- model: django_checkout.orderstatuslabel
+  pk: 3
+  fields:
+    channel: 1
+    status: in_progress
+    name_t9n:
+      en: In Progress
+- model: django_checkout.orderstatuslabel
+  pk: 4
+  fields:
+    channel: 1
+    status: complete
+    name_t9n:
+      en: Complete
+- model: django_checkout.orderstatuslabel
+  pk: 5
+  fields:
+    channel: 1
+    status: canceled
+    name_t9n:
+      en: Canceled
+- model: django_checkout.orderstatuslabel
+  pk: 6
+  fields:
+    channel: 2
+    status: new
+    name_t9n:
+      en: New
+      de: Neu
+      es: Nuevo
+      pl: Nowe
+- model: django_checkout.orderstatuslabel
+  pk: 7
+  fields:
+    channel: 2
+    status: confirmed
+    name_t9n:
+      en: Confirmed
+      de: Bestätigt
+      es: Confirmado
+      pl: Potwierdzone
+- model: django_checkout.orderstatuslabel
+  pk: 8
+  fields:
+    channel: 2
+    status: in_progress
+    name_t9n:
+      en: In Progress
+      de: In Bearbeitung
+      es: En progreso
+      pl: W realizacji
+- model: django_checkout.orderstatuslabel
+  pk: 9
+  fields:
+    channel: 2
+    status: complete
+    name_t9n:
+      en: Complete
+      de: Abgeschlossen
+      es: Completado
+      pl: Zrealizowane
+- model: django_checkout.orderstatuslabel
+  pk: 10
+  fields:
+    channel: 2
+    status: canceled
+    name_t9n:
+      en: Canceled
+      de: Storniert
+      es: Cancelado
+      pl: Anulowane
+- model: django_checkout.supplier
+  pk: 1
+  fields:
+    code: default-local
+    name: Default Local
+    is_global: true
+    channel: 1
+- model: django_checkout.supplier
+  pk: 2
+  fields:
+    code: default-europe
+    name: Default Europe
+    is_global: true
+    channel: 2
+- model: django_checkout.paymentmethod
+  pk: 1
+  fields:
+    channel: 1
+    provider: transfer
+    code: banktransfer
+    is_cash_on_delivery: false
+    is_free_order: false
+    image: ''
+    name_t9n:
+      en: Bank Transfer
+    description_t9n: null
+    additional_data: null
+    countries:
+    - 30
+    currencies:
+    - 2
+- model: django_checkout.paymentmethod
+  pk: 2
+  fields:
+    channel: 2
+    provider: transfer
+    code: banktransfer
+    is_cash_on_delivery: false
+    is_free_order: false
+    image: ''
+    name_t9n:
+      en: Bank Transfer
+      de: Banküberweisung
+      es: Transferencia bancaria
+      pl: Przelew bankowy
+    description_t9n: null
+    additional_data: null
+    countries:
+    - 5
+    - 21
+    - 8
+    - 10
+    currencies:
+    - 3
+    - 1
+- model: django_checkout.apikey
+  pk: 1
+  fields:
+    channel: 1
+    key: entirius-docker-checkout-dev-key-2026
+    created_at: '2026-01-01T00:00:00Z'
+    updated_at: '2026-01-01T00:00:00Z'
+- model: django_checkout.apikey
+  pk: 2
+  fields:
+    channel: 2
+    key: entirius-docker-checkout-dev-key-2026
+    created_at: '2026-01-01T00:00:00Z'
+    updated_at: '2026-01-01T00:00:00Z'

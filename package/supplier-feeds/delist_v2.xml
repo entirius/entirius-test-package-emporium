@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>DELX-1</sku>
+    <name>Replacement</name>
+    <price currency="EUR">32.00</price>
+    <stock>7</stock>
+    <ean>5900000000063</ean>
+    <weight_g>600</weight_g>
+  </product></catalog>

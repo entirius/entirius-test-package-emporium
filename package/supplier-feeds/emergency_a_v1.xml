@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>EMA-1</sku>
+    <name>Emergency A</name>
+    <price currency="EUR">100.00</price>
+    <stock>100</stock>
+    <ean>5900000000022</ean>
+    <weight_g>1500</weight_g>
+  </product></catalog>

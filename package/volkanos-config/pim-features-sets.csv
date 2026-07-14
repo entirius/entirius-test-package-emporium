@@ -1,0 +1,6 @@
+idx,name,desc,is-default,features
+default,Default,"Placeholder catch-all set assigned automatically at import. Not a real product type — every product here still needs classification. Pick the set that matches what the product actually is.",TRUE,"dimensions_depth,dimensions_height,dimensions_width,series,options,customizable"
+furniture,Furniture,"Physical furniture pieces: sofas, chairs, tables, shelving. Pick when the product is a standalone furniture item sold as-is. Carries material, craftsmanship and weight attributes.",FALSE,"series,options,weight_kg,is_handcrafted,material_composition,specifications"
+bundle,Bundle,"Multi-product bundles sold as one SKU (e.g. a table with chairs). Pick only for products composed of other catalogue products; carries bundle min/max limits.",FALSE,"series,options,max_limit_bundle,min_limit_bundle"
+custom,Custom,"Made-to-order furniture configured per customer request. Pick when the product is built to the buyer's specification rather than stocked.",FALSE,"series,options,weight_kg,is_handcrafted,material_composition,specifications"
+premium,Premium Collection,"High-end limited furniture from the premium line. Pick only for flagship products marketed as premium; same physical attributes as furniture.",FALSE,"weight_kg,is_handcrafted,material_composition,specifications,series,options"

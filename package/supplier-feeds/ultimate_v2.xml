@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>BULT-1</sku>
+    <name>Ultimate Widget</name>
+    <price currency="EUR">80.00</price>
+    <stock>35</stock>
+    <ean>5900000000011</ean>
+    <weight_g>2750</weight_g>
+  </product>
+  <product>
+    <sku>BULT-2</sku>
+    <name>Ultimate Gadget</name>
+    <price currency="EUR">60.00</price>
+    <stock>20</stock>
+    <ean>5900000000012</ean>
+    <weight_g>1000</weight_g>
+  </product></catalog>

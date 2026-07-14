@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>SUP-001</sku>
+    <name>Stationmaster Office Chair (supplier)</name>
+    <price currency="EUR">450.00</price>
+    <stock>15</stock>
+    <ean>5901234100001</ean>
+    <description>Supplier-sourced office chair (matches ENT-C005)</description>
+    <manufacturer>Orbital Foundry Supply</manufacturer>
+    <category>furniture/chairs/office</category>
+  </product>
+  <product>
+    <sku>SUP-002</sku>
+    <name>Star-Chart Bookshelf (supplier)</name>
+    <price currency="EUR">280.00</price>
+    <stock>8</stock>
+    <ean>5901234100002</ean>
+    <description>Heavy-duty bookshelf for archives</description>
+    <manufacturer>Orbital Foundry Supply</manufacturer>
+    <category>furniture/storage/bookshelves</category>
+  </product>
+  <product>
+    <sku>SUP-003</sku>
+    <name>Drone Dock Ottoman (supplier)</name>
+    <price currency="EUR">220.00</price>
+    <stock>30</stock>
+    <ean>5901234100003</ean>
+    <description>Comfortable ottoman with mechanical aesthetics</description>
+    <manufacturer>Orbital Foundry Supply</manufacturer>
+    <category>furniture/seating/ottomans</category>
+  </product>
+  <product>
+    <sku>SUP-004</sku>
+    <name>Airlock Dresser (supplier)</name>
+    <price currency="EUR">620.00</price>
+    <stock>5</stock>
+    <ean>5901234100004</ean>
+    <description>Premium dresser with golden trim</description>
+    <manufacturer>Orbital Foundry Supply</manufacturer>
+    <category>furniture/storage/dressers</category>
+  </product>
+  <product>
+    <sku>SUP-005</sku>
+    <name>Promenade Bench (supplier)</name>
+    <price currency="EUR">350.00</price>
+    <stock>20</stock>
+    <ean>5901234100005</ean>
+    <description>Sturdy bench, vacuum-tested for concourse seating</description>
+    <manufacturer>Orbital Foundry Supply</manufacturer>
+    <category>furniture/seating/benches</category>
+  </product>
+</catalog>

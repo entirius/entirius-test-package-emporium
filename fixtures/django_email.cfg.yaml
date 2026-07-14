@@ -1,0 +1,118 @@
+# =========================================================================
+# django_email seed — 2 channels matching PIM + language configs
+# Channel idx values mirror PIM: default-local, default-europe
+# =========================================================================
+
+- model: django_email.channel
+  pk: 1
+  fields:
+    idx: default-europe
+    label: Default Europe
+    from_name: Entirius Store
+    from_email: noreply@entirius.com
+    from_t9n:
+      en:
+        from_name: Entirius Store
+        from_email: noreply@entirius.com
+      pl:
+        from_name: Sklep Entirius
+        from_email: noreply@entirius.com
+    main_background_color: "#FFFFFF"
+    body_background_color: "#EDEDED"
+    main_text_color: "#141414"
+    brand_text_color: "#404040"
+    font_family: "'Inter', sans-serif"
+    logo_max_width: "100"
+
+- model: django_email.channel
+  pk: 2
+  fields:
+    idx: default-local
+    label: Default Local
+    from_name: Entirius Local
+    from_email: noreply@entirius.com
+    from_t9n: {}
+    main_background_color: "#FFFFFF"
+    body_background_color: "#EDEDED"
+    main_text_color: "#141414"
+    brand_text_color: "#404040"
+    font_family: "'Inter', sans-serif"
+    logo_max_width: "100"
+
+- model: django_email.langchannelconfig
+  pk: 1
+  fields:
+    channel: 1
+    language: en
+    shop_name: Entirius Store
+    logo_url: https://placehold.co/200x60?text=Entirius
+    header_mail: noreply@entirius.com
+    footer_copy: "© 2026 Entirius. All rights reserved."
+    footer_name_brand: Entirius
+    footer_link_brand: https://entirius.com
+    footer_link_facebook: ""
+    footer_link_instagram: ""
+    footer_link_youtube: ""
+    footer_link_x: ""
+    footer_link_tiktok: ""
+
+- model: django_email.langchannelconfig
+  pk: 2
+  fields:
+    channel: 1
+    language: pl
+    shop_name: Sklep Entirius
+    logo_url: https://placehold.co/200x60?text=Entirius
+    header_mail: noreply@entirius.com
+    footer_copy: "© 2026 Entirius. Wszelkie prawa zastrzeżone."
+    footer_name_brand: Entirius
+    footer_link_brand: https://entirius.com
+    footer_link_facebook: ""
+    footer_link_instagram: ""
+    footer_link_youtube: ""
+    footer_link_x: ""
+    footer_link_tiktok: ""
+
+- model: django_email.langchannelconfig
+  pk: 3
+  fields:
+    channel: 2
+    language: en
+    shop_name: Entirius Local
+    logo_url: https://placehold.co/200x60?text=Entirius
+    header_mail: noreply@entirius.com
+    footer_copy: "© 2026 Entirius. All rights reserved."
+    footer_name_brand: Entirius
+    footer_link_brand: https://entirius.com
+    footer_link_facebook: ""
+    footer_link_instagram: ""
+    footer_link_youtube: ""
+    footer_link_x: ""
+    footer_link_tiktok: ""
+
+# Email templates — AccountsNewAccount
+# pk=1: null values (used by BDD test "Retrieve template with null values")
+- model: django_email.accountsnewaccount
+  pk: 1
+  fields:
+    channel: 1
+    language: 2
+    subject: null
+    welcome: null
+    announce: null
+    confirm_button: null
+    thank_you: null
+    help: null
+
+# pk=2: Polish lang config (used by BDD PATCH + retrieve tests)
+- model: django_email.accountsnewaccount
+  pk: 2
+  fields:
+    channel: 1
+    language: 1
+    subject: null
+    welcome: null
+    announce: null
+    confirm_button: null
+    thank_you: null
+    help: null

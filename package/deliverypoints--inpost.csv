@@ -1,0 +1,6 @@
+delivery-point-code,delivery-point-name,delivery-point-x,delivery-point-y,delivery-point-address,delivery-point-city,delivery-point-postcode,delivery-point-hint
+WAW01A,Paczkomat WAW01A,21.0122,52.2297,ul. Marszalkowska 10,Warszawa,00-624,Przy wejsciu do Biedronki
+WAW02M,Paczkomat WAW02M,20.9832,52.2510,ul. Wolska 64,Warszawa,01-134,Parking Lidl
+KRK04N,Paczkomat KRK04N,19.9380,50.0615,ul. Krowoderska 63,Krakow,31-158,Obok stacji Orlen
+WRO08A,Paczkomat WRO08A,17.0385,51.1079,ul. Swidnicka 32,Wroclaw,50-068,Przy przystanku tramwajowym
+POZ03B,Paczkomat POZ03B,16.9340,52.4068,ul. Glogowska 100,Poznan,60-263,Parking Kaufland

@@ -1,0 +1,100 @@
+# Cascade test product (featureset cascade).
+# CASCADE-001 sits on the placeholder `default` feature-set with NO description and NO pictures
+# — deliberately "broken". It is the deterministic subject of the classification-cascade proof:
+# structural gap (`feature-set-default`) → spawn → assign-featureset proposal → accept →
+# attribute gaps (`pl-description`, `main-picture`) light up. The BDD scenario in
+# entirius-tests (features/enrichment/featureset_cascade.feature) reverts it back to `default`
+# on cleanup, so the seed state is stable across runs.
+# Kept OUT of products--*.csv on purpose: pim_csv BDD tests assert exact CSV counts (33).
+# Idempotent: explicit pks (9000+ range — clear of CSV-imported rows; loaddata resets
+# sequences afterwards). Explicit timestamps: auto_now(_add) fields are NOT NULL and
+# loaddata does not populate them.
+- model: django_pim.realproduct
+  pk: 9001
+  fields:
+    sku: CASCADE-001
+    ean: null
+    kind_of_product: 0
+    weight: null
+    width: null
+    height: null
+    deep: null
+    updated_at: 2026-01-01T00:00:00+00:00
+# is_enabled=false + visibility 0 (UNKNOWN) keep the product out of the Matrix read model and
+# storefront listings (matrix fill skips disabled products; visible() filters on named
+# visibilities) — public product counts stay CSV-exact (33). Admin APIs, gap recompute and the
+# enrichment adapter have no is_enabled filter, so the cascade still sees it.
+# Product.updated_at is a nullable legacy field (NOT auto_now) — null is intentional and
+# mirrors the golden fixture's product records.
+- model: django_pim.product
+  pk: 9001
+  fields:
+    product_class: 1
+    real_product: 9001
+    shop: 1
+    feature_set: 1
+    visibility: 0
+    magento_pk: null
+    updated_at: null
+    is_enabled: false
+    inherit_attributes: false
+    inherit_descriptions: false
+    inherit_images: false
+    db_created: 2026-01-01T00:00:00+00:00
+    db_modified: 2026-01-01T00:00:00+00:00
+    gap_worst_severity: null
+    gap_count: 0
+    gap_evaluated_at: null
+- model: django_pim.product
+  pk: 9002
+  fields:
+    product_class: 1
+    real_product: 9001
+    shop: 2
+    feature_set: 1
+    visibility: 0
+    magento_pk: null
+    updated_at: null
+    is_enabled: false
+    inherit_attributes: false
+    inherit_descriptions: false
+    inherit_images: false
+    db_created: 2026-01-01T00:00:00+00:00
+    db_modified: 2026-01-01T00:00:00+00:00
+    gap_worst_severity: null
+    gap_count: 0
+    gap_evaluated_at: null
+# Only the `name` attribute (feature pk=1) — admin lists stay readable; description stays
+# empty so the attribute gap fires once the product leaves the default set.
+- model: django_pim.productattribute
+  pk: 9001
+  fields:
+    product: 9001
+    feature: 1
+    attribute: null
+    value_bool: null
+    value_decimal: null
+    value_datetime: null
+    overridden_langs: []
+    value_txt: null
+    value_txt_t9n:
+      en: Cascade Probe Shelf
+      pl: Regał Sondy Kaskady
+    value_json: null
+    updated_at: 2026-01-01T00:00:00+00:00
+- model: django_pim.productattribute
+  pk: 9002
+  fields:
+    product: 9002
+    feature: 1
+    attribute: null
+    value_bool: null
+    value_decimal: null
+    value_datetime: null
+    overridden_langs: []
+    value_txt: null
+    value_txt_t9n:
+      en: Cascade Probe Shelf
+      pl: Regał Sondy Kaskady
+    value_json: null
+    updated_at: 2026-01-01T00:00:00+00:00

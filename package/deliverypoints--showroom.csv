@@ -1,0 +1,4 @@
+delivery-point-code,delivery-point-name,delivery-point-x,delivery-point-y,delivery-point-address,delivery-point-city,delivery-point-postcode,delivery-point-hint
+SHR-WAW-01,Showroom Warszawa Mokotow,21.0042,52.1935,ul. Pulawska 2,Warszawa,02-566,Wejscie od strony parkingu podziemnego
+SHR-KRK-01,Showroom Krakow Kazimierz,19.9449,50.0490,ul. Jozefa 18,Krakow,31-056,Otwarty rowniez w soboty 10-14
+SHR-WRO-01,Showroom Wroclaw Rynek,17.0326,51.1100,Rynek 13,Wroclaw,50-101,Piętro 1 klatka B

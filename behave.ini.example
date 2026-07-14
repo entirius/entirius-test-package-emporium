@@ -1,0 +1,17 @@
+[behave]
+paths = features
+junit = true
+junit_directory = reports
+show_timings = true
+format = pretty
+
+[behave.userdata]
+api_base_url = http://localhost:8000
+api_version = 1
+test_package_path = package
+admin_username = admin
+admin_password = admin123
+test_username = testuser
+test_password = testuser123
+channels = default-europe,default-local
+primary_channel = default-europe

@@ -1,0 +1,91 @@
+# Baseline GapDefinition rules (pim quality score).
+# Seeds the highlighter's starting checks. After seeding the truth lives in the DB —
+# clients tune them in the CMS. Idempotent: explicit pk + unique `key` (loaddata skips existing).
+# created_at/modified_at are explicit: BaseModel's auto_now(_add) fields are NOT NULL and
+# loaddata does not populate them.
+- model: django_pim.gapdefinition
+  pk: 1
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: pl-description
+    check_key: feature_present
+    params:
+      feature_idx: description
+    languages:
+    - pl
+    channels: null
+    severity: critical
+    label_t9n:
+      pl: Brak opisu
+      en: Missing description
+    active: true
+    display_order: 10
+- model: django_pim.gapdefinition
+  pk: 2
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: pl-description-min
+    check_key: feature_min_length
+    params:
+      feature_idx: description
+      min_length: 120
+    languages:
+    - pl
+    channels: null
+    severity: warning
+    label_t9n:
+      pl: Opis za krótki
+      en: Description too short
+    active: true
+    display_order: 20
+- model: django_pim.gapdefinition
+  pk: 3
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: main-picture
+    check_key: picture_present
+    params:
+      role: main
+    languages: null
+    channels: null
+    severity: critical
+    label_t9n:
+      pl: Brak zdjęcia głównego
+      en: Missing main picture
+    active: true
+    display_order: 30
+- model: django_pim.gapdefinition
+  pk: 4
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: feature-set-default
+    check_key: feature_set_default
+    params: {}
+    languages: null
+    channels: null
+    severity: critical
+    label_t9n:
+      pl: Produkt na domyślnym zestawie cech
+      en: Product on default feature set
+    active: true
+    display_order: 40
+- model: django_pim.gapdefinition
+  pk: 5
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: picture-alt-present
+    check_key: picture_alt_present
+    params: {}
+    languages: null
+    channels: null
+    severity: warning
+    label_t9n:
+      pl: Brak altów zdjęć
+      en: Missing picture alt texts
+    active: true
+    display_order: 50

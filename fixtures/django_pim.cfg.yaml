@@ -1,0 +1,1029 @@
+- model: django_pim.channel
+  pk: 1
+  fields:
+    idx: default-local
+    name: Default Local
+    is_default: true
+    default_language: 2
+    default_currency: 2
+    languages:
+    - 2
+    currencies:
+    - 2
+- model: django_pim.channel
+  pk: 2
+  fields:
+    idx: default-europe
+    name: Default Europe
+    default_language: 2
+    default_currency: 3
+    languages:
+    - 2
+    - 4
+    - 7
+    - 1
+    currencies:
+    - 3
+    - 1
+- model: django_pim.featureset
+  pk: 1
+  fields:
+    idx: default
+    name: Default
+    desc: Placeholder catch-all set assigned automatically at import. Not a real product
+      type — every product here still needs classification. Pick the set that matches what
+      the product actually is.
+    is_default: true
+- model: django_pim.featureset
+  pk: 2
+  fields:
+    idx: furniture
+    name: Furniture
+    desc: 'Physical furniture pieces: sofas, chairs, tables, shelving. Pick when the product
+      is a standalone furniture item sold as-is. Carries material, craftsmanship and weight
+      attributes.'
+    is_default: false
+# System features
+- model: django_pim.feature
+  pk: 1
+  fields:
+    scope: 1
+    idx: name
+    magento_idx: name
+    name_t9n:
+      de: Name
+      en: Name
+      es: Nombre
+      pl: Nazwa
+    is_required: true
+    is_visible: true
+    is_filterable: false
+    is_searchable: true
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 2
+  fields:
+    scope: 1
+    idx: description
+    magento_idx: description
+    desc: Full marketing description of the product, per language. Write 2-4 paragraphs
+      grounded in the product name, category and filled attributes; no invented facts,
+      no prices.
+    name_t9n:
+      de: Beschreibung
+      en: Description
+      es: Descripción
+      pl: Opis
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: true
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 3
+  fields:
+    scope: 1
+    idx: short_description
+    magento_idx: short_description
+    name_t9n:
+      de: Kurzbeschreibung
+      en: Description Short
+      es: Descripción corta
+      pl: Opis skrócony
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 4
+  fields:
+    scope: 1
+    idx: url_key
+    magento_idx: url_key
+    name_t9n:
+      de: URL-Schlüssel
+      en: Url key
+      es: Clave URL
+      pl: Url key
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 5
+  fields:
+    scope: 1
+    idx: badge
+    magento_idx: badge
+    name_t9n:
+      de: Abzeichen
+      en: Badge
+      es: Insignia
+      pl: Cecha specjalna
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 8
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 6
+  fields:
+    scope: 1
+    idx: brand
+    magento_idx: brand
+    name_t9n:
+      de: Marke
+      en: Brand
+      es: Marca
+      pl: Marka
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 7
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 7
+  fields:
+    scope: 1
+    idx: subname
+    magento_idx: subname
+    name_t9n:
+      de: Untertitel 1
+      en: Subname 1
+      es: Subnombre 1
+      pl: Podnazwa 1
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 8
+  fields:
+    scope: 1
+    idx: subname2
+    magento_idx: subname2
+    name_t9n:
+      de: Untertitel 2
+      en: Subname 2
+      es: Subnombre 2
+      pl: Podnazwa 2
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 9
+  fields:
+    scope: 1
+    idx: size_table
+    magento_idx: size_table
+    name_t9n:
+      de: Größentabelle
+      en: Size Table
+      es: Tabla de tallas
+      pl: Rozmiarówka
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 9
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 10
+  fields:
+    scope: 1
+    idx: extension
+    magento_idx: extension
+    name_t9n:
+      de: Erweiterung
+      en: Extension
+      es: Extensión
+      pl: Extension
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 9
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 11
+  fields:
+    scope: 1
+    idx: meta_title
+    magento_idx: meta_title
+    name_t9n:
+      de: Meta-Titel
+      en: Meta title
+      es: Meta título
+      pl: Meta tytuł
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    has_visual_asset: false
+    is_seo: true
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 12
+  fields:
+    scope: 1
+    idx: meta_description
+    magento_idx: meta_description
+    name_t9n:
+      de: Meta-Beschreibung
+      en: Meta description
+      es: Meta descripción
+      pl: Meta opis
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    has_visual_asset: false
+    is_seo: true
+    extra_value: {}
+    feature_type: 6
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 13
+  fields:
+    scope: 1
+    idx: rich_content
+    magento_idx: rich_content
+    name_t9n:
+      de: Rich Content
+      en: Rich Content
+      es: Contenido enriquecido
+      pl: Rich Content
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 9
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+# Business unit features (scope=3; scope=2/GLOBAL is deprecated)
+- model: django_pim.feature
+  pk: 14
+  fields:
+    scope: 3
+    idx: dimensions_depth
+    magento_idx: dimensions_depth
+    name_t9n:
+      en: Depth
+      de: Tiefe
+      es: Profundidad
+      pl: Głębokość
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 15
+  fields:
+    scope: 3
+    idx: dimensions_height
+    magento_idx: dimensions_height
+    name_t9n:
+      en: Height
+      de: Höhe
+      es: Altura
+      pl: Wysokość
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 16
+  fields:
+    scope: 3
+    idx: dimensions_width
+    magento_idx: dimensions_width
+    name_t9n:
+      en: Width
+      de: Breite
+      es: Ancho
+      pl: Szerokość
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 17
+  fields:
+    scope: 3
+    idx: series
+    magento_idx: series
+    desc: Product line / collection the item belongs to. Pick an existing series value from
+      the attribute list; do not invent new series names.
+    name_t9n:
+      en: Series
+      de: Serie
+      es: Serie
+      pl: Seria
+    is_required: false
+    is_visible: true
+    is_filterable: true
+    is_searchable: true
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 7
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 18
+  fields:
+    scope: 3
+    idx: options
+    magento_idx: options
+    desc: Selectable product options (multiselect). Only values from the existing options
+      attribute list are valid; leave empty when the product has no variants.
+    name_t9n:
+      en: Options
+      de: Optionen
+      es: Opciones
+      pl: Opcje
+    is_required: false
+    is_visible: true
+    is_filterable: true
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 8
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 19
+  fields:
+    scope: 3
+    idx: customizable
+    magento_idx: customizable
+    name_t9n:
+      en: Customizable
+      de: Anpassbar
+      es: Personalizable
+      pl: Konfigurowalne
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 1
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+# New global features
+- model: django_pim.feature
+  pk: 20
+  fields:
+    scope: 3
+    idx: weight_kg
+    magento_idx: weight_kg
+    desc: Net product weight in kilograms, decimal (e.g. 45.5). Take from supplier data or
+      specifications; never estimate from the photo.
+    name_t9n:
+      en: Weight (kg)
+      de: Gewicht (kg)
+      es: Peso (kg)
+      pl: Waga (kg)
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 2
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 21
+  fields:
+    scope: 3
+    idx: is_handcrafted
+    magento_idx: is_handcrafted
+    desc: Boolean — true only when the product is documented as handmade in the source
+      description or supplier data.
+    name_t9n:
+      en: Handcrafted
+      de: Handgefertigt
+      es: Hecho a mano
+      pl: Ręcznie wykonane
+    is_required: false
+    is_visible: true
+    is_filterable: true
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 1
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 22
+  fields:
+    scope: 3
+    idx: material_composition
+    magento_idx: material_composition
+    desc: Materials the product is made of, free text (e.g. "Oak frame, linen upholstery").
+      Ground in supplier specifications; list dominant materials first.
+    name_t9n:
+      en: Material Composition
+      de: Materialzusammensetzung
+      es: Composición del material
+      pl: Skład materiałowy
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: true
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 5
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 23
+  fields:
+    scope: 3
+    idx: specifications
+    magento_idx: specifications
+    desc: 'Technical specification as a JSON object (e.g. {"dimensions": "220x95x85",
+      "load_capacity_kg": 500}). Keys are free-form but must come from documented product
+      data.'
+    name_t9n:
+      en: Specifications
+      de: Spezifikationen
+      es: Especificaciones
+      pl: Specyfikacja
+    is_required: false
+    is_visible: false
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 9
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+# Bundle limit features
+- model: django_pim.feature
+  pk: 24
+  fields:
+    scope: 3
+    idx: max_limit_bundle
+    magento_idx: max_limit_bundle
+    name_t9n:
+      en: Max Bundle Limit
+      de: Max Bundle Limit
+      es: Límite máximo del paquete
+      pl: Maksymalny limit bundla
+    is_required: false
+    is_visible: false
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 25
+  fields:
+    scope: 3
+    idx: min_limit_bundle
+    magento_idx: min_limit_bundle
+    name_t9n:
+      en: Min Bundle Limit
+      de: Min Bundle Limit
+      es: Límite mínimo del paquete
+      pl: Minimalny limit bundla
+    is_required: false
+    is_visible: false
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+# Feature set 3 (bundle)
+- model: django_pim.featureset
+  pk: 3
+  fields:
+    idx: bundle
+    name: Bundle
+    desc: Multi-product bundles sold as one SKU (e.g. a table with chairs). Pick only for
+      products composed of other catalogue products; carries bundle min/max limits.
+    is_default: false
+# Feature set 4 (custom)
+- model: django_pim.featureset
+  pk: 4
+  fields:
+    idx: custom
+    name: Custom
+    desc: Made-to-order furniture configured per customer request. Pick when the product is
+      built to the buyer's specification rather than stocked.
+    is_default: false
+# Feature set 5 (premium)
+- model: django_pim.featureset
+  pk: 5
+  fields:
+    idx: premium
+    name: Premium Collection
+    desc: High-end limited furniture from the premium line. Pick only for flagship products
+      marketed as premium; same physical attributes as furniture.
+    is_default: false
+# FeatureInFeatureSet — default (pk=1): only GLOBAL features (system features auto-included by importer)
+- model: django_pim.featureinfeatureset
+  pk: 1
+  fields:
+    feature_set: 1
+    feature: 14
+    position: 10
+- model: django_pim.featureinfeatureset
+  pk: 2
+  fields:
+    feature_set: 1
+    feature: 15
+    position: 20
+- model: django_pim.featureinfeatureset
+  pk: 3
+  fields:
+    feature_set: 1
+    feature: 16
+    position: 30
+- model: django_pim.featureinfeatureset
+  pk: 4
+  fields:
+    feature_set: 1
+    feature: 17
+    position: 40
+- model: django_pim.featureinfeatureset
+  pk: 5
+  fields:
+    feature_set: 1
+    feature: 18
+    position: 50
+- model: django_pim.featureinfeatureset
+  pk: 6
+  fields:
+    feature_set: 1
+    feature: 19
+    position: 60
+- model: django_pim.featureinfeatureset
+  pk: 7
+  fields:
+    feature_set: 1
+    feature: 20
+    position: 70
+- model: django_pim.featureinfeatureset
+  pk: 8
+  fields:
+    feature_set: 1
+    feature: 21
+    position: 80
+- model: django_pim.featureinfeatureset
+  pk: 9
+  fields:
+    feature_set: 1
+    feature: 22
+    position: 90
+- model: django_pim.featureinfeatureset
+  pk: 10
+  fields:
+    feature_set: 1
+    feature: 23
+    position: 100
+- model: django_pim.featureinfeatureset
+  pk: 11
+  fields:
+    feature_set: 1
+    feature: 24
+    position: 110
+- model: django_pim.featureinfeatureset
+  pk: 12
+  fields:
+    feature_set: 1
+    feature: 25
+    position: 120
+# FeatureInFeatureSet — furniture (pk=2): global features only
+- model: django_pim.featureinfeatureset
+  pk: 21
+  fields:
+    feature_set: 2
+    feature: 14
+    position: 10
+- model: django_pim.featureinfeatureset
+  pk: 22
+  fields:
+    feature_set: 2
+    feature: 15
+    position: 20
+- model: django_pim.featureinfeatureset
+  pk: 23
+  fields:
+    feature_set: 2
+    feature: 16
+    position: 30
+- model: django_pim.featureinfeatureset
+  pk: 24
+  fields:
+    feature_set: 2
+    feature: 17
+    position: 40
+- model: django_pim.featureinfeatureset
+  pk: 25
+  fields:
+    feature_set: 2
+    feature: 18
+    position: 50
+- model: django_pim.featureinfeatureset
+  pk: 26
+  fields:
+    feature_set: 2
+    feature: 19
+    position: 60
+- model: django_pim.featureinfeatureset
+  pk: 27
+  fields:
+    feature_set: 2
+    feature: 20
+    position: 70
+- model: django_pim.featureinfeatureset
+  pk: 28
+  fields:
+    feature_set: 2
+    feature: 21
+    position: 80
+- model: django_pim.featureinfeatureset
+  pk: 29
+  fields:
+    feature_set: 2
+    feature: 22
+    position: 90
+- model: django_pim.featureinfeatureset
+  pk: 30
+  fields:
+    feature_set: 2
+    feature: 23
+    position: 100
+# FeatureInFeatureSet — bundle (pk=3): bundle limits + series + options
+- model: django_pim.featureinfeatureset
+  pk: 31
+  fields:
+    feature_set: 3
+    feature: 17
+    position: 10
+- model: django_pim.featureinfeatureset
+  pk: 32
+  fields:
+    feature_set: 3
+    feature: 18
+    position: 20
+- model: django_pim.featureinfeatureset
+  pk: 33
+  fields:
+    feature_set: 3
+    feature: 24
+    position: 30
+- model: django_pim.featureinfeatureset
+  pk: 34
+  fields:
+    feature_set: 3
+    feature: 25
+    position: 40
+# FeatureInFeatureSet — custom (pk=4): same as furniture
+- model: django_pim.featureinfeatureset
+  pk: 35
+  fields:
+    feature_set: 4
+    feature: 17
+    position: 10
+- model: django_pim.featureinfeatureset
+  pk: 36
+  fields:
+    feature_set: 4
+    feature: 18
+    position: 20
+- model: django_pim.featureinfeatureset
+  pk: 37
+  fields:
+    feature_set: 4
+    feature: 20
+    position: 30
+- model: django_pim.featureinfeatureset
+  pk: 38
+  fields:
+    feature_set: 4
+    feature: 21
+    position: 40
+- model: django_pim.featureinfeatureset
+  pk: 39
+  fields:
+    feature_set: 4
+    feature: 22
+    position: 50
+- model: django_pim.featureinfeatureset
+  pk: 40
+  fields:
+    feature_set: 4
+    feature: 23
+    position: 60
+# FeatureInFeatureSet — premium (pk=5)
+- model: django_pim.featureinfeatureset
+  pk: 41
+  fields:
+    feature_set: 5
+    feature: 20
+    position: 10
+- model: django_pim.featureinfeatureset
+  pk: 42
+  fields:
+    feature_set: 5
+    feature: 21
+    position: 20
+- model: django_pim.featureinfeatureset
+  pk: 43
+  fields:
+    feature_set: 5
+    feature: 22
+    position: 30
+- model: django_pim.featureinfeatureset
+  pk: 44
+  fields:
+    feature_set: 5
+    feature: 23
+    position: 40
+- model: django_pim.featureinfeatureset
+  pk: 45
+  fields:
+    feature_set: 5
+    feature: 17
+    position: 50
+- model: django_pim.featureinfeatureset
+  pk: 46
+  fields:
+    feature_set: 5
+    feature: 18
+    position: 60
+# ProductLinkType records
+- model: django_pim.productlinktype
+  pk: 1
+  fields:
+    idx: related
+    name_t9n: {en: Related Products, pl: Powiązane produkty}
+    position: 1
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"
+- model: django_pim.productlinktype
+  pk: 2
+  fields:
+    idx: crosssell
+    name_t9n: {en: Cross-sell, pl: Cross-sell}
+    position: 2
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"
+- model: django_pim.productlinktype
+  pk: 3
+  fields:
+    idx: upsell
+    name_t9n: {en: Upsell, pl: Upsell}
+    position: 3
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"
+- model: django_pim.productlinktype
+  pk: 4
+  fields:
+    idx: navigation
+    name_t9n: {en: Navigation, pl: Nawigacja}
+    position: 4
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"
+# FilesCategory records
+- model: django_pim.filescategory
+  pk: 1
+  fields:
+    code: manual
+    name_t9n: {en: Manual, pl: Instrukcja}
+    db_created: "2025-01-01T00:00:00Z"
+- model: django_pim.filescategory
+  pk: 2
+  fields:
+    code: datasheet
+    name_t9n: {en: Technical Datasheet, pl: Karta techniczna}
+    db_created: "2025-01-01T00:00:00Z"
+- model: django_pim.filescategory
+  pk: 3
+  fields:
+    code: certificate
+    name_t9n: {en: Certificate, pl: Certyfikat}
+    db_created: "2025-01-01T00:00:00Z"
+- model: django_pim.filescategory
+  pk: 4
+  fields:
+    code: warranty
+    name_t9n: {en: Warranty Document, pl: Dokument gwarancyjny}
+    db_created: "2025-01-01T00:00:00Z"
+# SEO system features
+- model: django_pim.feature
+  pk: 26
+  fields:
+    scope: 1
+    idx: canonical_url
+    magento_idx: canonical_url
+    name_t9n:
+      en: Canonical URL
+      de: Canonical URL
+      es: URL canónica
+      pl: Canonical URL
+    is_required: false
+    is_visible: false
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    has_visual_asset: false
+    is_seo: true
+    extra_value: {}
+    feature_type: 4
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+- model: django_pim.feature
+  pk: 27
+  fields:
+    scope: 1
+    idx: og_image
+    magento_idx: og_image
+    name_t9n:
+      en: OG Image
+      de: OG Image
+      es: OG Image
+      pl: OG Image
+    is_required: false
+    is_visible: false
+    is_filterable: false
+    is_searchable: false
+    is_comparable: false
+    is_for_customization: false
+    has_visual_asset: false
+    is_seo: true
+    extra_value: {}
+    feature_type: 3
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
+# Sample category with SEO fields
+- model: django_pim.productcategory
+  pk: 1
+  fields:
+    shop: 2
+    parent_category: null
+    idx: root-category
+    url_key_t9n: {en: root-category, pl: kategoria-glowna}
+    name_t9n: {en: Root Category, pl: Kategoria główna}
+    description_t9n: {en: Root category for testing, pl: Kategoria główna do testów}
+    meta_title_t9n: {en: Root Category - Shop, pl: Kategoria główna - Sklep}
+    meta_description_t9n: {en: Browse our root category, pl: Przeglądaj główną kategorię}
+    canonical_url_t9n: {en: "https://example.com/root-category"}
+    og_image_url: "https://example.com/images/root-og.jpg"
+    noindex: false
+    nofollow: false
+    tree_deep: 0
+    position: 1
+    is_active: true
+    is_in_menu: true
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"
+- model: django_pim.productcategory
+  pk: 2
+  fields:
+    shop: 2
+    parent_category: 1
+    idx: seo-test-category
+    url_key_t9n: {en: seo-test, pl: seo-test}
+    name_t9n: {en: SEO Test Category, pl: Kategoria testowa SEO}
+    description_t9n: {}
+    meta_title_t9n: {en: SEO Test - Buy Online}
+    meta_description_t9n: {en: Shop SEO test products online}
+    canonical_url_t9n: {en: "https://example.com/seo-test"}
+    og_image_url: "https://example.com/images/seo-test-og.jpg"
+    noindex: true
+    nofollow: false
+    tree_deep: 1
+    position: 1
+    is_active: true
+    is_in_menu: false
+    db_created: "2025-01-01T00:00:00Z"
+    db_modified: "2025-01-01T00:00:00Z"

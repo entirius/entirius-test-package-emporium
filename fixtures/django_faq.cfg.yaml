@@ -1,0 +1,244 @@
+# FaqChannel (mirrors PIM channel by idx)
+- model: django_faq.faqchannel
+  pk: 1
+  fields:
+    idx: default-europe
+    name: Default Europe
+    default_language: 2  # en
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqGroup: shipping (assigned to channel)
+- model: django_faq.faqgroup
+  pk: 1
+  fields:
+    idx: shipping
+    name: Shipping & Delivery
+    position: 0
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqGroup: general (global — no channels)
+- model: django_faq.faqgroup
+  pk: 2
+  fields:
+    idx: general
+    name: General
+    position: 1
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# M2M: shipping group → default-europe channel
+- model: django_faq.faqgroup_channels
+  pk: 1
+  fields:
+    faqgroup: 1
+    faqchannel: 1
+
+# FaqGroupT9N: shipping EN
+- model: django_faq.faqgroupt9n
+  pk: 1
+  fields:
+    group: 1
+    language: 2  # en
+    name: Shipping & Delivery
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqGroupT9N: shipping PL
+- model: django_faq.faqgroupt9n
+  pk: 2
+  fields:
+    group: 1
+    language: 1  # pl
+    name: "Wysyłka i dostawa"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqGroupT9N: general EN
+- model: django_faq.faqgroupt9n
+  pk: 3
+  fields:
+    group: 2
+    language: 2  # en
+    name: General
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqGroupT9N: general PL
+- model: django_faq.faqgroupt9n
+  pk: 4
+  fields:
+    group: 2
+    language: 1  # pl
+    name: "Ogólne"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# M2M: FaqChannel languages (en + pl)
+- model: django_faq.faqchannel_languages
+  pk: 1
+  fields:
+    faqchannel: 1
+    language: 2  # en
+
+- model: django_faq.faqchannel_languages
+  pk: 2
+  fields:
+    faqchannel: 1
+    language: 1  # pl
+
+# FaqItem 1: shipping group
+- model: django_faq.faqitem
+  pk: 1
+  fields:
+    group: 1
+    url_key: how-long-does-shipping-take
+    question: "How long does shipping take?"
+    answer: "<p>Standard shipping takes 3-5 business days. Express shipping takes 1-2 business days.</p>"
+    short_answer: "3-5 business days (standard), 1-2 days (express)"
+    position: 0
+    position_in_group: 0
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItem 2: shipping group
+- model: django_faq.faqitem
+  pk: 2
+  fields:
+    group: 1
+    url_key: how-to-track-my-order
+    question: "How can I track my order?"
+    answer: "<p>You will receive a tracking link via email once your order has been shipped.</p>"
+    short_answer: "Check the tracking link in your email"
+    position: 1
+    position_in_group: 1
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItem 3: shipping group
+- model: django_faq.faqitem
+  pk: 3
+  fields:
+    group: 1
+    url_key: how-to-return-an-item
+    question: "How do I return an item?"
+    answer: "<p>You can return items within 30 days of delivery. Contact support to initiate a return.</p>"
+    short_answer: "Return within 30 days via support"
+    position: 2
+    position_in_group: 2
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItem 4: general group
+- model: django_faq.faqitem
+  pk: 4
+  fields:
+    group: 2
+    url_key: what-payment-methods-do-you-accept
+    question: "What payment methods do you accept?"
+    answer: "<p>We accept credit cards (Visa, Mastercard), PayU, and bank transfers.</p>"
+    short_answer: "Cards, PayU, bank transfer"
+    position: 3
+    position_in_group: 0
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItem 5: general group
+- model: django_faq.faqitem
+  pk: 5
+  fields:
+    group: 2
+    url_key: do-you-offer-international-shipping
+    question: "Do you offer international shipping?"
+    answer: "<p>Yes, we ship to most EU countries. Delivery times vary by destination.</p>"
+    short_answer: "Yes, most EU countries"
+    position: 4
+    position_in_group: 1
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItemT9N: item 1 EN
+- model: django_faq.faqitemt9n
+  pk: 1
+  fields:
+    item: 1
+    language: 2  # en
+    question: "How long does shipping take?"
+    answer: "<p>Standard shipping takes 3-5 business days. Express shipping takes 1-2 business days.</p>"
+    short_answer: "3-5 business days (standard), 1-2 days (express)"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItemT9N: item 1 PL
+- model: django_faq.faqitemt9n
+  pk: 2
+  fields:
+    item: 1
+    language: 1  # pl
+    question: "Jak długo trwa wysyłka?"
+    answer: "<p>Standardowa wysyłka trwa 3-5 dni roboczych. Wysyłka ekspresowa trwa 1-2 dni robocze.</p>"
+    short_answer: "3-5 dni roboczych (standard), 1-2 dni (ekspres)"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItemT9N: item 3 EN
+- model: django_faq.faqitemt9n
+  pk: 3
+  fields:
+    item: 3
+    language: 2  # en
+    question: "How do I return an item?"
+    answer: "<p>You can return items within 30 days of delivery. Contact support to initiate a return.</p>"
+    short_answer: "Return within 30 days via support"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqItemT9N: item 3 PL
+- model: django_faq.faqitemt9n
+  pk: 4
+  fields:
+    item: 3
+    language: 1  # pl
+    question: "Jak zwrócić produkt?"
+    answer: "<p>Produkty można zwrócić w ciągu 30 dni od dostawy. Skontaktuj się z obsługą klienta.</p>"
+    short_answer: "Zwrot w ciągu 30 dni przez obsługę"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqAssociation: item 3 (returns) → product CHAIR-001
+- model: django_faq.faqassociation
+  pk: 1
+  fields:
+    faq_item: 3
+    entity_type: product
+    entity_identifier: CHAIR-001
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqAssociation: item 4 (payment) → category furniture
+- model: django_faq.faqassociation
+  pk: 2
+  fields:
+    faq_item: 4
+    entity_type: category
+    entity_identifier: furniture
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# FaqAssociation: item 5 (international) → blog-post
+- model: django_faq.faqassociation
+  pk: 3
+  fields:
+    faq_item: 5
+    entity_type: blog-post
+    entity_identifier: international-shipping-guide
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>ACK-1</sku>
+    <name>Ack Item</name>
+    <price currency="EUR">55.00</price>
+    <stock>18</stock>
+    <ean>5900000000071</ean>
+    <weight_g>1200</weight_g>
+  </product></catalog>

@@ -1,0 +1,8 @@
+sku,category_idx,position
+ENT-S001,sofas,1
+ENT-S002,sofas,2
+ENT-C001,chairs,1
+ENT-C002,chairs,2
+ENT-D001,office,1
+ENT-B001,bedroom,1
+ENT-BND01,sale,1

@@ -1,0 +1,2910 @@
+# === Infrastructure (existing) ===
+- model: django_contentdb.language
+  pk: 1
+  fields:
+    iso3: ENG
+    iso2: EN
+    name_en: English
+    name_pl: Angielski
+- model: django_contentdb.language
+  pk: 2
+  fields:
+    iso3: POL
+    iso2: PL
+    name_en: Polish
+    name_pl: Polski
+
+# === ContentChannels (mirrors PIM channels) ===
+- model: django_contentdb.contentchannel
+  pk: 1
+  fields:
+    idx: test-channel-pl
+    name: Test Channel PL
+    default_language: 1
+    is_default: true
+- model: django_contentdb.contentchannel
+  pk: 2
+  fields:
+    idx: test-channel-multi
+    name: Test Channel Multi
+    default_language: 1
+    is_default: false
+- model: django_contentdb.attributeset
+  pk: 1
+  fields:
+    slug: static-attrs
+    label: static attrs
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+- model: django_contentdb.contenttype
+  pk: 1
+  fields:
+    slug: static-page
+    label: static page
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: false
+    supports_authors: false
+- model: django_contentdb.contenttype
+  pk: 2
+  fields:
+    slug: header
+    label: header
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: true
+    supports_authors: false
+
+# === AccessRights (pk = access_level) ===
+- model: django_contentdb.accessrights
+  pk: 1
+  fields: {}
+
+# === New ContentTypes ===
+- model: django_contentdb.contenttype
+  pk: 3
+  fields:
+    slug: blog-post
+    label: blog post
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: false
+    supports_authors: true
+- model: django_contentdb.contenttype
+  pk: 4
+  fields:
+    slug: product-rich-content
+    label: product rich content
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: false
+    supports_authors: false
+- model: django_contentdb.contenttype
+  pk: 5
+  fields:
+    slug: category-rich-content
+    label: category rich content
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: false
+    supports_authors: false
+- model: django_contentdb.contenttype
+  pk: 6
+  fields:
+    slug: legal-page
+    label: legal page
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: false
+    supports_authors: false
+
+# === Footer ContentType (layout extender) ===
+- model: django_contentdb.contenttype
+  pk: 7
+  fields:
+    slug: footer
+    label: footer
+    attribute_set: 1
+    created_at: 2025-01-01 00:00:00+00:00
+    updated_at: 2025-01-01 00:00:00+00:00
+    is_layout_extender: true
+    supports_authors: false
+
+# === Categories (for blog posts) ===
+- model: django_contentdb.category
+  pk: 1
+  fields:
+    uid: d0000001-0001-4000-8000-000000000001
+    name: News
+    url_key: news
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.category
+  pk: 2
+  fields:
+    uid: d0000001-0002-4000-8000-000000000002
+    name: Guides
+    url_key: guides
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.category
+  pk: 3
+  fields:
+    uid: d0000001-0003-4000-8000-000000000003
+    name: Technology
+    url_key: technology
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.category
+  pk: 4
+  fields:
+    uid: d0000001-0004-4000-8000-000000000004
+    name: Sustainability
+    url_key: sustainability
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+# === Authors ===
+
+- model: django_contentdb.author
+  pk: 1
+  fields:
+    uid: a0000001-0001-4000-8000-000000000001
+    name: Anna Kowalska
+    slug: anna-kowalska
+    role_t9n: {"en": "Editor in Chief", "pl": "Redaktor naczelny"}
+    description_t9n: {"en": "Senior editor with 10 years of e-commerce experience", "pl": "Redaktor z 10-letnim doświadczeniem w e-commerce"}
+    tag_t9n: {"en": "editorial", "pl": "redakcja"}
+    photo: null
+    contact_email: anna@entirius.com
+    contact_phone: "+48 123 456 789"
+    contact_url: https://anna-kowalska.com
+    social_profiles: {"twitter": "https://x.com/annakowalska", "linkedin": "https://linkedin.com/in/annakowalska", "other": {"personal": "https://anna-blog.com"}}
+    is_active: true
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+- model: django_contentdb.author
+  pk: 2
+  fields:
+    uid: a0000001-0002-4000-8000-000000000002
+    name: Jan Nowak
+    slug: jan-nowak
+    role_t9n: {}
+    description_t9n: {}
+    tag_t9n: {}
+    photo: null
+    contact_email: ""
+    contact_phone: ""
+    contact_url: ""
+    social_profiles: {}
+    is_active: true
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+- model: django_contentdb.author
+  pk: 3
+  fields:
+    uid: a0000001-0003-4000-8000-000000000003
+    name: Maria Wisniewska
+    slug: maria-wisniewska
+    role_t9n: {"en": "Technical Writer"}
+    description_t9n: {}
+    tag_t9n: {}
+    photo: null
+    contact_email: maria@entirius.com
+    contact_phone: ""
+    contact_url: ""
+    social_profiles: {}
+    is_active: true
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+- model: django_contentdb.author
+  pk: 4
+  fields:
+    uid: a0000001-0004-4000-8000-000000000004
+    name: Tomasz Kwiatkowski
+    slug: tomasz-kwiatkowski
+    role_t9n: {"en": "Guest Contributor", "pl": "Autor gościnny"}
+    description_t9n: {}
+    tag_t9n: {}
+    photo: null
+    contact_email: ""
+    contact_phone: ""
+    contact_url: ""
+    social_profiles: {}
+    is_active: false
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+- model: django_contentdb.author
+  pk: 5
+  fields:
+    uid: a0000001-0005-4000-8000-000000000005
+    name: Ewa Lewandowska
+    slug: ewa-lewandowska
+    role_t9n: {"en": "Content Strategist", "pl": "Strateg treści"}
+    description_t9n: {"en": "Digital content strategy specialist", "pl": "Specjalistka ds. strategii treści cyfrowej"}
+    tag_t9n: {"en": "strategy", "pl": "strategia"}
+    photo: null
+    contact_email: ewa@entirius.com
+    contact_phone: ""
+    contact_url: ""
+    social_profiles: {"linkedin": "https://linkedin.com/in/ewalewandowska"}
+    is_active: true
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+
+# =========================================================================
+# Content records: 6 pages x 2 (draft body + published snapshot)
+# Each page has: odd pk = draft Content, even pk = published Content
+# =========================================================================
+
+# --- Page 1: Home (static-page) ---
+- model: django_contentdb.content
+  pk: 1
+  fields:
+    uid: c0000001-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb000101-0000-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: left
+          title: "Welcome to Entirius"
+          description: "<p>Your modern e-commerce platform for the digital age.</p>"
+          custom_buttons:
+            - label: "Explore"
+              url: "/about"
+              type: "internal"
+        bb000102-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Featured Products"
+          description: "<p>Discover our curated selection of quality products.</p>"
+          custom_buttons:
+            - label: "Browse"
+              url: "/c/"
+              type: "internal"
+        bb000102-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Latest News"
+          description: "<p>Stay updated with the latest from Entirius.</p>"
+          custom_buttons:
+            - label: "Read more"
+              url: "/welcome-to-entirius"
+              type: "internal"
+      sections:
+        aa000101-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa000102-0000-4000-8000-000000000001:
+          core_type: section-text
+          title: "Discover Entirius"
+          width: content_width
+      tiles_order:
+        aa000101-0000-4000-8000-000000000001:
+          - bb000101-0000-4000-8000-000000000001
+        aa000102-0000-4000-8000-000000000001:
+          - bb000102-0001-4000-8000-000000000001
+          - bb000102-0002-4000-8000-000000000001
+      sections_order:
+        - aa000101-0000-4000-8000-000000000001
+        - aa000102-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Home"
+      description: "Welcome to the Entirius demo store"
+      og_title: "Entirius Demo Store"
+      og_description: "Your modern e-commerce platform"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# Home — published snapshot (same content)
+- model: django_contentdb.content
+  pk: 2
+  fields:
+    uid: c0000001-0002-4000-8000-000000000002
+    content:
+      document_configs: {}
+      tiles:
+        bb000101-0000-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: left
+          title: "Welcome to Entirius"
+          description: "<p>Your modern e-commerce platform for the digital age.</p>"
+          custom_buttons:
+            - label: "Explore"
+              url: "/about"
+              type: "internal"
+        bb000102-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Featured Products"
+          description: "<p>Discover our curated selection of quality products.</p>"
+          custom_buttons:
+            - label: "Browse"
+              url: "/c/"
+              type: "internal"
+        bb000102-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Latest News"
+          description: "<p>Stay updated with the latest from Entirius.</p>"
+          custom_buttons:
+            - label: "Read more"
+              url: "/welcome-to-entirius"
+              type: "internal"
+      sections:
+        aa000101-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa000102-0000-4000-8000-000000000001:
+          core_type: section-text
+          title: "Discover Entirius"
+          width: content_width
+      tiles_order:
+        aa000101-0000-4000-8000-000000000001:
+          - bb000101-0000-4000-8000-000000000001
+        aa000102-0000-4000-8000-000000000001:
+          - bb000102-0001-4000-8000-000000000001
+          - bb000102-0002-4000-8000-000000000001
+      sections_order:
+        - aa000101-0000-4000-8000-000000000001
+        - aa000102-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Home"
+      description: "Welcome to the Entirius demo store"
+      og_title: "Entirius Demo Store"
+      og_description: "Your modern e-commerce platform"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# --- Page 2: About Us (static-page) ---
+- model: django_contentdb.content
+  pk: 3
+  fields:
+    uid: c0000001-0003-4000-8000-000000000003
+    content:
+      document_configs: {}
+      tiles:
+        bb000201-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "About Us"
+          description: "<p>We are a modern e-commerce platform built for scale and flexibility.</p>"
+        bb000202-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Our Mission"
+          description: "<p>To make e-commerce accessible and powerful for every business.</p>"
+      sections:
+        aa000201-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000202-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: content_width
+      tiles_order:
+        aa000201-0000-4000-8000-000000000001:
+          - bb000201-0001-4000-8000-000000000001
+        aa000202-0000-4000-8000-000000000001:
+          - bb000202-0001-4000-8000-000000000001
+      sections_order:
+        - aa000201-0000-4000-8000-000000000001
+        - aa000202-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "About Us"
+      description: "Learn about the Entirius platform"
+      og_title: "About Entirius"
+      og_description: "Modern e-commerce platform built for scale"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# About — published snapshot
+- model: django_contentdb.content
+  pk: 4
+  fields:
+    uid: c0000001-0004-4000-8000-000000000004
+    content:
+      document_configs: {}
+      tiles:
+        bb000201-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "About Us"
+          description: "<p>We are a modern e-commerce platform built for scale and flexibility.</p>"
+        bb000202-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Our Mission"
+          description: "<p>To make e-commerce accessible and powerful for every business.</p>"
+      sections:
+        aa000201-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000202-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: content_width
+      tiles_order:
+        aa000201-0000-4000-8000-000000000001:
+          - bb000201-0001-4000-8000-000000000001
+        aa000202-0000-4000-8000-000000000001:
+          - bb000202-0001-4000-8000-000000000001
+      sections_order:
+        - aa000201-0000-4000-8000-000000000001
+        - aa000202-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "About Us"
+      description: "Learn about the Entirius platform"
+      og_title: "About Entirius"
+      og_description: "Modern e-commerce platform built for scale"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# --- Page 3: Contact (static-page) ---
+- model: django_contentdb.content
+  pk: 5
+  fields:
+    uid: c0000001-0005-4000-8000-000000000005
+    content:
+      document_configs: {}
+      tiles:
+        bb000301-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Contact Us"
+          description: "<p>Get in touch with our team for any questions or support.</p>"
+        bb000302-0001-4000-8000-000000000001:
+          core_type: tile-accordion
+          title: "How can I reach support?"
+          description: "<p>Email us at support@entirius.com or use the contact form.</p>"
+        bb000302-0002-4000-8000-000000000001:
+          core_type: tile-accordion
+          title: "What are your business hours?"
+          description: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
+      sections:
+        aa000301-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000302-0000-4000-8000-000000000001:
+          core_type: section-accordion
+          width: content_width
+      tiles_order:
+        aa000301-0000-4000-8000-000000000001:
+          - bb000301-0001-4000-8000-000000000001
+        aa000302-0000-4000-8000-000000000001:
+          - bb000302-0001-4000-8000-000000000001
+          - bb000302-0002-4000-8000-000000000001
+      sections_order:
+        - aa000301-0000-4000-8000-000000000001
+        - aa000302-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Contact"
+      description: "Contact the Entirius team"
+      og_title: "Contact Entirius"
+      og_description: "Get in touch with our support team"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# Contact — published snapshot
+- model: django_contentdb.content
+  pk: 6
+  fields:
+    uid: c0000001-0006-4000-8000-000000000006
+    content:
+      document_configs: {}
+      tiles:
+        bb000301-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Contact Us"
+          description: "<p>Get in touch with our team for any questions or support.</p>"
+        bb000302-0001-4000-8000-000000000001:
+          core_type: tile-accordion
+          title: "How can I reach support?"
+          description: "<p>Email us at support@entirius.com or use the contact form.</p>"
+        bb000302-0002-4000-8000-000000000001:
+          core_type: tile-accordion
+          title: "What are your business hours?"
+          description: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
+      sections:
+        aa000301-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000302-0000-4000-8000-000000000001:
+          core_type: section-accordion
+          width: content_width
+      tiles_order:
+        aa000301-0000-4000-8000-000000000001:
+          - bb000301-0001-4000-8000-000000000001
+        aa000302-0000-4000-8000-000000000001:
+          - bb000302-0001-4000-8000-000000000001
+          - bb000302-0002-4000-8000-000000000001
+      sections_order:
+        - aa000301-0000-4000-8000-000000000001
+        - aa000302-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Contact"
+      description: "Contact the Entirius team"
+      og_title: "Contact Entirius"
+      og_description: "Get in touch with our support team"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# --- Page 4: Blog — Welcome to Entirius (blog-post) ---
+# Rich-text showcase: h2, h3, bold, italic, underline, ul, ol, blockquote, links
+- model: django_contentdb.content
+  pk: 7
+  fields:
+    uid: c0000001-0007-4000-8000-000000000007
+    content:
+      document_configs: {}
+      tiles:
+        bb000401-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Why We Built Entirius</h2>
+            <p>After years of working with legacy e-commerce platforms, we knew there had to be a <strong>better way</strong>. Monolithic systems are hard to maintain, slow to evolve, and force businesses into rigid workflows. We wanted something <em>modular</em>, something that lets you install only what you need.</p>
+            <blockquote>We are not trying to monetize the platform itself. We have our own stores running on it. We make money selling socks — and other things.</blockquote>
+            <h3>Core Principles</h3>
+            <ul>
+            <li><strong>Modularity:</strong> Each module is an independent Django package with its own models, schemas, services, and API. Install <u>django-pim</u> without knowing <u>django-checkout</u> exists.</li>
+            <li><strong>API-first:</strong> Every feature exposes a clean REST API. The CMS and Storefront are decoupled frontends — swap them, extend them, or build your own.</li>
+            <li><strong>No vendor lock-in:</strong> Open standards, Pydantic schemas, OpenAPI specs. Your data is yours.</li>
+            </ul>
+            <h2>What Makes the Architecture Different</h2>
+            <p>Entirius is a <strong>modular monolith</strong> — not microservices (we do not hate ourselves), not a big ball of mud (we have been there). Here is how a typical request flows:</p>
+            <ol>
+            <li><strong>Storefront</strong> sends a request to the Matrix API</li>
+            <li><strong>Matrix</strong> aggregates data from PIM and regional modules</li>
+            <li><strong>Response</strong> is assembled server-side and returned as a single payload</li>
+            <li><strong>Storefront</strong> renders the page with SSR — crawlers see real content</li>
+            </ol>
+            <p>This approach gives us the <em>deployment simplicity</em> of a monolith with the <em>organisational clarity</em> of microservices. Read more in our <a href="/about">architecture overview</a>.</p>
+        bb000401-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Getting Involved</h2>
+            <p>Whether you are evaluating Entirius for your next project or just curious about the tech stack, here are some ways to get started:</p>
+            <ul>
+            <li>Browse the <a href="/blog/getting-started">Getting Started guide</a> for a step-by-step walkthrough</li>
+            <li>Check the <strong>API documentation</strong> — auto-generated from Pydantic schemas via drf-spectacular</li>
+            <li>Read about our <a href="/blog/ai-in-e-commerce">AI integrations</a> and where we are headed</li>
+            </ul>
+            <blockquote>Yes, we let robots write our code. No, we are not sorry.</blockquote>
+      sections:
+        aa000401-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000401-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000401-0000-4000-8000-000000000001:
+          - bb000401-0001-4000-8000-000000000001
+        aa000401-0001-4000-8000-000000000001:
+          - bb000401-0002-4000-8000-000000000001
+      sections_order:
+        - aa000401-0000-4000-8000-000000000001
+        - aa000401-0001-4000-8000-000000000001
+    extension:
+      title: "Welcome to Entirius"
+      description: "<p>An introduction to the Entirius e-commerce platform.</p>"
+      author: "Anna Kowalska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/welcome-to-entirius"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-welcome/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-welcome-m/400/300"
+              height: 300
+    meta:
+      title: "Welcome to Entirius"
+      description: "An introduction to the Entirius platform"
+      og_title: "Welcome to Entirius"
+      og_description: "Introducing the Entirius e-commerce platform"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: 1
+
+# Welcome blog — published snapshot (mirrors pk=7 content)
+- model: django_contentdb.content
+  pk: 8
+  fields:
+    uid: c0000001-0008-4000-8000-000000000008
+    content:
+      document_configs: {}
+      tiles:
+        bb000401-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Why We Built Entirius</h2>
+            <p>After years of working with legacy e-commerce platforms, we knew there had to be a <strong>better way</strong>. Monolithic systems are hard to maintain, slow to evolve, and force businesses into rigid workflows. We wanted something <em>modular</em>, something that lets you install only what you need.</p>
+            <blockquote>We are not trying to monetize the platform itself. We have our own stores running on it. We make money selling socks — and other things.</blockquote>
+            <h3>Core Principles</h3>
+            <ul>
+            <li><strong>Modularity:</strong> Each module is an independent Django package with its own models, schemas, services, and API. Install <u>django-pim</u> without knowing <u>django-checkout</u> exists.</li>
+            <li><strong>API-first:</strong> Every feature exposes a clean REST API. The CMS and Storefront are decoupled frontends — swap them, extend them, or build your own.</li>
+            <li><strong>No vendor lock-in:</strong> Open standards, Pydantic schemas, OpenAPI specs. Your data is yours.</li>
+            </ul>
+            <h2>What Makes the Architecture Different</h2>
+            <p>Entirius is a <strong>modular monolith</strong> — not microservices (we do not hate ourselves), not a big ball of mud (we have been there). Here is how a typical request flows:</p>
+            <ol>
+            <li><strong>Storefront</strong> sends a request to the Matrix API</li>
+            <li><strong>Matrix</strong> aggregates data from PIM and regional modules</li>
+            <li><strong>Response</strong> is assembled server-side and returned as a single payload</li>
+            <li><strong>Storefront</strong> renders the page with SSR — crawlers see real content</li>
+            </ol>
+            <p>This approach gives us the <em>deployment simplicity</em> of a monolith with the <em>organisational clarity</em> of microservices. Read more in our <a href="/about">architecture overview</a>.</p>
+        bb000401-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Getting Involved</h2>
+            <p>Whether you are evaluating Entirius for your next project or just curious about the tech stack, here are some ways to get started:</p>
+            <ul>
+            <li>Browse the <a href="/blog/getting-started">Getting Started guide</a> for a step-by-step walkthrough</li>
+            <li>Check the <strong>API documentation</strong> — auto-generated from Pydantic schemas via drf-spectacular</li>
+            <li>Read about our <a href="/blog/ai-in-e-commerce">AI integrations</a> and where we are headed</li>
+            </ul>
+            <blockquote>Yes, we let robots write our code. No, we are not sorry.</blockquote>
+      sections:
+        aa000401-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000401-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000401-0000-4000-8000-000000000001:
+          - bb000401-0001-4000-8000-000000000001
+        aa000401-0001-4000-8000-000000000001:
+          - bb000401-0002-4000-8000-000000000001
+      sections_order:
+        - aa000401-0000-4000-8000-000000000001
+        - aa000401-0001-4000-8000-000000000001
+    extension:
+      title: "Welcome to Entirius"
+      description: "<p>An introduction to the Entirius e-commerce platform.</p>"
+      author: "Anna Kowalska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/welcome-to-entirius"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-welcome/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-welcome-m/400/300"
+              height: 300
+    meta:
+      title: "Welcome to Entirius"
+      description: "An introduction to the Entirius platform"
+      og_title: "Welcome to Entirius"
+      og_description: "Introducing the Entirius e-commerce platform"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: 1
+
+# --- Page 5: Blog — Getting Started (blog-post) ---
+# Step-by-step guide: numbered lists, blockquotes as tips, multiple sections, image section
+- model: django_contentdb.content
+  pk: 9
+  fields:
+    uid: c0000001-0009-4000-8000-000000000009
+    content:
+      document_configs: {}
+      tiles:
+        bb000501-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Prerequisites</h2>
+            <p>Before you begin, make sure you have the following installed on your machine:</p>
+            <ul>
+            <li><strong>Docker</strong> and <strong>Docker Compose</strong> — the entire stack runs in containers</li>
+            <li><strong>Git</strong> with SSH key configured for repository access</li>
+            <li><strong>Node.js 18+</strong> — for running the CMS and Storefront frontends locally</li>
+            <li><strong>Python 3.11+</strong> with <strong>UV</strong> package manager (replaces pip)</li>
+            </ul>
+            <blockquote>Tip: On macOS, install Docker Desktop. On Linux, use Docker Engine with the compose plugin. Avoid Snap packages — they cause permission issues with volume mounts.</blockquote>
+        bb000501-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Step-by-Step Setup</h2>
+            <ol>
+            <li><strong>Clone the Docker repo</strong> — this is your orchestration layer. All source repos will be cloned into the <em>repos/</em> subdirectory.</li>
+            <li><strong>Copy the environment file</strong> — <code>cp .env.example .env</code> and fill in your credentials and channel config.</li>
+            <li><strong>Build the backend image</strong> — run <code>make build</code>. This installs the platform packages. Takes 3-5 minutes on first run.</li>
+            <li><strong>Start infrastructure</strong> — <code>make dev</code> brings up PostgreSQL, Redis, RabbitMQ, and the backend with live-mounted source code.</li>
+            <li><strong>Seed the database</strong> — <code>make seed</code> loads fixture data, creates test users, and imports the product catalogue.</li>
+            <li><strong>Start the frontends</strong> — <code>npm run dev</code> in both <em>storefront-blueprint</em> and <em>cms-blueprint</em> directories.</li>
+            </ol>
+            <h3>Verifying the Setup</h3>
+            <p>After completing the steps above, you should be able to access:</p>
+            <ul>
+            <li>Backend API: <strong>localhost:8000/api/docs/</strong> — Swagger UI with all v2 endpoints</li>
+            <li>CMS: <strong>localhost:8080</strong> — log in with the superuser credentials from <code>make seed</code></li>
+            <li>Storefront: <strong>localhost:3000</strong> — the customer-facing store with SSR</li>
+            </ul>
+            <blockquote>If the storefront shows an error page, check that the DEFAULT_CHANEL environment variable matches a channel in your PIM. This is the most common setup issue.</blockquote>
+        bb000501-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Common Issues</h2>
+            <h3>Build fails with SSH error</h3>
+            <p>Make sure your SSH agent is running and has your deploy key loaded. Docker BuildKit needs <code>--ssh default</code> to forward your SSH credentials into the build context.</p>
+            <h3>Database connection refused</h3>
+            <p>The PostgreSQL container may still be starting. Run <code>docker compose ps</code> to check health status. The <em>db</em> service should show <strong>(healthy)</strong> before the backend can connect.</p>
+            <h3>Modules not reflecting local changes</h3>
+            <p>If you edited a Django module but the change is not visible, make sure you are running <code>make dev</code> (not <code>make up</code>). The <em>dev</em> compose file mounts local repos into the container. Without it, you are running code baked into the image at build time.</p>
+      sections:
+        aa000501-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000501-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000501-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000501-0000-4000-8000-000000000001:
+          - bb000501-0001-4000-8000-000000000001
+        aa000501-0001-4000-8000-000000000001:
+          - bb000501-0002-4000-8000-000000000001
+        aa000501-0002-4000-8000-000000000001:
+          - bb000501-0003-4000-8000-000000000001
+      sections_order:
+        - aa000501-0000-4000-8000-000000000001
+        - aa000501-0001-4000-8000-000000000001
+        - aa000501-0002-4000-8000-000000000001
+    extension:
+      title: "Getting Started with Entirius"
+      description: "<p>A step-by-step guide to setting up your first store.</p>"
+      author: "Jan Nowak"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/getting-started"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-started/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-started-m/400/300"
+              height: 300
+    meta:
+      title: "Getting Started"
+      description: "A step-by-step guide to your first Entirius store"
+      og_title: "Getting Started with Entirius"
+      og_description: "Set up your first e-commerce store"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: 2
+
+# Getting Started — published snapshot
+- model: django_contentdb.content
+  pk: 10
+  fields:
+    uid: c0000001-000a-4000-8000-00000000000a
+    content:
+      document_configs: {}
+      tiles:
+        bb000501-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Prerequisites</h2>
+            <p>Before you begin, make sure you have the following installed on your machine:</p>
+            <ul>
+            <li><strong>Docker</strong> and <strong>Docker Compose</strong> — the entire stack runs in containers</li>
+            <li><strong>Git</strong> with SSH key configured for repository access</li>
+            <li><strong>Node.js 18+</strong> — for running the CMS and Storefront frontends locally</li>
+            <li><strong>Python 3.11+</strong> with <strong>UV</strong> package manager (replaces pip)</li>
+            </ul>
+            <blockquote>Tip: On macOS, install Docker Desktop. On Linux, use Docker Engine with the compose plugin. Avoid Snap packages — they cause permission issues with volume mounts.</blockquote>
+        bb000501-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Step-by-Step Setup</h2>
+            <ol>
+            <li><strong>Clone the Docker repo</strong> — this is your orchestration layer. All source repos will be cloned into the <em>repos/</em> subdirectory.</li>
+            <li><strong>Copy the environment file</strong> — <code>cp .env.example .env</code> and fill in your credentials and channel config.</li>
+            <li><strong>Build the backend image</strong> — run <code>make build</code>. This installs the platform packages. Takes 3-5 minutes on first run.</li>
+            <li><strong>Start infrastructure</strong> — <code>make dev</code> brings up PostgreSQL, Redis, RabbitMQ, and the backend with live-mounted source code.</li>
+            <li><strong>Seed the database</strong> — <code>make seed</code> loads fixture data, creates test users, and imports the product catalogue.</li>
+            <li><strong>Start the frontends</strong> — <code>npm run dev</code> in both <em>storefront-blueprint</em> and <em>cms-blueprint</em> directories.</li>
+            </ol>
+            <h3>Verifying the Setup</h3>
+            <p>After completing the steps above, you should be able to access:</p>
+            <ul>
+            <li>Backend API: <strong>localhost:8000/api/docs/</strong> — Swagger UI with all v2 endpoints</li>
+            <li>CMS: <strong>localhost:8080</strong> — log in with the superuser credentials from <code>make seed</code></li>
+            <li>Storefront: <strong>localhost:3000</strong> — the customer-facing store with SSR</li>
+            </ul>
+            <blockquote>If the storefront shows an error page, check that the DEFAULT_CHANEL environment variable matches a channel in your PIM. This is the most common setup issue.</blockquote>
+        bb000501-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Common Issues</h2>
+            <h3>Build fails with SSH error</h3>
+            <p>Make sure your SSH agent is running and has your deploy key loaded. Docker BuildKit needs <code>--ssh default</code> to forward your SSH credentials into the build context.</p>
+            <h3>Database connection refused</h3>
+            <p>The PostgreSQL container may still be starting. Run <code>docker compose ps</code> to check health status. The <em>db</em> service should show <strong>(healthy)</strong> before the backend can connect.</p>
+            <h3>Modules not reflecting local changes</h3>
+            <p>If you edited a Django module but the change is not visible, make sure you are running <code>make dev</code> (not <code>make up</code>). The <em>dev</em> compose file mounts local repos into the container. Without it, you are running code baked into the image at build time.</p>
+      sections:
+        aa000501-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000501-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000501-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000501-0000-4000-8000-000000000001:
+          - bb000501-0001-4000-8000-000000000001
+        aa000501-0001-4000-8000-000000000001:
+          - bb000501-0002-4000-8000-000000000001
+        aa000501-0002-4000-8000-000000000001:
+          - bb000501-0003-4000-8000-000000000001
+      sections_order:
+        - aa000501-0000-4000-8000-000000000001
+        - aa000501-0001-4000-8000-000000000001
+        - aa000501-0002-4000-8000-000000000001
+    extension:
+      title: "Getting Started with Entirius"
+      description: "<p>A step-by-step guide to setting up your first store.</p>"
+      author: "Jan Nowak"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/getting-started"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-started/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-started-m/400/300"
+              height: 300
+    meta:
+      title: "Getting Started"
+      description: "A step-by-step guide to your first Entirius store"
+      og_title: "Getting Started with Entirius"
+      og_description: "Set up your first e-commerce store"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: 2
+
+# --- Page 6: Product Rich Content (product-rich-content, no route) ---
+- model: django_contentdb.content
+  pk: 11
+  fields:
+    uid: c0000001-000b-4000-8000-00000000000b
+    content:
+      document_configs: {}
+      tiles:
+        bb000601-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Product Details"
+          description: "<p>This product features premium quality materials and expert craftsmanship.</p>"
+        bb000602-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Specifications"
+          description: "<p>Material: Premium grade. Weight: 250g. Dimensions: 20x15x10 cm.</p>"
+      sections:
+        aa000601-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000602-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: content_width
+      tiles_order:
+        aa000601-0000-4000-8000-000000000001:
+          - bb000601-0001-4000-8000-000000000001
+        aa000602-0000-4000-8000-000000000001:
+          - bb000602-0001-4000-8000-000000000001
+      sections_order:
+        - aa000601-0000-4000-8000-000000000001
+        - aa000602-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Sample Product"
+      description: "Detailed product information"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# Product — published snapshot
+- model: django_contentdb.content
+  pk: 12
+  fields:
+    uid: c0000001-000c-4000-8000-00000000000c
+    content:
+      document_configs: {}
+      tiles:
+        bb000601-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Product Details"
+          description: "<p>This product features premium quality materials and expert craftsmanship.</p>"
+        bb000602-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Specifications"
+          description: "<p>Material: Premium grade. Weight: 250g. Dimensions: 20x15x10 cm.</p>"
+      sections:
+        aa000601-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+        aa000602-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: content_width
+      tiles_order:
+        aa000601-0000-4000-8000-000000000001:
+          - bb000601-0001-4000-8000-000000000001
+        aa000602-0000-4000-8000-000000000001:
+          - bb000602-0001-4000-8000-000000000001
+      sections_order:
+        - aa000601-0000-4000-8000-000000000001
+        - aa000602-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Sample Product"
+      description: "Detailed product information"
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    category: null
+
+# =========================================================================
+# Drafts — link ContentType -> Content, with access_rights M2M
+# =========================================================================
+- model: django_contentdb.draft
+  pk: 1
+  fields:
+    content_type: 1
+    content: 1
+    name: "Home"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 2
+  fields:
+    content_type: 1
+    content: 3
+    name: "About Us"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 3
+  fields:
+    content_type: 1
+    content: 5
+    name: "Contact"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 4
+  fields:
+    content_type: 3
+    content: 7
+    name: "Welcome to Entirius"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 5
+  fields:
+    content_type: 3
+    content: 9
+    name: "Getting Started"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 6
+  fields:
+    content_type: 4
+    content: 11
+    name: "Sample Product"
+    language: 1
+    created_at: 2025-01-15 12:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+# =========================================================================
+# Published — link Draft -> published Content snapshot
+# =========================================================================
+- model: django_contentdb.published
+  pk: 1
+  fields:
+    draft: 1
+    content: 2
+    created_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.published
+  pk: 2
+  fields:
+    draft: 2
+    content: 4
+    created_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.published
+  pk: 3
+  fields:
+    draft: 3
+    content: 6
+    created_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.published
+  pk: 4
+  fields:
+    draft: 4
+    content: 8
+    created_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.published
+  pk: 5
+  fields:
+    draft: 5
+    content: 10
+    created_at: 2025-01-15 12:00:00+00:00
+- model: django_contentdb.published
+  pk: 6
+  fields:
+    draft: 6
+    content: 12
+    created_at: 2025-01-15 12:00:00+00:00
+
+# =========================================================================
+# Routes — URL slugs with M2M to drafts
+# Product-rich-content (draft 6) has no route — linked by SKU
+# =========================================================================
+- model: django_contentdb.route
+  pk: 1
+  fields:
+    url: home
+    label: Home
+    placement: top
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    drafts:
+      - 1
+- model: django_contentdb.route
+  pk: 2
+  fields:
+    url: about
+    label: About Us
+    placement: top
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    drafts:
+      - 2
+- model: django_contentdb.route
+  pk: 3
+  fields:
+    url: contact
+    label: Contact
+    placement: top
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    drafts:
+      - 3
+- model: django_contentdb.route
+  pk: 4
+  fields:
+    url: welcome-to-entirius
+    label: Welcome to Entirius
+    placement: top
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    drafts:
+      - 4
+- model: django_contentdb.route
+  pk: 5
+  fields:
+    url: getting-started
+    label: Getting Started
+    placement: top
+    created_at: 2025-01-15 12:00:00+00:00
+    updated_at: 2025-01-15 12:00:00+00:00
+    drafts:
+      - 5
+
+# --- Page 7: Blog — AI in E-Commerce (blog-post, authors: Anna + co-authors: Tomasz + Ewa) ---
+- model: django_contentdb.content
+  pk: 13
+  fields:
+    uid: c0000001-000d-4000-8000-00000000000d
+    content:
+      document_configs: {}
+      tiles:
+        bb000701-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Machine Learning in Product Discovery</h2>
+            <p>The way customers find products is evolving. Recommendation engines powered by <strong>machine learning</strong> analyze user behaviour, purchase history, and browsing patterns to surface products each customer is most likely to buy.</p>
+            <p>This goes beyond simple "customers who bought X also bought Y" logic. Modern systems understand <em>intent</em> — recognising seasonal trends, size preferences, colour palettes, and even price sensitivity.</p>
+            <ul>
+            <li><strong>Recommendation Engines:</strong> Personalised product suggestions that increase average order value and customer satisfaction</li>
+            <li><strong>Dynamic Pricing:</strong> AI-driven price optimisation based on demand, competition, and inventory levels</li>
+            <li><strong>Inventory Forecasting:</strong> Predict future demand to avoid stockouts and overstock situations</li>
+            <li><strong>Chatbots:</strong> 24/7 customer support that learns from conversations and improves over time</li>
+            </ul>
+        bb000701-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Real-World Impact</h2>
+            <ol>
+            <li><strong>Implement tracking</strong> — set up event analytics to understand user behaviour across your store</li>
+            <li><strong>Collect data responsibly</strong> — ensure GDPR/CCPA compliance while gathering signals for recommendations</li>
+            <li><strong>Start with rules-based logic</strong> — before investing in ML, test simple rules (category affinity, bestsellers)</li>
+            <li><strong>Evaluate ML solutions</strong> — use APIs from vendors like Amazon Personalize, Algolia, or Klevu</li>
+            <li><strong>Measure ROI</strong> — track conversion lift, average order value, and customer lifetime value before and after deployment</li>
+            </ol>
+            <blockquote>Companies implementing AI-driven recommendations report a 10-30% increase in conversion rates and a 15-25% boost in average order value within the first 6 months.</blockquote>
+        bb000701-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Getting Started with AI</h2>
+            <table>
+            <tr><th>Approach</th><th>Complexity</th><th>ROI Timeline</th></tr>
+            <tr><td>Rule-based (IF/THEN)</td><td>Low</td><td>2-4 weeks</td></tr>
+            <tr><td>ML-powered (vendor API)</td><td>Medium</td><td>2-3 months</td></tr>
+            <tr><td>Deep learning (custom model)</td><td>High</td><td>6-12 months</td></tr>
+            </table>
+            <p>For most e-commerce businesses, <em>starting with vendor APIs is the sweet spot</em> — you get proven algorithms without the infrastructure investment of training your own models. As your data volume and business complexity grow, you can invest in custom solutions.</p>
+      sections:
+        aa000701-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000701-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000701-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000701-0000-4000-8000-000000000001:
+          - bb000701-0001-4000-8000-000000000001
+        aa000701-0001-4000-8000-000000000001:
+          - bb000701-0002-4000-8000-000000000001
+        aa000701-0002-4000-8000-000000000001:
+          - bb000701-0003-4000-8000-000000000001
+      sections_order:
+        - aa000701-0000-4000-8000-000000000001
+        - aa000701-0001-4000-8000-000000000001
+        - aa000701-0002-4000-8000-000000000001
+    extension:
+      title: "AI in E-Commerce"
+      description: "<p>How artificial intelligence is reshaping online retail.</p>"
+      author: "Anna Kowalska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/ai-in-e-commerce"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-ai/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-ai-m/400/300"
+              height: 300
+    meta:
+      title: "AI in E-Commerce"
+      description: "How AI is transforming online retail"
+      og_title: "AI in E-Commerce"
+      og_description: "Artificial intelligence in online stores"
+    created_at: 2025-01-20 10:00:00+00:00
+    updated_at: 2025-01-20 10:00:00+00:00
+    category: 3
+
+# AI in E-Commerce — published snapshot
+- model: django_contentdb.content
+  pk: 14
+  fields:
+    uid: c0000001-000e-4000-8000-00000000000e
+    content:
+      document_configs: {}
+      tiles:
+        bb000701-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Machine Learning in Product Discovery</h2>
+            <p>The way customers find products is evolving. Recommendation engines powered by <strong>machine learning</strong> analyze user behaviour, purchase history, and browsing patterns to surface products each customer is most likely to buy.</p>
+            <p>This goes beyond simple "customers who bought X also bought Y" logic. Modern systems understand <em>intent</em> — recognising seasonal trends, size preferences, colour palettes, and even price sensitivity.</p>
+            <ul>
+            <li><strong>Recommendation Engines:</strong> Personalised product suggestions that increase average order value and customer satisfaction</li>
+            <li><strong>Dynamic Pricing:</strong> AI-driven price optimisation based on demand, competition, and inventory levels</li>
+            <li><strong>Inventory Forecasting:</strong> Predict future demand to avoid stockouts and overstock situations</li>
+            <li><strong>Chatbots:</strong> 24/7 customer support that learns from conversations and improves over time</li>
+            </ul>
+        bb000701-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Real-World Impact</h2>
+            <ol>
+            <li><strong>Implement tracking</strong> — set up event analytics to understand user behaviour across your store</li>
+            <li><strong>Collect data responsibly</strong> — ensure GDPR/CCPA compliance while gathering signals for recommendations</li>
+            <li><strong>Start with rules-based logic</strong> — before investing in ML, test simple rules (category affinity, bestsellers)</li>
+            <li><strong>Evaluate ML solutions</strong> — use APIs from vendors like Amazon Personalize, Algolia, or Klevu</li>
+            <li><strong>Measure ROI</strong> — track conversion lift, average order value, and customer lifetime value before and after deployment</li>
+            </ol>
+            <blockquote>Companies implementing AI-driven recommendations report a 10-30% increase in conversion rates and a 15-25% boost in average order value within the first 6 months.</blockquote>
+        bb000701-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Getting Started with AI</h2>
+            <table>
+            <tr><th>Approach</th><th>Complexity</th><th>ROI Timeline</th></tr>
+            <tr><td>Rule-based (IF/THEN)</td><td>Low</td><td>2-4 weeks</td></tr>
+            <tr><td>ML-powered (vendor API)</td><td>Medium</td><td>2-3 months</td></tr>
+            <tr><td>Deep learning (custom model)</td><td>High</td><td>6-12 months</td></tr>
+            </table>
+            <p>For most e-commerce businesses, <em>starting with vendor APIs is the sweet spot</em> — you get proven algorithms without the infrastructure investment of training your own models. As your data volume and business complexity grow, you can invest in custom solutions.</p>
+      sections:
+        aa000701-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000701-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000701-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000701-0000-4000-8000-000000000001:
+          - bb000701-0001-4000-8000-000000000001
+        aa000701-0001-4000-8000-000000000001:
+          - bb000701-0002-4000-8000-000000000001
+        aa000701-0002-4000-8000-000000000001:
+          - bb000701-0003-4000-8000-000000000001
+      sections_order:
+        - aa000701-0000-4000-8000-000000000001
+        - aa000701-0001-4000-8000-000000000001
+        - aa000701-0002-4000-8000-000000000001
+    extension:
+      title: "AI in E-Commerce"
+      description: "<p>How artificial intelligence is reshaping online retail.</p>"
+      author: "Anna Kowalska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/ai-in-e-commerce"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-ai/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-ai-m/400/300"
+              height: 300
+    meta:
+      title: "AI in E-Commerce"
+      description: "How AI is transforming online retail"
+      og_title: "AI in E-Commerce"
+      og_description: "Artificial intelligence in online stores"
+    created_at: 2025-01-20 10:00:00+00:00
+    updated_at: 2025-01-20 10:00:00+00:00
+    category: 3
+
+# --- Page 8: Blog — Sustainable Shopping (blog-post, no authors — backwards compat test) ---
+- model: django_contentdb.content
+  pk: 15
+  fields:
+    uid: c0000001-000f-4000-8000-00000000000f
+    content:
+      document_configs: {}
+      tiles:
+        bb000801-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>The Green Economy Shift</h2>
+            <p>Consumers are voting with their wallets. <strong>73% of global consumers</strong> are willing to change their consumption habits to reduce environmental impact. For e-commerce businesses, this means the era of "greenwashing" is over — customers expect <em>real action</em>, not just marketing claims.</p>
+            <p>The shift is not just ethical — it is also economic. Studies show that eco-conscious brands enjoy higher customer loyalty, premium pricing power, and positive media coverage. Building sustainability into your supply chain is no longer a nice-to-have; it is a competitive advantage.</p>
+            <ul>
+            <li><strong>Sustainable Packaging:</strong> Biodegradable mailers, recycled cardboard, and plastic-free inserts reduce waste and shipping weight</li>
+            <li><strong>Carbon-Neutral Shipping:</strong> Offset programs or partnerships with green logistics providers appeal to environmentally aware customers</li>
+            <li><strong>Circular Economy:</strong> Offer take-back programs, repair services, or resale platforms to extend product lifecycles</li>
+            <li><strong>Transparent Supply Chains:</strong> Document sourcing, manufacturing practices, and ethical labour standards</li>
+            </ul>
+        bb000801-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Practical Steps for Your Store</h2>
+            <ol>
+            <li><strong>Audit your supply chain</strong> — identify the highest-impact areas (packaging, shipping, production)</li>
+            <li><strong>Switch to eco-friendly packaging</strong> — work with suppliers offering compostable or recyclable alternatives</li>
+            <li><strong>Partner with green logistics</strong> — choose carriers that offer carbon offset or zero-emission delivery options</li>
+            <li><strong>Highlight sustainability in product pages</strong> — use badges, certifications, and transparent sourcing information</li>
+            <li><strong>Communicate your progress</strong> — publish annual sustainability reports and celebrate milestones with customers</li>
+            </ol>
+            <blockquote>The most successful sustainable brands do not just talk about impact — they measure it, report it, and continuously improve. Trust is built through transparency, not promises.</blockquote>
+      sections:
+        aa000801-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000801-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000801-0000-4000-8000-000000000001:
+          - bb000801-0001-4000-8000-000000000001
+        aa000801-0001-4000-8000-000000000001:
+          - bb000801-0002-4000-8000-000000000001
+      sections_order:
+        - aa000801-0000-4000-8000-000000000001
+        - aa000801-0001-4000-8000-000000000001
+    extension:
+      title: "Sustainable Shopping"
+      description: "<p>Adapting your store for the green economy.</p>"
+      author: "Ewa Lewandowska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/sustainable-shopping"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-sustain/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-sustain-m/400/300"
+              height: 300
+    meta:
+      title: "Sustainable Shopping"
+      description: "Eco-friendly e-commerce practices"
+      og_title: "Sustainable Shopping"
+      og_description: "Green economy for online stores"
+    created_at: 2025-01-22 10:00:00+00:00
+    updated_at: 2025-01-22 10:00:00+00:00
+    category: 4
+
+# Sustainable Shopping — published snapshot
+- model: django_contentdb.content
+  pk: 16
+  fields:
+    uid: c0000001-0010-4000-8000-000000000010
+    content:
+      document_configs: {}
+      tiles:
+        bb000801-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>The Green Economy Shift</h2>
+            <p>Consumers are voting with their wallets. <strong>73% of global consumers</strong> are willing to change their consumption habits to reduce environmental impact. For e-commerce businesses, this means the era of "greenwashing" is over — customers expect <em>real action</em>, not just marketing claims.</p>
+            <p>The shift is not just ethical — it is also economic. Studies show that eco-conscious brands enjoy higher customer loyalty, premium pricing power, and positive media coverage. Building sustainability into your supply chain is no longer a nice-to-have; it is a competitive advantage.</p>
+            <ul>
+            <li><strong>Sustainable Packaging:</strong> Biodegradable mailers, recycled cardboard, and plastic-free inserts reduce waste and shipping weight</li>
+            <li><strong>Carbon-Neutral Shipping:</strong> Offset programs or partnerships with green logistics providers appeal to environmentally aware customers</li>
+            <li><strong>Circular Economy:</strong> Offer take-back programs, repair services, or resale platforms to extend product lifecycles</li>
+            <li><strong>Transparent Supply Chains:</strong> Document sourcing, manufacturing practices, and ethical labour standards</li>
+            </ul>
+        bb000801-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Practical Steps for Your Store</h2>
+            <ol>
+            <li><strong>Audit your supply chain</strong> — identify the highest-impact areas (packaging, shipping, production)</li>
+            <li><strong>Switch to eco-friendly packaging</strong> — work with suppliers offering compostable or recyclable alternatives</li>
+            <li><strong>Partner with green logistics</strong> — choose carriers that offer carbon offset or zero-emission delivery options</li>
+            <li><strong>Highlight sustainability in product pages</strong> — use badges, certifications, and transparent sourcing information</li>
+            <li><strong>Communicate your progress</strong> — publish annual sustainability reports and celebrate milestones with customers</li>
+            </ol>
+            <blockquote>The most successful sustainable brands do not just talk about impact — they measure it, report it, and continuously improve. Trust is built through transparency, not promises.</blockquote>
+      sections:
+        aa000801-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa000801-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa000801-0000-4000-8000-000000000001:
+          - bb000801-0001-4000-8000-000000000001
+        aa000801-0001-4000-8000-000000000001:
+          - bb000801-0002-4000-8000-000000000001
+      sections_order:
+        - aa000801-0000-4000-8000-000000000001
+        - aa000801-0001-4000-8000-000000000001
+    extension:
+      title: "Sustainable Shopping"
+      description: "<p>Adapting your store for the green economy.</p>"
+      author: "Ewa Lewandowska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/sustainable-shopping"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-sustain/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-sustain-m/400/300"
+              height: 300
+    meta:
+      title: "Sustainable Shopping"
+      description: "Eco-friendly e-commerce practices"
+      og_title: "Sustainable Shopping"
+      og_description: "Green economy for online stores"
+    created_at: 2025-01-22 10:00:00+00:00
+    updated_at: 2025-01-22 10:00:00+00:00
+    category: 4
+
+# =========================================================================
+# Additional Drafts (pk=7..8)
+# =========================================================================
+- model: django_contentdb.draft
+  pk: 7
+  fields:
+    content_type: 3
+    content: 13
+    name: "AI in E-Commerce"
+    language: 1
+    created_at: 2025-01-20 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+- model: django_contentdb.draft
+  pk: 8
+  fields:
+    content_type: 3
+    content: 15
+    name: "Sustainable Shopping"
+    language: 1
+    created_at: 2025-01-22 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+# =========================================================================
+# Additional Published (pk=7..8)
+# =========================================================================
+- model: django_contentdb.published
+  pk: 7
+  fields:
+    draft: 7
+    content: 14
+    created_at: 2025-01-20 10:00:00+00:00
+- model: django_contentdb.published
+  pk: 8
+  fields:
+    draft: 8
+    content: 16
+    created_at: 2025-01-22 10:00:00+00:00
+
+# =========================================================================
+# Additional Routes (pk=6..7)
+# =========================================================================
+- model: django_contentdb.route
+  pk: 6
+  fields:
+    url: ai-in-e-commerce
+    label: AI in E-Commerce
+    placement: top
+    created_at: 2025-01-20 10:00:00+00:00
+    updated_at: 2025-01-20 10:00:00+00:00
+    drafts:
+      - 7
+- model: django_contentdb.route
+  pk: 7
+  fields:
+    url: sustainable-shopping
+    label: Sustainable Shopping
+    placement: top
+    created_at: 2025-01-22 10:00:00+00:00
+    updated_at: 2025-01-22 10:00:00+00:00
+    drafts:
+      - 8
+
+# === Draft Authors ===
+
+- model: django_contentdb.draftauthor
+  pk: 1
+  fields:
+    draft: 4
+    author: 1
+    position: 0
+
+- model: django_contentdb.draftauthor
+  pk: 2
+  fields:
+    draft: 5
+    author: 2
+    position: 0
+
+- model: django_contentdb.draftauthor
+  pk: 3
+  fields:
+    draft: 7
+    author: 1
+    position: 0
+
+# === Draft Co-Authors ===
+
+- model: django_contentdb.draftcoauthor
+  pk: 1
+  fields:
+    draft: 4
+    author: 3
+    position: 0
+
+- model: django_contentdb.draftcoauthor
+  pk: 2
+  fields:
+    draft: 7
+    author: 4
+    position: 0
+
+- model: django_contentdb.draftcoauthor
+  pk: 3
+  fields:
+    draft: 7
+    author: 5
+    position: 1
+
+# =========================================================================
+# ContentChannels — mirrors of PIM channels (normally created by sync_contentdb_channels)
+# Seeded here so fixture-loaded drafts can reference them via M2M.
+# sync_contentdb_channels uses update_or_create(idx=...) so these won't duplicate.
+# =========================================================================
+
+- model: django_contentdb.contentchannel
+  pk: 1
+  fields:
+    idx: default-local
+    name: Default Local
+    default_language: 1
+    is_default: true
+
+- model: django_contentdb.contentchannel
+  pk: 2
+  fields:
+    idx: default-europe
+    name: Default Europe
+    default_language: 1
+    is_default: false
+
+# =========================================================================
+# Navigation — Megamenu (header layout extender)
+# Content pk=17 (draft body), pk=18 (published snapshot), pk=19 (footer draft)
+# Draft pk=9 (megamenu, is_system=true), pk=10 (footer, is_system=true)
+# Published pk=9 (megamenu only — footer not published)
+# Route pk=8 (layout-extender-header)
+# =========================================================================
+
+# --- Megamenu draft content ---
+- model: django_contentdb.content
+  pk: 17
+  fields:
+    uid: c0000017-0001-4000-8000-000000000001
+    content:
+      items:
+        - id: "nav-item-0001-0000-4000-8000-000000000001"
+          label: "FURNITURE"
+          display_as: "megamenu"
+          link_type: "category"
+          link_value: "furniture"
+          icon: ""
+          color: ""
+          sort_order: 0
+          columns:
+            - id: "nav-col-0001-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Shop by Category"
+              sort_order: 0
+              links:
+                - id: "nav-link-0001-0001-4000-8000-000000000001"
+                  label: "Best sellers"
+                  link_type: "category"
+                  link_value: "best-sellers"
+                  sort_order: 0
+                - id: "nav-link-0001-0001-4000-8000-000000000002"
+                  label: "Sofas"
+                  link_type: "category"
+                  link_value: "sofas"
+                  sort_order: 1
+                - id: "nav-link-0001-0001-4000-8000-000000000003"
+                  label: "Loveseats"
+                  link_type: "category"
+                  link_value: "loveseats"
+                  sort_order: 2
+                - id: "nav-link-0001-0001-4000-8000-000000000004"
+                  label: "Sectionals"
+                  link_type: "category"
+                  link_value: "sectionals"
+                  sort_order: 3
+                - id: "nav-link-0001-0001-4000-8000-000000000005"
+                  label: "Sleepers"
+                  link_type: "category"
+                  link_value: "sleepers"
+                  sort_order: 4
+                - id: "nav-link-0001-0001-4000-8000-000000000006"
+                  label: "Chairs"
+                  link_type: "category"
+                  link_value: "chairs"
+                  sort_order: 5
+                - id: "nav-link-0001-0001-4000-8000-000000000007"
+                  label: "Ottomans"
+                  link_type: "category"
+                  link_value: "ottomans"
+                  sort_order: 6
+                - id: "nav-link-0001-0001-4000-8000-000000000008"
+                  label: "Tables"
+                  link_type: "category"
+                  link_value: "tables"
+                  sort_order: 7
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0001-0002-4000-8000-000000000001"
+              type: "links"
+              heading: "Collections"
+              sort_order: 1
+              links:
+                - id: "nav-link-0001-0002-4000-8000-000000000001"
+                  label: "Del Mar"
+                  link_type: "category"
+                  link_value: "del-mar"
+                  sort_order: 0
+                - id: "nav-link-0001-0002-4000-8000-000000000002"
+                  label: "Ez motion"
+                  link_type: "category"
+                  link_value: "ez-motion"
+                  sort_order: 1
+                - id: "nav-link-0001-0002-4000-8000-000000000003"
+                  label: "Leather"
+                  link_type: "category"
+                  link_value: "leather"
+                  sort_order: 2
+                - id: "nav-link-0001-0002-4000-8000-000000000004"
+                  label: "Simplicity"
+                  link_type: "category"
+                  link_value: "simplicity"
+                  sort_order: 3
+                - id: "nav-link-0001-0002-4000-8000-000000000005"
+                  label: "Soho living"
+                  link_type: "category"
+                  link_value: "soho-living"
+                  sort_order: 4
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0001-0003-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 2
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-delmar.jpg"
+              caption: "Explore our new Del Mar collection"
+              button_label: "Shop Now"
+              button_link_type: "category"
+              button_link_value: "del-mar"
+              alt_text: "Del Mar collection furniture"
+        - id: "nav-item-0002-0000-4000-8000-000000000001"
+          label: "OUR STORY"
+          display_as: "megamenu"
+          link_type: "page"
+          link_value: "about"
+          icon: ""
+          color: ""
+          sort_order: 1
+          columns:
+            - id: "nav-col-0002-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Our Story"
+              sort_order: 0
+              links:
+                - id: "nav-link-0002-0001-4000-8000-000000000001"
+                  label: "Our company"
+                  link_type: "page"
+                  link_value: "about"
+                  sort_order: 0
+                - id: "nav-link-0002-0001-4000-8000-000000000002"
+                  label: "Register product"
+                  link_type: "url"
+                  link_value: "/register-product"
+                  sort_order: 1
+                - id: "nav-link-0002-0001-4000-8000-000000000003"
+                  label: "Warranty"
+                  link_type: "url"
+                  link_value: "/warranty"
+                  sort_order: 2
+                - id: "nav-link-0002-0001-4000-8000-000000000004"
+                  label: "Privacy policy"
+                  link_type: "url"
+                  link_value: "/privacy-policy"
+                  sort_order: 3
+                - id: "nav-link-0002-0001-4000-8000-000000000005"
+                  label: "Employment"
+                  link_type: "url"
+                  link_value: "/employment"
+                  sort_order: 4
+                - id: "nav-link-0002-0001-4000-8000-000000000006"
+                  label: "Contact us"
+                  link_type: "page"
+                  link_value: "contact"
+                  sort_order: 5
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0002-0002-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 1
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-story.jpg"
+              caption: "Learn about our story"
+              button_label: "Read More"
+              button_link_type: "page"
+              button_link_value: "about"
+              alt_text: "American flag"
+            - id: "nav-col-0002-0003-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 2
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-process.jpg"
+              caption: "Find out how we work"
+              button_label: "Our Process"
+              button_link_type: "url"
+              button_link_value: "/our-process"
+              alt_text: "Craftsman at work"
+        - id: "nav-item-0003-0000-4000-8000-000000000001"
+          label: "FIND A STORE"
+          display_as: "link"
+          link_type: "url"
+          link_value: "/find-a-store"
+          icon: ""
+          color: ""
+          sort_order: 2
+          columns: []
+        - id: "nav-item-0004-0000-4000-8000-000000000001"
+          label: "BLOG"
+          display_as: "link"
+          link_type: "page"
+          link_value: "blog"
+          icon: ""
+          color: ""
+          sort_order: 3
+          columns: []
+    extension: null
+    meta: null
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    category: null
+
+# --- Megamenu published content (snapshot) ---
+- model: django_contentdb.content
+  pk: 18
+  fields:
+    uid: c0000018-0001-4000-8000-000000000001
+    content:
+      items:
+        - id: "nav-item-0001-0000-4000-8000-000000000001"
+          label: "FURNITURE"
+          display_as: "megamenu"
+          link_type: "category"
+          link_value: "furniture"
+          icon: ""
+          color: ""
+          sort_order: 0
+          columns:
+            - id: "nav-col-0001-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Shop by Category"
+              sort_order: 0
+              links:
+                - id: "nav-link-0001-0001-4000-8000-000000000001"
+                  label: "Best sellers"
+                  link_type: "category"
+                  link_value: "best-sellers"
+                  sort_order: 0
+                - id: "nav-link-0001-0001-4000-8000-000000000002"
+                  label: "Sofas"
+                  link_type: "category"
+                  link_value: "sofas"
+                  sort_order: 1
+                - id: "nav-link-0001-0001-4000-8000-000000000003"
+                  label: "Loveseats"
+                  link_type: "category"
+                  link_value: "loveseats"
+                  sort_order: 2
+                - id: "nav-link-0001-0001-4000-8000-000000000004"
+                  label: "Sectionals"
+                  link_type: "category"
+                  link_value: "sectionals"
+                  sort_order: 3
+                - id: "nav-link-0001-0001-4000-8000-000000000005"
+                  label: "Sleepers"
+                  link_type: "category"
+                  link_value: "sleepers"
+                  sort_order: 4
+                - id: "nav-link-0001-0001-4000-8000-000000000006"
+                  label: "Chairs"
+                  link_type: "category"
+                  link_value: "chairs"
+                  sort_order: 5
+                - id: "nav-link-0001-0001-4000-8000-000000000007"
+                  label: "Ottomans"
+                  link_type: "category"
+                  link_value: "ottomans"
+                  sort_order: 6
+                - id: "nav-link-0001-0001-4000-8000-000000000008"
+                  label: "Tables"
+                  link_type: "category"
+                  link_value: "tables"
+                  sort_order: 7
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0001-0002-4000-8000-000000000001"
+              type: "links"
+              heading: "Collections"
+              sort_order: 1
+              links:
+                - id: "nav-link-0001-0002-4000-8000-000000000001"
+                  label: "Del Mar"
+                  link_type: "category"
+                  link_value: "del-mar"
+                  sort_order: 0
+                - id: "nav-link-0001-0002-4000-8000-000000000002"
+                  label: "Ez motion"
+                  link_type: "category"
+                  link_value: "ez-motion"
+                  sort_order: 1
+                - id: "nav-link-0001-0002-4000-8000-000000000003"
+                  label: "Leather"
+                  link_type: "category"
+                  link_value: "leather"
+                  sort_order: 2
+                - id: "nav-link-0001-0002-4000-8000-000000000004"
+                  label: "Simplicity"
+                  link_type: "category"
+                  link_value: "simplicity"
+                  sort_order: 3
+                - id: "nav-link-0001-0002-4000-8000-000000000005"
+                  label: "Soho living"
+                  link_type: "category"
+                  link_value: "soho-living"
+                  sort_order: 4
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0001-0003-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 2
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-delmar.jpg"
+              caption: "Explore our new Del Mar collection"
+              button_label: "Shop Now"
+              button_link_type: "category"
+              button_link_value: "del-mar"
+              alt_text: "Del Mar collection furniture"
+        - id: "nav-item-0002-0000-4000-8000-000000000001"
+          label: "OUR STORY"
+          display_as: "megamenu"
+          link_type: "page"
+          link_value: "about"
+          icon: ""
+          color: ""
+          sort_order: 1
+          columns:
+            - id: "nav-col-0002-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Our Story"
+              sort_order: 0
+              links:
+                - id: "nav-link-0002-0001-4000-8000-000000000001"
+                  label: "Our company"
+                  link_type: "page"
+                  link_value: "about"
+                  sort_order: 0
+                - id: "nav-link-0002-0001-4000-8000-000000000002"
+                  label: "Register product"
+                  link_type: "url"
+                  link_value: "/register-product"
+                  sort_order: 1
+                - id: "nav-link-0002-0001-4000-8000-000000000003"
+                  label: "Warranty"
+                  link_type: "url"
+                  link_value: "/warranty"
+                  sort_order: 2
+                - id: "nav-link-0002-0001-4000-8000-000000000004"
+                  label: "Privacy policy"
+                  link_type: "url"
+                  link_value: "/privacy-policy"
+                  sort_order: 3
+                - id: "nav-link-0002-0001-4000-8000-000000000005"
+                  label: "Employment"
+                  link_type: "url"
+                  link_value: "/employment"
+                  sort_order: 4
+                - id: "nav-link-0002-0001-4000-8000-000000000006"
+                  label: "Contact us"
+                  link_type: "page"
+                  link_value: "contact"
+                  sort_order: 5
+              media_type: "image"
+              media_url: ""
+              caption: ""
+              button_label: ""
+              button_link_type: "url"
+              button_link_value: ""
+              alt_text: ""
+            - id: "nav-col-0002-0002-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 1
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-story.jpg"
+              caption: "Learn about our story"
+              button_label: "Read More"
+              button_link_type: "page"
+              button_link_value: "about"
+              alt_text: "American flag"
+            - id: "nav-col-0002-0003-4000-8000-000000000001"
+              type: "banner"
+              heading: ""
+              sort_order: 2
+              links: []
+              media_type: "image"
+              media_url: "/media/images/nav-banner-process.jpg"
+              caption: "Find out how we work"
+              button_label: "Our Process"
+              button_link_type: "url"
+              button_link_value: "/our-process"
+              alt_text: "Craftsman at work"
+        - id: "nav-item-0003-0000-4000-8000-000000000001"
+          label: "FIND A STORE"
+          display_as: "link"
+          link_type: "url"
+          link_value: "/find-a-store"
+          icon: ""
+          color: ""
+          sort_order: 2
+          columns: []
+        - id: "nav-item-0004-0000-4000-8000-000000000001"
+          label: "BLOG"
+          display_as: "link"
+          link_type: "page"
+          link_value: "blog"
+          icon: ""
+          color: ""
+          sort_order: 3
+          columns: []
+    extension: null
+    meta: null
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    category: null
+
+# --- Footer draft content (empty navigation, not published) ---
+- model: django_contentdb.content
+  pk: 19
+  fields:
+    uid: c0000019-0001-4000-8000-000000000001
+    content:
+      items: []
+    extension: null
+    meta: null
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    category: null
+
+# --- Megamenu Draft (is_system=true) ---
+- model: django_contentdb.draft
+  pk: 9
+  fields:
+    content_type: 2
+    content: 17
+    name: "Main Navigation"
+    language: 1
+    is_system: true
+    created_at: 2026-03-15 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+# --- Footer Draft (is_system=true, not published) ---
+- model: django_contentdb.draft
+  pk: 10
+  fields:
+    content_type: 7
+    content: 19
+    name: "Footer"
+    language: 1
+    is_system: true
+    created_at: 2026-03-15 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+# --- Megamenu Published ---
+- model: django_contentdb.published
+  pk: 9
+  fields:
+    draft: 9
+    content: 18
+    created_at: 2026-03-15 10:00:00+00:00
+
+# --- Megamenu Route ---
+- model: django_contentdb.route
+  pk: 8
+  fields:
+    url: layout-extender-header
+    label: Main Navigation
+    placement: top
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    drafts:
+      - 9
+
+# =========================================================================
+# Page 9: Product Showcase (static-page with product_sku tile props)
+# Demonstrates SKU picker in Builder — tiles reference real PIM SKUs.
+# Content pk=20 (draft), pk=21 (published snapshot)
+# Draft pk=11, Published pk=10, Route pk=9
+# =========================================================================
+
+# --- Product Showcase draft content ---
+- model: django_contentdb.content
+  pk: 20
+  fields:
+    uid: c0000020-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb000901-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 1
+          tile_align: center
+          title: "Orion Command Sofa"
+          description: "<p>The flagship of the Orion Collection. Ceramic-composite framing with pressure-tested comfort cushioning, certified for artificial gravity.</p>"
+          product_sku: "ENT-S001"
+          custom_buttons:
+            - label: "View Product"
+              url: "/p/orion-command-sofa"
+              type: "internal"
+        bb000902-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 2
+          tile_align: left
+          title: "Umbra Sectional"
+          description: "<p>A modular sectional built for the long haul. Each segment interlocks with titanium-frame joints — reconfigure it to fit any cabin.</p>"
+          product_sku: "ENT-S003"
+          custom_buttons:
+            - label: "Configure"
+              url: "/p/umbra-sectional"
+              type: "internal"
+        bb000903-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: right
+          title: "Flight Deck Command Chair"
+          description: "<p>Built for long flight-deck shifts, with lumbar support calibrated for extended station watches.</p>"
+          product_sku: "ENT-C001"
+          custom_buttons:
+            - label: "Shop Now"
+              url: "/p/flight-deck-command-chair"
+              type: "internal"
+      sections:
+        aa000901-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa000902-0000-4000-8000-000000000001:
+          core_type: section-text
+          title: "More Picks"
+          width: content_width
+      tiles_order:
+        aa000901-0000-4000-8000-000000000001:
+          - bb000901-0001-4000-8000-000000000001
+        aa000902-0000-4000-8000-000000000001:
+          - bb000902-0001-4000-8000-000000000001
+          - bb000903-0001-4000-8000-000000000001
+      sections_order:
+        - aa000901-0000-4000-8000-000000000001
+        - aa000902-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Product Showcase"
+      description: "Curated product highlights with SKU-linked hero tiles"
+      og_title: "Product Showcase"
+      og_description: "Featured products from the Entirius catalog"
+    created_at: 2026-03-21 10:00:00+00:00
+    updated_at: 2026-03-21 10:00:00+00:00
+    category: null
+
+# Product Showcase — published snapshot
+- model: django_contentdb.content
+  pk: 21
+  fields:
+    uid: c0000021-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb000901-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 1
+          tile_align: center
+          title: "Orion Command Sofa"
+          description: "<p>The flagship of the Orion Collection. Ceramic-composite framing with pressure-tested comfort cushioning, certified for artificial gravity.</p>"
+          product_sku: "ENT-S001"
+          custom_buttons:
+            - label: "View Product"
+              url: "/p/orion-command-sofa"
+              type: "internal"
+        bb000902-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 2
+          tile_align: left
+          title: "Umbra Sectional"
+          description: "<p>A modular sectional built for the long haul. Each segment interlocks with titanium-frame joints — reconfigure it to fit any cabin.</p>"
+          product_sku: "ENT-S003"
+          custom_buttons:
+            - label: "Configure"
+              url: "/p/umbra-sectional"
+              type: "internal"
+        bb000903-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: right
+          title: "Flight Deck Command Chair"
+          description: "<p>Built for long flight-deck shifts, with lumbar support calibrated for extended station watches.</p>"
+          product_sku: "ENT-C001"
+          custom_buttons:
+            - label: "Shop Now"
+              url: "/p/flight-deck-command-chair"
+              type: "internal"
+      sections:
+        aa000901-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa000902-0000-4000-8000-000000000001:
+          core_type: section-text
+          title: "More Picks"
+          width: content_width
+      tiles_order:
+        aa000901-0000-4000-8000-000000000001:
+          - bb000901-0001-4000-8000-000000000001
+        aa000902-0000-4000-8000-000000000001:
+          - bb000902-0001-4000-8000-000000000001
+          - bb000903-0001-4000-8000-000000000001
+      sections_order:
+        - aa000901-0000-4000-8000-000000000001
+        - aa000902-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Product Showcase"
+      description: "Curated product highlights with SKU-linked hero tiles"
+      og_title: "Product Showcase"
+      og_description: "Featured products from the Entirius catalog"
+    created_at: 2026-03-21 10:00:00+00:00
+    updated_at: 2026-03-21 10:00:00+00:00
+    category: null
+
+# --- Product Showcase Draft ---
+- model: django_contentdb.draft
+  pk: 11
+  fields:
+    content_type: 1
+    content: 20
+    name: "Product Showcase"
+    language: 1
+    created_at: 2026-03-21 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+# --- Product Showcase Published ---
+- model: django_contentdb.published
+  pk: 10
+  fields:
+    draft: 11
+    content: 21
+    created_at: 2026-03-21 10:00:00+00:00
+
+# --- Product Showcase Route ---
+- model: django_contentdb.route
+  pk: 9
+  fields:
+    url: product-showcase
+    label: Product Showcase
+    placement: top
+    created_at: 2026-03-21 10:00:00+00:00
+    updated_at: 2026-03-21 10:00:00+00:00
+    drafts:
+      - 11
+
+# =========================================================================
+# Blog Landing Page (static-page, route: 'blog')
+# Provides rich content section below the blog tile grid.
+# Content pk=22 (draft body), pk=23 (published snapshot)
+# Draft pk=12, Published pk=11, Route pk=10
+# =========================================================================
+
+- model: django_contentdb.content
+  pk: 22
+  fields:
+    uid: c0000022-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001001-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: left
+          title: "Entirius Blog"
+          description: "<p>Tips, guides, and industry insights for modern e-commerce.</p>"
+          custom_buttons:
+            - label: "Latest articles"
+              url: "#blog-catalog"
+              type: "internal"
+        bb001002-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Stay Updated"
+          description: "<p>Subscribe to our newsletter for the latest e-commerce insights and platform updates.</p>"
+      sections:
+        aa001001-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa001002-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+      tiles_order:
+        aa001001-0000-4000-8000-000000000001:
+          - bb001001-0001-4000-8000-000000000001
+        aa001002-0000-4000-8000-000000000001:
+          - bb001002-0001-4000-8000-000000000001
+      sections_order:
+        - aa001001-0000-4000-8000-000000000001
+        - aa001002-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Blog"
+      description: "Read our latest articles, guides and advice"
+      og_title: "Entirius Blog"
+      og_description: "Tips and guides for modern e-commerce"
+    created_at: 2025-02-01 10:00:00+00:00
+    updated_at: 2025-02-01 10:00:00+00:00
+    category: null
+
+# Blog landing page — published snapshot
+- model: django_contentdb.content
+  pk: 23
+  fields:
+    uid: c0000023-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001001-0001-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 3
+          tile_align: left
+          title: "Entirius Blog"
+          description: "<p>Tips, guides, and industry insights for modern e-commerce.</p>"
+          custom_buttons:
+            - label: "Latest articles"
+              url: "#blog-catalog"
+              type: "internal"
+        bb001002-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          title: "Stay Updated"
+          description: "<p>Subscribe to our newsletter for the latest e-commerce insights and platform updates.</p>"
+      sections:
+        aa001001-0000-4000-8000-000000000001:
+          core_type: section-hero-slider
+          width: full_width
+        aa001002-0000-4000-8000-000000000001:
+          core_type: section-text
+          width: content_width
+      tiles_order:
+        aa001001-0000-4000-8000-000000000001:
+          - bb001001-0001-4000-8000-000000000001
+        aa001002-0000-4000-8000-000000000001:
+          - bb001002-0001-4000-8000-000000000001
+      sections_order:
+        - aa001001-0000-4000-8000-000000000001
+        - aa001002-0000-4000-8000-000000000001
+    extension: null
+    meta:
+      title: "Blog"
+      description: "Read our latest articles, guides and advice"
+      og_title: "Entirius Blog"
+      og_description: "Tips and guides for modern e-commerce"
+    created_at: 2025-02-01 10:00:00+00:00
+    updated_at: 2025-02-01 10:00:00+00:00
+    category: null
+
+- model: django_contentdb.draft
+  pk: 12
+  fields:
+    content_type: 1
+    content: 22
+    name: "Blog Landing Page"
+    language: 1
+    created_at: 2025-02-01 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+- model: django_contentdb.published
+  pk: 11
+  fields:
+    draft: 12
+    content: 23
+    created_at: 2025-02-01 10:00:00+00:00
+
+- model: django_contentdb.route
+  pk: 10
+  fields:
+    url: blog
+    label: Blog
+    placement: top
+    created_at: 2025-02-01 10:00:00+00:00
+    updated_at: 2025-02-01 10:00:00+00:00
+    drafts:
+      - 12
+
+# =========================================================================
+# Blog Post 5: E-Commerce Analytics for Growth (Technology)
+# Content pk=24 (draft), pk=25 (published)
+# Draft pk=13, Published pk=12, Route pk=11
+# =========================================================================
+
+- model: django_contentdb.content
+  pk: 24
+  fields:
+    uid: c0000024-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001101-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Metrics That Matter</h2>
+            <p>Not all analytics are created equal. Vanity metrics like page views and session duration tell you <em>what happened</em>, but not <em>why it matters</em>. The metrics that drive business decisions are the ones tied directly to revenue and customer behaviour.</p>
+            <p>Here are the <strong>key performance indicators</strong> every e-commerce business should track:</p>
+            <table>
+            <tr><th>Metric</th><th>What It Tells You</th><th>Target Range</th></tr>
+            <tr><td>Conversion Rate</td><td>% of visitors who purchase</td><td>1-5%</td></tr>
+            <tr><td>Average Order Value</td><td>Mean revenue per transaction</td><td>Industry-dependent</td></tr>
+            <tr><td>Customer Lifetime Value</td><td>Total revenue per customer</td><td>10-50x AOV</td></tr>
+            <tr><td>Cart Abandonment Rate</td><td>% of carts not completed</td><td>&lt;70%</td></tr>
+            </table>
+        bb001101-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>From Data to Decisions</h2>
+            <p>Collecting data is easy. Acting on it is the challenge. Here is a four-step workflow to turn analytics into action:</p>
+            <ol>
+            <li><strong>Track at the right level</strong> — instrument your storefront to capture user events (add to cart, purchase, returns, support tickets)</li>
+            <li><strong>Segment your audience</strong> — break down metrics by device, geography, customer cohort, product category to identify patterns</li>
+            <li><strong>Set benchmarks</strong> — establish baseline metrics and set quarterly improvement targets (e.g., reduce cart abandonment by 5%)</li>
+            <li><strong>Test and iterate</strong> — run A/B tests on checkout flow, product layout, and messaging to validate improvements before full rollout</li>
+            </ol>
+            <blockquote>The most successful e-commerce businesses do not have better instincts — they have better data. They measure, they test, they learn.</blockquote>
+      sections:
+        aa001101-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001101-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa001101-0000-4000-8000-000000000001:
+          - bb001101-0001-4000-8000-000000000001
+        aa001101-0001-4000-8000-000000000001:
+          - bb001101-0002-4000-8000-000000000001
+      sections_order:
+        - aa001101-0000-4000-8000-000000000001
+        - aa001101-0001-4000-8000-000000000001
+    extension:
+      title: "E-Commerce Analytics for Growth"
+      description: "<p>Which metrics matter most and how to turn analytics into revenue.</p>"
+      author: "Maria Wisniewska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/ecommerce-analytics-for-growth"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-analytics/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-analytics-m/400/300"
+              height: 300
+    meta:
+      title: "E-Commerce Analytics for Growth"
+      description: "Data-driven strategies for growing your online store"
+      og_title: "E-Commerce Analytics for Growth"
+      og_description: "Turn raw analytics into actionable insights"
+    created_at: 2025-02-05 10:00:00+00:00
+    updated_at: 2025-02-05 10:00:00+00:00
+    category: 3
+
+# Analytics — published snapshot
+- model: django_contentdb.content
+  pk: 25
+  fields:
+    uid: c0000025-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001101-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Metrics That Matter</h2>
+            <p>Not all analytics are created equal. Vanity metrics like page views and session duration tell you <em>what happened</em>, but not <em>why it matters</em>. The metrics that drive business decisions are the ones tied directly to revenue and customer behaviour.</p>
+            <p>Here are the <strong>key performance indicators</strong> every e-commerce business should track:</p>
+            <table>
+            <tr><th>Metric</th><th>What It Tells You</th><th>Target Range</th></tr>
+            <tr><td>Conversion Rate</td><td>% of visitors who purchase</td><td>1-5%</td></tr>
+            <tr><td>Average Order Value</td><td>Mean revenue per transaction</td><td>Industry-dependent</td></tr>
+            <tr><td>Customer Lifetime Value</td><td>Total revenue per customer</td><td>10-50x AOV</td></tr>
+            <tr><td>Cart Abandonment Rate</td><td>% of carts not completed</td><td>&lt;70%</td></tr>
+            </table>
+        bb001101-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>From Data to Decisions</h2>
+            <p>Collecting data is easy. Acting on it is the challenge. Here is a four-step workflow to turn analytics into action:</p>
+            <ol>
+            <li><strong>Track at the right level</strong> — instrument your storefront to capture user events (add to cart, purchase, returns, support tickets)</li>
+            <li><strong>Segment your audience</strong> — break down metrics by device, geography, customer cohort, product category to identify patterns</li>
+            <li><strong>Set benchmarks</strong> — establish baseline metrics and set quarterly improvement targets (e.g., reduce cart abandonment by 5%)</li>
+            <li><strong>Test and iterate</strong> — run A/B tests on checkout flow, product layout, and messaging to validate improvements before full rollout</li>
+            </ol>
+            <blockquote>The most successful e-commerce businesses do not have better instincts — they have better data. They measure, they test, they learn.</blockquote>
+      sections:
+        aa001101-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001101-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa001101-0000-4000-8000-000000000001:
+          - bb001101-0001-4000-8000-000000000001
+        aa001101-0001-4000-8000-000000000001:
+          - bb001101-0002-4000-8000-000000000001
+      sections_order:
+        - aa001101-0000-4000-8000-000000000001
+        - aa001101-0001-4000-8000-000000000001
+    extension:
+      title: "E-Commerce Analytics for Growth"
+      description: "<p>Which metrics matter most and how to turn analytics into revenue.</p>"
+      author: "Maria Wisniewska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/ecommerce-analytics-for-growth"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-analytics/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-analytics-m/400/300"
+              height: 300
+    meta:
+      title: "E-Commerce Analytics for Growth"
+      description: "Data-driven strategies for growing your online store"
+      og_title: "E-Commerce Analytics for Growth"
+      og_description: "Turn raw analytics into actionable insights"
+    created_at: 2025-02-05 10:00:00+00:00
+    updated_at: 2025-02-05 10:00:00+00:00
+    category: 3
+
+- model: django_contentdb.draft
+  pk: 13
+  fields:
+    content_type: 3
+    content: 24
+    name: "E-Commerce Analytics for Growth"
+    language: 1
+    created_at: 2025-02-05 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+- model: django_contentdb.published
+  pk: 12
+  fields:
+    draft: 13
+    content: 25
+    created_at: 2025-02-05 10:00:00+00:00
+
+- model: django_contentdb.route
+  pk: 11
+  fields:
+    url: ecommerce-analytics-for-growth
+    label: E-Commerce Analytics for Growth
+    placement: top
+    created_at: 2025-02-05 10:00:00+00:00
+    updated_at: 2025-02-05 10:00:00+00:00
+    drafts:
+      - 13
+
+- model: django_contentdb.draftauthor
+  pk: 4
+  fields:
+    draft: 13
+    author: 3
+    position: 0
+
+# =========================================================================
+# Blog Post 6: Building Customer Trust Online (News)
+# Content pk=26 (draft), pk=27 (published)
+# Draft pk=14, Published pk=13, Route pk=12
+# =========================================================================
+
+- model: django_contentdb.content
+  pk: 26
+  fields:
+    uid: c0000026-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001201-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>The Trust Equation</h2>
+            <p>In the physical world, a handshake and face-to-face conversation build trust. Online, you have no such luxury. Every interaction must <strong>communicate safety, competence, and authenticity</strong>.</p>
+            <p>Customers want to know that:</p>
+            <ul>
+            <li><strong>SSL certificates</strong> and encrypted checkout protect their payment information</li>
+            <li><strong>Clear return policies</strong> mean they can buy without fear of losing money</li>
+            <li><strong>Real customer reviews</strong> (not fake testimonials) prove you deliver on promises</li>
+            <li><strong>Transparent pricing</strong> means no hidden fees at checkout</li>
+            </ul>
+        bb001201-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Building Trust at Every Touchpoint</h2>
+            <h3>Before Purchase</h3>
+            <ul>
+            <li>Display security badges prominently on every page</li>
+            <li>Show real customer photos and reviews (not stock images)</li>
+            <li>Make shipping costs and timelines visible before checkout</li>
+            </ul>
+            <h3>During Checkout</h3>
+            <ul>
+            <li>Use recognisable payment providers (Stripe, PayPal, Apple Pay)</li>
+            <li>Show the SSL lock icon and "secure" label</li>
+            <li>Offer guest checkout — forcing account creation frustrates customers</li>
+            </ul>
+            <h3>After Purchase</h3>
+            <ul>
+            <li>Send order confirmation and tracking immediately</li>
+            <li>Make returns hassle-free — clear instructions, prepaid labels if possible</li>
+            <li>Respond to support emails within 24 hours</li>
+            </ul>
+        bb001201-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Measuring Trust</h2>
+            <blockquote>Trust is built slowly and destroyed quickly. Invest in systems that protect customer data and handle complaints promptly.</blockquote>
+            <p>How do you measure something intangible like trust? These metrics correlate strongly with customer trust:</p>
+            <ol>
+            <li><strong>Customer reviews and ratings</strong> — average rating, number of reviews, response rate to negative feedback</li>
+            <li><strong>Return/refund rate</strong> — high returns suggest either product mismatches or trust issues in the product description</li>
+            <li><strong>Support ticket resolution time</strong> — fast responses signal you care; slow responses erode trust</li>
+            <li><strong>Repeat purchase rate</strong> — customers who trust you come back</li>
+            </ol>
+      sections:
+        aa001201-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001201-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001201-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa001201-0000-4000-8000-000000000001:
+          - bb001201-0001-4000-8000-000000000001
+        aa001201-0001-4000-8000-000000000001:
+          - bb001201-0002-4000-8000-000000000001
+        aa001201-0002-4000-8000-000000000001:
+          - bb001201-0003-4000-8000-000000000001
+      sections_order:
+        - aa001201-0000-4000-8000-000000000001
+        - aa001201-0001-4000-8000-000000000001
+        - aa001201-0002-4000-8000-000000000001
+    extension:
+      title: "Building Customer Trust Online"
+      description: "<p>How transparent policies and secure payments shape brand perception.</p>"
+      author: "Ewa Lewandowska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/building-customer-trust-online"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-trust/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-trust-m/400/300"
+              height: 300
+    meta:
+      title: "Building Customer Trust Online"
+      description: "Trust-building strategies for e-commerce businesses"
+      og_title: "Building Customer Trust Online"
+      og_description: "Transparent policies and secure payments for brand trust"
+    created_at: 2025-02-10 10:00:00+00:00
+    updated_at: 2025-02-10 10:00:00+00:00
+    category: 1
+
+# Trust — published snapshot
+- model: django_contentdb.content
+  pk: 27
+  fields:
+    uid: c0000027-0001-4000-8000-000000000001
+    content:
+      document_configs: {}
+      tiles:
+        bb001201-0001-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>The Trust Equation</h2>
+            <p>In the physical world, a handshake and face-to-face conversation build trust. Online, you have no such luxury. Every interaction must <strong>communicate safety, competence, and authenticity</strong>.</p>
+            <p>Customers want to know that:</p>
+            <ul>
+            <li><strong>SSL certificates</strong> and encrypted checkout protect their payment information</li>
+            <li><strong>Clear return policies</strong> mean they can buy without fear of losing money</li>
+            <li><strong>Real customer reviews</strong> (not fake testimonials) prove you deliver on promises</li>
+            <li><strong>Transparent pricing</strong> means no hidden fees at checkout</li>
+            </ul>
+        bb001201-0002-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Building Trust at Every Touchpoint</h2>
+            <h3>Before Purchase</h3>
+            <ul>
+            <li>Display security badges prominently on every page</li>
+            <li>Show real customer photos and reviews (not stock images)</li>
+            <li>Make shipping costs and timelines visible before checkout</li>
+            </ul>
+            <h3>During Checkout</h3>
+            <ul>
+            <li>Use recognisable payment providers (Stripe, PayPal, Apple Pay)</li>
+            <li>Show the SSL lock icon and "secure" label</li>
+            <li>Offer guest checkout — forcing account creation frustrates customers</li>
+            </ul>
+            <h3>After Purchase</h3>
+            <ul>
+            <li>Send order confirmation and tracking immediately</li>
+            <li>Make returns hassle-free — clear instructions, prepaid labels if possible</li>
+            <li>Respond to support emails within 24 hours</li>
+            </ul>
+        bb001201-0003-4000-8000-000000000001:
+          core_type: tile-txt-btn
+          description: >-
+            <h2>Measuring Trust</h2>
+            <blockquote>Trust is built slowly and destroyed quickly. Invest in systems that protect customer data and handle complaints promptly.</blockquote>
+            <p>How do you measure something intangible like trust? These metrics correlate strongly with customer trust:</p>
+            <ol>
+            <li><strong>Customer reviews and ratings</strong> — average rating, number of reviews, response rate to negative feedback</li>
+            <li><strong>Return/refund rate</strong> — high returns suggest either product mismatches or trust issues in the product description</li>
+            <li><strong>Support ticket resolution time</strong> — fast responses signal you care; slow responses erode trust</li>
+            <li><strong>Repeat purchase rate</strong> — customers who trust you come back</li>
+            </ol>
+      sections:
+        aa001201-0000-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001201-0001-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+        aa001201-0002-4000-8000-000000000001:
+          core_type: section-text
+          variant: 3
+          dye: 3
+          width: content_width
+      tiles_order:
+        aa001201-0000-4000-8000-000000000001:
+          - bb001201-0001-4000-8000-000000000001
+        aa001201-0001-4000-8000-000000000001:
+          - bb001201-0002-4000-8000-000000000001
+        aa001201-0002-4000-8000-000000000001:
+          - bb001201-0003-4000-8000-000000000001
+      sections_order:
+        - aa001201-0000-4000-8000-000000000001
+        - aa001201-0001-4000-8000-000000000001
+        - aa001201-0002-4000-8000-000000000001
+    extension:
+      title: "Building Customer Trust Online"
+      description: "<p>How transparent policies and secure payments shape brand perception.</p>"
+      author: "Ewa Lewandowska"
+      custom_buttons:
+        - label: "Read more"
+          url: "/blog/building-customer-trust-online"
+          type: "internal"
+      images_set:
+        desktop:
+          set:
+            - source: "https://picsum.photos/seed/blog-trust/800/600"
+              height: 600
+        mobile:
+          set:
+            - source: "https://picsum.photos/seed/blog-trust-m/400/300"
+              height: 300
+    meta:
+      title: "Building Customer Trust Online"
+      description: "Trust-building strategies for e-commerce businesses"
+      og_title: "Building Customer Trust Online"
+      og_description: "Transparent policies and secure payments for brand trust"
+    created_at: 2025-02-10 10:00:00+00:00
+    updated_at: 2025-02-10 10:00:00+00:00
+    category: 1
+
+- model: django_contentdb.draft
+  pk: 14
+  fields:
+    content_type: 3
+    content: 26
+    name: "Building Customer Trust Online"
+    language: 1
+    created_at: 2025-02-10 10:00:00+00:00
+    access_rights:
+      - 1
+    channels: []
+
+- model: django_contentdb.published
+  pk: 13
+  fields:
+    draft: 14
+    content: 27
+    created_at: 2025-02-10 10:00:00+00:00
+
+- model: django_contentdb.route
+  pk: 12
+  fields:
+    url: building-customer-trust-online
+    label: Building Customer Trust Online
+    placement: top
+    created_at: 2025-02-10 10:00:00+00:00
+    updated_at: 2025-02-10 10:00:00+00:00
+    drafts:
+      - 14
+
+- model: django_contentdb.draftauthor
+  pk: 5
+  fields:
+    draft: 14
+    author: 5
+    position: 0

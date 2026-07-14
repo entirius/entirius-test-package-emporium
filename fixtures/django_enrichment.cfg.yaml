@@ -1,0 +1,45 @@
+# Baseline SpawnRule (django-enrichment gap-spawn).
+# A template rule mapping the seeded `pl-description` gap check to a fix-attribute task.
+# Inactive on purpose: `scope.channel` is per-client — the operator sets it in the CMS
+# (Enricher → Spawn Rules) and flips `active`/`auto`. Idempotent: explicit pk + unique `key`.
+# created_at/modified_at are explicit: BaseModel's auto_now(_add) fields are NOT NULL and
+# loaddata does not populate them.
+- model: django_enrichment.spawnrule
+  pk: 1
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: desc-pl
+    module: pim
+    check_key: pl-description
+    params: {}
+    scope: {}
+    task_type: fix-attribute
+    task_params:
+      feature: description
+    limit: null
+    cooldown_days: null
+    auto: false
+    active: false
+
+# Classification cascade head (featureset cascade).
+# Maps the seeded `feature-set-default` gap rule (GapDefinition pk=4) to an assign-featureset
+# task: the AI picks the correct feature-set from `GET feature-sets/` (idx/name/desc/is_default).
+# check_key is the GapDefinition KEY (`feature-set-default`), not the registry check name.
+# Inactive on purpose — the operator scopes the channel and flips `active` in the CMS.
+- model: django_enrichment.spawnrule
+  pk: 2
+  fields:
+    created_at: 2026-01-01T00:00:00+00:00
+    modified_at: 2026-01-01T00:00:00+00:00
+    key: set-default
+    module: pim
+    check_key: feature-set-default
+    params: {}
+    scope: {}
+    task_type: assign-featureset
+    task_params: {}
+    limit: null
+    cooldown_days: null
+    auto: false
+    active: false

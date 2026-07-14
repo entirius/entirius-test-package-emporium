@@ -1,0 +1,366 @@
+# entirius-test-package: Test Discount Rules
+#
+# 10 comprehensive test discount rules covering all major modifier types,
+# targets, and features (combinable, auto-apply, gratis, progressive, etc.)
+#
+# Import: loaddata --format=yaml django_checkout.discounts.yaml
+#
+# Note: PK values start at 100 to avoid collisions with manual testing.
+# Channel pk=2 = default-europe, Currency pk=3 = EUR
+
+# ─────────────────────────────────────────────────────────────────────────
+# Discount Rule Codes
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 100
+  fields:
+    name: TEST_PERCENT_10
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 10
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 101
+  fields:
+    name: TEST_PRICE_50
+    free_shipping: false
+    min_order_amount: '200.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: price_discount
+    extra_value: 50
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 102
+  fields:
+    name: TEST_CHEAPEST_GRATIS
+    free_shipping: false
+    min_order_amount: '300.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: cheapest_gratis
+    extra_value: 1
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 103
+  fields:
+    name: TEST_MOST_EXPENSIVE_GRATIS
+    free_shipping: false
+    min_order_amount: '1000.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: most_expensive_gratis
+    extra_value: 1
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 104
+  fields:
+    name: TEST_FREE_SHIPPING
+    free_shipping: true
+    min_order_amount: '200.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: 'None'
+    extra_value: 1
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 105
+  fields:
+    name: TEST_STEP_PRICE_PERCENT
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: step_price_percent_discount
+    extra_value:
+      EUR:
+        '200': 5
+        '500': 10
+        '1000': 15
+        '2000': 20
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 106
+  fields:
+    name: TEST_GRATIS_STEPPED
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: gratis_stepped
+    extra_value:
+      EUR:
+        '300': 1
+        '600': 2
+        '1000': 3
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 107
+  fields:
+    name: TEST_AUTO_APPLY
+    free_shipping: false
+    min_order_amount: '1000.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 5
+    extension: {}
+    priority: 5
+    combine_with_other_rules: true
+    automatic_applications: true
+    is_active: false
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 108
+  fields:
+    name: TEST_FIRST_ORDER_LOGGED
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: first_order_logged
+    modifier: percent_discount
+    extra_value: 20
+    extension: {}
+    priority: 10
+    combine_with_other_rules: false
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+- model: django_checkout.discountrulecode
+  pk: 109
+  fields:
+    name: TEST_COMBINABLE
+    free_shipping: false
+    min_order_amount: '500.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: price_discount
+    extra_value: 50
+    extension: {}
+    priority: 10
+    combine_with_other_rules: true
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels:
+    - 2
+    free_shipping_methods: []
+    currencies:
+    - 3
+
+# ─────────────────────────────────────────────────────────────────────────
+# Discount Codes (user-facing codes for non-automatic rules)
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountcode
+  pk: 100
+  fields:
+    rule: 100
+    code: PERCENT10
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 101
+  fields:
+    rule: 101
+    code: PRICE50
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 102
+  fields:
+    rule: 102
+    code: CHEAPEST_FREE
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 103
+  fields:
+    rule: 103
+    code: EXPENSIVE_FREE
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 104
+  fields:
+    rule: 104
+    code: FREESHIP
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 105
+  fields:
+    rule: 105
+    code: STEP_PRICE_PCT
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 106
+  fields:
+    rule: 106
+    code: GRATIS_STEP
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# Note: TEST_AUTO_APPLY (pk=107) has no code -- it's automatic
+
+- model: django_checkout.discountcode
+  pk: 108
+  fields:
+    rule: 108
+    code: FIRST_LOGGED
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+- model: django_checkout.discountcode
+  pk: 109
+  fields:
+    rule: 109
+    code: COMBINE50
+    max_used: 99999
+    max_uses_per_user: 99999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null

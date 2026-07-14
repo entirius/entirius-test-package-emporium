@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>DEL-1</sku>
+    <name>Delist One</name>
+    <price currency="EUR">30.00</price>
+    <stock>7</stock>
+    <ean>5900000000061</ean>
+    <weight_g>600</weight_g>
+  </product>
+  <product>
+    <sku>DEL-2</sku>
+    <name>Delist Two</name>
+    <price currency="EUR">31.00</price>
+    <stock>7</stock>
+    <ean>5900000000062</ean>
+    <weight_g>600</weight_g>
+  </product></catalog>

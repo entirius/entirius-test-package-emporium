@@ -1,0 +1,39 @@
+idx,parent,name pl,name en,name es,name de,description pl,description en,url key pl,url key en,url key es,url key de,position,is in menu,is active
+root,,Korzeń,Root,Raíz,Wurzel,Korzeń,Root,korzen,root,raiz,wurzel,0,true,true,true
+sofas,root,Sofy,Sofas,Sofás,Sofas,Sofy premium,Premium sofas for every space,sofy,sofas,sofas-es,sofas-de,1,true,true
+living-room-sofas,sofas,Sofy do salonu,Living Room Sofas,Sofás de salón,Wohnzimmersofas,Sofy do salonu,Living room sofa collection,sofy-do-salonu,living-room-sofas,sofas-de-salon,wohnzimmersofas,1,true,true
+corner-sofas,living-room-sofas,Sofy narożne,Corner Sofas,Sofás esquineros,Ecksofas,Sofy narożne,Corner sofa designs,sofy-narozne,corner-sofas,sofas-esquineros,ecksofas,1,true,true
+modular-corner,corner-sofas,Narożniki modułowe,Modular Corner Sofas,Sofás esquineros modulares,Modulare Ecksofas,Narożniki modułowe,Modular corner configurations,narozniki-modulowe,modular-corner,sofas-esquineros-modulares,modulare-ecksofas,1,true,true
+small-modular,modular-corner,Małe modułowe,Small Modular Sofas,Sofás modulares pequeños,Kleine Modulsofas,Małe konfiguracje modułowe,Small modular configurations,male-modulowe,small-modular,sofas-modulares-pequenos,kleine-modulsofas,1,true,true
+large-modular,modular-corner,Duże modułowe,Large Modular Sofas,Sofás modulares grandes,Große Modulsofas,Duże konfiguracje modułowe,Large modular configurations,duze-modulowe,large-modular,sofas-modulares-grandes,grosse-modulsofas,2,true,true
+l-shaped,corner-sofas,Sofy w kształcie L,L-Shaped Sofas,Sofás en forma de L,L-förmige Sofas,Sofy w kształcie L,L-shaped sofa designs,sofy-w-ksztalcie-l,l-shaped,sofas-en-forma-de-l,l-foermige-sofas,2,true,true
+straight-sofas,living-room-sofas,Sofy proste,Straight Sofas,Sofás rectos,Gerade Sofas,Klasyczne sofy proste,Classic straight sofas,sofy-proste,straight-sofas,sofas-rectos,gerade-sofas,2,true,true
+sofa-beds,sofas,Sofy rozkładane,Sofa Beds,Sofás cama,Schlafsofas,Sofy z funkcją spania,Convertible sofa beds,sofy-rozkladane,sofa-beds,sofas-cama,schlafsofas,2,true,true
+chairs,root,Krzesła,Chairs,Sillas,Stühle,Wygodne krzesła,Comfortable chairs for any room,krzesla,chairs,sillas,stuhle,2,true,true
+office-chairs,chairs,Krzesła biurowe,Office Chairs,Sillas de oficina,Bürostühle,Krzesła biurowe,Office seating solutions,krzesla-biurowe,office-chairs,sillas-de-oficina,buerostuehle,1,true,true
+ergonomic,office-chairs,Ergonomiczne,Ergonomic Chairs,Sillas ergonómicas,Ergonomische Stühle,Krzesła ergonomiczne,Ergonomic office chairs,ergonomiczne,ergonomic,sillas-ergonomicas,ergonomische-stuehle,1,true,true
+mesh-back,ergonomic,Z siatką,Mesh Back Chairs,Sillas con respaldo de malla,Netzrücken-Stühle,Krzesła z siatką na oparciu,Mesh back ergonomic chairs,z-siatka,mesh-back,sillas-con-respaldo-de-malla,netzruecken-stuehle,1,true,true
+high-back-mesh,mesh-back,Wysokie z siatką,High Back Mesh Chairs,Sillas altas de malla,Hohe Netzrücken-Stühle,Krzesła wysokie z siatką,High back mesh chairs,wysokie-z-siatka,high-back-mesh,sillas-altas-de-malla,hohe-netzruecken-stuehle,1,true,true
+leather-ergonomic,ergonomic,Skórzane ergonomiczne,Leather Ergonomic Chairs,Sillas ergonómicas de cuero,Leder-Ergonomie-Stühle,Skórzane krzesła ergonomiczne,Leather ergonomic chairs,skorzane-ergonomiczne,leather-ergonomic,sillas-ergonomicas-de-cuero,leder-ergonomie-stuehle,2,true,true
+executive,office-chairs,Gabinetowe,Executive Chairs,Sillas ejecutivas,Chefsessel,Krzesła gabinetowe,Executive office chairs,gabinetowe,executive,sillas-ejecutivas,chefsessel,2,true,true
+dining-chairs,chairs,Krzesła jadalniane,Dining Chairs,Sillas de comedor,Esszimmerstühle,Krzesła do jadalni,Dining room chairs,krzesla-jadalniane,dining-chairs,sillas-de-comedor,esszimmerstuehle,2,true,true
+ottomans,root,Pufy,Ottomans,Otomanas,Hocker,Pufy i podnóżki,Versatile ottomans and footrests,pufy,ottomans,otomanas,hocker,3,true,true
+bedroom,root,Sypialnia,Bedroom,Dormitorio,Schlafzimmer,Meble do sypialni,Bedroom furniture collection,sypialnia,bedroom,dormitorio,schlafzimmer,4,true,true
+beds,bedroom,Łóżka,Beds,Camas,Betten,Kolekcja łóżek,Bed collection,lozka,beds,camas,betten,1,true,true
+platform-beds,beds,Łóżka platformowe,Platform Beds,Camas plataforma,Plattformbetten,Łóżka platformowe,Platform bed designs,lozka-platformowe,platform-beds,camas-plataforma,plattformbetten,1,true,true
+nightstands,bedroom,Stoliki nocne,Nightstands,Mesitas de noche,Nachttische,Stoliki nocne,Nightstand collection,stoliki-nocne,nightstands,mesitas-de-noche,nachttische,2,true,true
+dressers,bedroom,Komody,Dressers,Cómodas,Kommoden,Kolekcja komod,Dresser collection,komody,dressers,comodas,kommoden,3,true,true
+office,root,Biuro,Office,Oficina,Büro,Meble biurowe,Office furniture for productivity,biuro,office,oficina,buero,5,true,true
+desks,office,Biurka,Desks,Escritorios,Schreibtische,Kolekcja biurek,Desk collection,biurka,desks,escritorios,schreibtische,1,true,true
+standing-desks,desks,Biurka stojące,Standing Desks,Escritorios de pie,Stehschreibtische,Biurka do pracy stojącej,Standing desk collection,biurka-stojace,standing-desks,escritorios-de-pie,stehschreibtische,1,true,true
+office-storage,office,Regały biurowe,Office Storage,Almacenamiento de oficina,Büroregale,Regały i szafki biurowe,Office storage solutions,regaly-biurowe,office-storage,almacenamiento-de-oficina,bueroregale,2,true,true
+outdoor,root,Ogród,Outdoor,Exterior,Outdoor,Meble ogrodowe,Outdoor furniture collection,ogrod,outdoor,exterior,outdoor-de,6,true,true
+sale,root,Wyprzedaż,Sale,Ofertas,Angebote,Wyprzedaż,Items on sale,wyprzedaz,sale,ofertas,angebote,7,true,true
+lighting,root,Oświetlenie Stacji,Station Lighting,Iluminación de Estación,Stationsbeleuchtung,Systemy oświetlenia stacji,Station lighting array systems,oswietlenie-stacji,station-lighting,iluminacion-de-estacion,stationsbeleuchtung,8,true,true
+wall-decor,root,Dekoracje Ścienne,Wall Decor,Decoración de Pared,Wanddekoration,Kolekcja dekoracji ściennych,Wall decor and hangings collection,dekoracje-scienne,wall-decor,decoracion-de-pared,wanddekoration,9,true,true
+cargo-storage,root,Magazyn Ładunkowy,Cargo Storage,Almacenamiento de Carga,Frachtlagerung,Systemy magazynów ładunkowych,Cargo storage vault systems,magazyn-ladunkowy,cargo-storage,almacenamiento-de-carga,frachtlagerung,10,true,true
+galley,root,Wyposażenie Kambuza,Galley Furnishings,Mobiliario de Cocina,Kombüsen-Möbel,Kolekcja wyposażenia kambuza,Galley furnishing collection,wyposazenie-kambuza,galley-furnishings,mobiliario-de-cocina,kombuesen-moebel,11,true,true
+study,root,Nauka i Szkolenie,Study & Training,Estudio y Formación,Studium & Training,Wyposażenie do nauki i szkoleń,Study and training equipment,nauka-i-szkolenie,study-training,estudio-y-formacion,studium-training,12,true,true
+bathroom,root,Armatura Łazienkowa,Bathroom Fittings,Accesorios de Baño,Badarmaturen,Wyposażenie armatury łazienkowej,Bathroom fitting furnishings,armatura-lazienkowa,bathroom-fittings,accesorios-de-bano,badarmaturen,13,true,true
+hydroponics,root,Dekoracje Hydroponiczne,Hydroponics Decor,Decoración Hidropónica,Hydroponik-Dekoration,Kolekcja dekoracji hydroponicznych,Hydroponics decoration collection,dekoracje-hydroponiczne,hydroponics-decor,decoracion-hidroponica,hydroponik-dekoration,14,true,true
+command-deck,root,Stanowisko Mostka,Command Deck Workspace,Espacio de Trabajo del Puente,Kommandobrücken-Arbeitsplatz,Wyposażenie stanowiska mostka,Command deck workspace equipment,stanowisko-mostka,command-deck-workspace,espacio-de-trabajo-del-puente,kommandobruecken-arbeitsplatz,15,true,true

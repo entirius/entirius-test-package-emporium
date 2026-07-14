@@ -1,0 +1,103 @@
+- model: django_pricemanager.channel
+  pk: 1
+  fields:
+    idx: default-local
+    name: Default Local
+    calculate_direction: 1
+- model: django_pricemanager.channel
+  pk: 2
+  fields:
+    idx: default-europe
+    name: Default Europe
+    calculate_direction: 0
+- model: django_pricemanager.salechannel
+  pk: 1
+  fields:
+    idx: default-local
+    name: Default Local
+    channel: 1
+    is_only_for_verified_user: false
+    price_source: csv
+    country: 30
+    customer_representation: null
+- model: django_pricemanager.salechannel
+  pk: 2
+  fields:
+    idx: default-europe
+    name: Default Europe
+    channel: 2
+    is_only_for_verified_user: false
+    price_source: csv
+    country: 5
+    customer_representation: null
+- model: django_pricemanager.salechannel
+  pk: 3
+  fields:
+    idx: default-europe-pl
+    name: Default Europe PL
+    channel: 2
+    is_only_for_verified_user: false
+    price_source: generated
+    country: 21
+    customer_representation: null
+- model: django_pricemanager.salechannel
+  pk: 4
+  fields:
+    idx: default-europe-es
+    name: Default Europe ES
+    channel: 2
+    is_only_for_verified_user: false
+    price_source: generated
+    country: 8
+    customer_representation: null
+- model: django_pricemanager.salechannel
+  pk: 5
+  fields:
+    idx: default-europe-fr
+    name: Default Europe FR
+    channel: 2
+    is_only_for_verified_user: false
+    price_source: generated
+    country: 10
+    customer_representation: null
+- model: django_pricemanager.taxclass
+  pk: 1
+  fields:
+    idx: standard-rate
+    name: Standard Rate
+    source_file: ''
+- model: django_pricemanager.taxrate
+  pk: 1
+  fields:
+    tax_class: 1
+    country: 30
+    rate: '0.08'
+- model: django_pricemanager.taxrate
+  pk: 2
+  fields:
+    tax_class: 1
+    country: 5
+    rate: '0.19'
+- model: django_pricemanager.taxrate
+  pk: 3
+  fields:
+    tax_class: 1
+    country: 21
+    rate: '0.23'
+- model: django_pricemanager.taxrate
+  pk: 4
+  fields:
+    tax_class: 1
+    country: 8
+    rate: '0.21'
+- model: django_pricemanager.taxrate
+  pk: 5
+  fields:
+    tax_class: 1
+    country: 10
+    rate: '0.20'
+- model: django_pricemanager.pricemanagersettings
+  pk: 1
+  fields:
+    matrix_signals_enabled: false
+    read_from_current: true

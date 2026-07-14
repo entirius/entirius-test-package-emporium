@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>EANF-1</sku>
+    <name>Anchor Mismatch Item</name>
+    <price currency="EUR">130.00</price>
+    <stock>8</stock>
+    <ean>5900000000017</ean>
+    <weight_g>9000</weight_g>
+  </product></catalog>

@@ -1,0 +1,76 @@
+- model: django_deliverypoints.deliverypointtype
+  pk: 1
+  fields:
+    code: inpost
+    name: InPost
+    is_carrier: true
+    is_active: true
+    sort_order: 1
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 2
+  fields:
+    code: dpd
+    name: DPD Pickup
+    is_carrier: true
+    is_active: true
+    sort_order: 2
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 3
+  fields:
+    code: orlen
+    name: Orlen Paczka
+    is_carrier: true
+    is_active: true
+    sort_order: 3
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 4
+  fields:
+    code: poczta_polska
+    name: Poczta Polska
+    is_carrier: true
+    is_active: true
+    sort_order: 4
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 5
+  fields:
+    code: dhl
+    name: DHL Pickup
+    is_carrier: true
+    is_active: true
+    sort_order: 5
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 6
+  fields:
+    code: showroom
+    name: Showroom
+    is_carrier: false
+    is_active: true
+    sort_order: 10
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_deliverypoints.deliverypointtype
+  pk: 7
+  fields:
+    code: retail_store
+    name: Retail Store
+    is_carrier: false
+    is_active: true
+    sort_order: 11
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

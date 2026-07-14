@@ -1,0 +1,6 @@
+sku,field,type
+ENT-S001,description,fix-attribute
+ENT-S002,description,fix-attribute
+ENT-C001,short_description,fix-attribute
+ENT-S001,name,translate
+ENT-S003,name,translate

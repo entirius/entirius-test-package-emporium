@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>NOEAN-1</sku>
+    <name>No Barcode Item</name>
+    <price currency="EUR">40.00</price>
+    <stock>5</stock>
+    <weight_g>500</weight_g>
+  </product></catalog>

@@ -1,0 +1,11 @@
+name,code,modifier,extra_value,min_order_amount,target,free_shipping,combine_with_other_rules,automatic_applications,description_en,description_pl
+TEST_PERCENT_10,PERCENT10,percent_discount,10,0,all,false,false,false,10% discount,10% rabatu
+TEST_PRICE_50,PRICE50,price_discount,50,200,all,false,false,false,50 EUR discount at min 200 EUR,50 EUR rabatu przy min 200 EUR
+TEST_CHEAPEST_GRATIS,CHEAPEST_FREE,cheapest_gratis,1,300,all,false,false,false,Cheapest product free at min 300 EUR,Najtańszy produkt gratis przy min 300 EUR
+TEST_MOST_EXPENSIVE_GRATIS,EXPENSIVE_FREE,most_expensive_gratis,1,1000,all,false,false,false,Most expensive product free at min 1000 EUR,Najdroższy produkt gratis przy min 1000 EUR
+TEST_FREE_SHIPPING,FREESHIP,,0,200,all,true,false,false,Free shipping at min 200 EUR,Darmowa dostawa przy min 200 EUR
+TEST_STEP_PRICE_PERCENT,STEP_PRICE_PCT,step_price_percent_discount,"{""EUR"": {""200"": 5, ""500"": 10, ""1000"": 15, ""2000"": 20}}",0,all,false,false,false,Progressive discount by cart value,Progresywny rabat według wartości koszyka
+TEST_GRATIS_STEPPED,GRATIS_STEP,gratis_stepped,"{""EUR"": {""300"": 1, ""600"": 2, ""1000"": 3}}",0,all,false,false,false,Progressive gratis by cart value,Progresywne gratisy według wartości koszyka
+TEST_AUTO_APPLY,AUTO,percent_discount,5,1000,all,false,true,true,5% automatic discount at min 1000 EUR (combinable),5% automatyczny rabat przy min 1000 EUR (łączalny)
+TEST_FIRST_ORDER_LOGGED,FIRST_LOGGED,percent_discount,20,0,first_order_logged,false,false,false,20% discount for first order (logged users),20% rabatu dla pierwszego zamówienia (zalogowani)
+TEST_COMBINABLE,COMBINE50,price_discount,50,500,all,false,true,false,50 EUR discount (combinable) at min 500 EUR,50 EUR rabatu (łączalny z innymi) przy min 500 EUR

@@ -1,0 +1,6 @@
+delivery-point-code,delivery-point-name,delivery-point-x,delivery-point-y,delivery-point-address,delivery-point-city,delivery-point-postcode,delivery-point-hint
+RET-WAW-01,Sklep Warszawa Zlote Tarasy,21.0018,52.2298,ul. Zlota 59,Warszawa,00-120,Poziom -1 obok Zara
+RET-WAW-02,Sklep Warszawa Arkadia,20.9845,52.2568,Al. Jana Pawla II 82,Warszawa,00-175,Poziom 1 obok H&M
+RET-POZ-01,Sklep Poznan Stary Browar,16.9210,52.4010,ul. Polwiejska 42,Poznan,61-888,Wejscie od Polwiejskiej
+RET-GDA-01,Sklep Gdansk Galeria Baltycka,18.6130,54.3804,al. Grunwaldzka 141,Gdansk,80-264,Poziom 2
+RET-KAT-01,Sklep Katowice Silesia City Center,19.0338,50.2339,ul. Chorzowska 107,Katowice,40-101,Poziom 0 wejscie glowne

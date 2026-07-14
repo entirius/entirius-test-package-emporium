@@ -1,0 +1,58 @@
+- model: django_qms.channel
+  pk: 1
+  fields:
+    idx: default-local
+    name: Default Local QMS
+    stock_weight: 1
+    qms_type: XRAY
+- model: django_qms.channel
+  pk: 2
+  fields:
+    idx: default-europe
+    name: Default Europe QMS
+    stock_weight: 1
+    qms_type: XRAY
+- model: django_qms.xraystorage
+  pk: 1
+  fields:
+    code: local-source-csv
+    channel: 1
+    storage_manager: csv
+    data_direction: input
+    additional_data:
+      csv_path: '/entirius/test-package/package/qty.csv'
+- model: django_qms.xraystorage
+  pk: 2
+  fields:
+    code: local-target-checkout
+    channel: 1
+    storage_manager: checkout
+    data_direction: output
+    additional_data: {}
+- model: django_qms.xraystorage
+  pk: 3
+  fields:
+    code: europe-source-csv
+    channel: 2
+    storage_manager: csv
+    data_direction: input
+    additional_data:
+      csv_path: '/entirius/test-package/package/qty.csv'
+- model: django_qms.xraystorage
+  pk: 4
+  fields:
+    code: europe-target-checkout
+    channel: 2
+    storage_manager: checkout
+    data_direction: output
+    additional_data: {}
+- model: django_qms.xraystoragelink
+  pk: 1
+  fields:
+    storage_input: 1
+    storage_output: 2
+- model: django_qms.xraystoragelink
+  pk: 2
+  fields:
+    storage_input: 3
+    storage_output: 4

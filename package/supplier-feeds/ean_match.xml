@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>EANM-1</sku>
+    <name>Anchor Match Item</name>
+    <price currency="EUR">120.00</price>
+    <stock>10</stock>
+    <ean>5900000000017</ean>
+    <weight_g>2000</weight_g>
+  </product></catalog>

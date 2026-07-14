@@ -1,0 +1,28 @@
+idx,scope,type,name pl,name en,visible,required,filterable,searchable
+name,system,text t9n,Nazwa,Name,TRUE,TRUE,FALSE,TRUE
+description,system,text t9n,Opis,Description,TRUE,FALSE,FALSE,TRUE
+short_description,system,text t9n,Krótki opis,Description Short,FALSE,FALSE,FALSE,FALSE
+url_key,system,varchar 255 t9n,Klucz URL,Url key,FALSE,FALSE,FALSE,FALSE
+badge,system,multiselect,Odznaka,Badge,TRUE,FALSE,FALSE,FALSE
+brand,system,select,Marka,Brand,TRUE,FALSE,FALSE,FALSE
+subname,system,text t9n,Podtytuł 1,Subname 1,FALSE,FALSE,FALSE,FALSE
+subname2,system,text t9n,Podtytuł 2,Subname 2,FALSE,FALSE,FALSE,FALSE
+size_table,system,json,Tabela rozmiarów,Size Table,FALSE,FALSE,FALSE,FALSE
+extension,system,json,Rozszerzenie,Extension,FALSE,FALSE,FALSE,FALSE
+meta_title,system,text t9n,Meta tytuł,Meta title,FALSE,FALSE,FALSE,FALSE
+meta_description,system,text t9n,Meta opis,Meta description,FALSE,FALSE,FALSE,FALSE
+rich_content,system,json,Treść rozszerzona,Rich Content,FALSE,FALSE,FALSE,FALSE
+canonical_url,system,varchar 255 t9n,Adres kanoniczny,Canonical URL,FALSE,FALSE,FALSE,FALSE
+og_image,system,varchar 255 t9n,Obraz OG,OG Image,FALSE,FALSE,FALSE,FALSE
+dimensions_depth,business_unit,text,Głębokość,Depth,TRUE,FALSE,FALSE,FALSE
+dimensions_height,business_unit,text,Wysokość,Height,TRUE,FALSE,FALSE,FALSE
+dimensions_width,business_unit,text,Szerokość,Width,TRUE,FALSE,FALSE,FALSE
+series,business_unit,select,Seria,Series,TRUE,FALSE,TRUE,TRUE
+options,business_unit,multiselect,Opcje,Options,TRUE,FALSE,TRUE,TRUE
+customizable,business_unit,bool,Konfigurowalny,Customizable,TRUE,FALSE,FALSE,FALSE
+max_limit_bundle,business_unit,text,Maksymalny limit bundla,Max Bundle Limit,FALSE,FALSE,FALSE,FALSE
+min_limit_bundle,business_unit,text,Minimalny limit bundla,Min Bundle Limit,FALSE,FALSE,FALSE,FALSE
+weight_kg,business_unit,decimal,Waga (kg),Weight (kg),TRUE,FALSE,FALSE,FALSE
+is_handcrafted,business_unit,bool,Ręcznie wykonane,Handcrafted,TRUE,FALSE,TRUE,FALSE
+material_composition,business_unit,text,Skład materiałowy,Material Composition,TRUE,FALSE,FALSE,TRUE
+specifications,business_unit,json,Specyfikacja,Specifications,FALSE,FALSE,FALSE,FALSE

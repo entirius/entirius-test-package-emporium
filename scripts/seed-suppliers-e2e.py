@@ -21,7 +21,14 @@ suppliers with knobs baked in, then stamps the anchor RealProduct.
 from decimal import Decimal
 
 from django_regional.models import Currency, Language
-from django_suppliers.enums import EvalFrequency, ReviewMode, SupplierType
+from django_suppliers.enums import (
+    EvalFrequency,
+    ProductStatus,
+    ReviewMode,
+    SupplierRole,
+    SupplierType,
+    SyncMode,
+)
 from django_suppliers.models import (
     ProductSupplierLink,
     Supplier,
@@ -50,6 +57,30 @@ PRESETS = [
 SUPPLIER_IDXS = [p[0] for p in PRESETS]
 # Generated RealProduct SKUs are `{sku_prefix}-{sha1(external_id)[:12]}`.
 SKU_PREFIXES = [f"{p[1]}-" for p in PRESETS]
+
+# --- demo-supplier fixture (features/admin/suppliers_*.feature) --------------------------
+# The admin CRUD/feed/mapping/push/audit suite addresses this supplier by idx AND by hardcoded
+# SupplierProduct PKs (products/1,2,4) + feed_id=1. Created here (Step 3c, before the package
+# import) on the freshly-reset DB so `main-catalog` lands at SupplierFeed pk=1 and DEMO-001..004
+# at SupplierProduct pk=1..4. default-europe is the mapping target because it carries pl + pln
+# (default-local is en-only) — so validate() sees no language mismatch and push() resolves a real
+# channel. `furniture` is an existing PIM FeatureSet so push() can resolve feature_set.
+DEMO_IDX = "demo-supplier"
+DEMO_SKU_PREFIX = "DMS"
+DEMO_FEED_IDX = "main-catalog"
+DEMO_FEED_URL = "file:///entirius/test-package/package/supplier-feed.xml"
+DEMO_PROFILE_IDX = "default-pl"
+DEMO_CHANNEL = "default-europe"
+DEMO_FEATURE_SET = "furniture"
+DEMO_LINK_SKU = "0001-0007"  # RealProduct the manual-link scenarios attach demo-supplier to
+# (external_id, status) in creation order == PK order. DEMO-004 pre-approved so the push/audit
+# scenarios (products/4) act on an approved SP; DEMO-001/002 stay `new` for approve/reject.
+DEMO_PRODUCTS = [
+    ("DEMO-001", ProductStatus.NEW),
+    ("DEMO-002", ProductStatus.NEW),
+    ("DEMO-003", ProductStatus.NEW),
+    ("DEMO-004", ProductStatus.APPROVED),
+]
 
 
 def _lang(iso2: str) -> Language:
@@ -176,13 +207,102 @@ def _ensure_warehouse() -> str:
     return f"warehouse {WAREHOUSE}: ready"
 
 
+def _ensure_demo_supplier() -> str:
+    """Create the demo-supplier fixture: supplier + main-catalog feed + default-pl profile +
+    DEMO-001..004 SupplierProducts + the 0001-0007 link anchor. Idempotent via update_or_create
+    on natural keys, so a re-run resets statuses (approve/reject tests mutate them) and preserves
+    PKs. Generated DMS- push artifacts are dropped first so DEMO-004's re-push does not hit
+    'Product already exists'."""
+    from contextlib import suppress
+
+    from django.contrib.auth.models import User
+    from django.utils import timezone
+    from django_pim.models import Product, RealProduct
+
+    with suppress(Exception):
+        Product.objects.filter(real_product__sku__startswith=f"{DEMO_SKU_PREFIX}-").delete()
+    with suppress(Exception):
+        RealProduct.objects.filter(sku__startswith=f"{DEMO_SKU_PREFIX}-").delete()
+
+    pln = Currency.objects.get(iso3="PLN")
+    supplier, _ = Supplier.objects.update_or_create(
+        idx=DEMO_IDX,
+        defaults={
+            "name": "Demo Supplier",
+            "supplier_role": SupplierRole.TRADE,
+            "supplier_type": SupplierType.FEED,
+            "review_mode": ReviewMode.MANUAL,
+            "is_active": True,
+            "default_language": _lang("pl"),
+            "default_currency": pln,
+            "sku_prefix": DEMO_SKU_PREFIX,
+            "default_feature_set_idx": DEMO_FEATURE_SET,
+            "qty_subtract": 0,
+            "qty_minimum": 0,
+        },
+    )
+    feed, _ = SupplierFeed.objects.update_or_create(
+        supplier=supplier,
+        idx=DEMO_FEED_IDX,
+        defaults={
+            "connector_kind": "xml_feed",
+            "sync_mode": SyncMode.FULL,
+            "is_active": True,
+            "feed_config": {
+                "feed_url": DEMO_FEED_URL,
+                "product_xpath": ".//product",
+                "field_mapping": {"external_id": "./sku/text()", "name": "./name/text()", "cost": "./price/text()"},
+            },
+        },
+    )
+    SupplierMappingProfile.objects.update_or_create(
+        supplier=supplier,
+        idx=DEMO_PROFILE_IDX,
+        defaults={
+            "name": "Default PL",
+            "target_channel_idxs": [DEMO_CHANNEL],
+            "is_active": True,
+            "import_language": _lang("pl"),
+        },
+    )
+    # Start with zero links so delete-impact reports affected_links_count=0 (the manual-link
+    # scenarios create + clean up their own transient links).
+    ProductSupplierLink.objects.filter(supplier=supplier).delete()
+    # ProductSupplierLink resolves the anchor by sku string — the RealProduct must exist.
+    RealProduct.objects.get_or_create(sku=DEMO_LINK_SKU)
+
+    admin = User.objects.filter(is_superuser=True).order_by("id").first()
+    now = timezone.now()
+    for external_id, status in DEMO_PRODUCTS:
+        approved = status == ProductStatus.APPROVED
+        SupplierProduct.objects.update_or_create(
+            supplier=supplier,
+            external_id=external_id,
+            defaults={
+                "feed": feed,
+                "name": f"{external_id} demo product",
+                "cost": Decimal("100.0000"),
+                "currency": "PLN",
+                "stock": 10,
+                "ean": "",  # blank -> push skips RealProduct EAN validation
+                "status": status,
+                "pushed_to_channel_idxs": [],
+                "reviewed_by": admin if approved else None,
+                "reviewed_at": now if approved else None,
+            },
+        )
+    return f"demo-supplier: feed {DEMO_FEED_IDX}, profile {DEMO_PROFILE_IDX}, {len(DEMO_PRODUCTS)} SPs, link {DEMO_LINK_SKU}"
+
+
 def main() -> None:
     _wipe_prior_run()
     _upsert_suppliers()
+    demo_msg = _ensure_demo_supplier()
     anchor_msg = _ensure_anchor()
     warehouse_msg = _ensure_warehouse()
     print("=== seed-suppliers-e2e ===")
-    print(f"suppliers ready: {', '.join(SUPPLIER_IDXS)}")
+    print(f"suppliers ready: {', '.join(SUPPLIER_IDXS)}, {DEMO_IDX}")
+    print(demo_msg)
     print(anchor_msg)
     print(warehouse_msg)
     print("=== done ===")

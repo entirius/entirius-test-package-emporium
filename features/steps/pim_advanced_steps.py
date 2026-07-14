@@ -244,9 +244,16 @@ def step_product_has_inheritance_enabled(context, sku: str, channel_idx: str) ->
 
 @given('product "{sku}" on "{channel_idx}" has description inheritance enabled')
 def step_product_has_description_inheritance_enabled(context, sku: str, channel_idx: str) -> None:
+    # Recreate fresh so the scenario is re-runnable without a reseed: a local description left
+    # from a prior run would block re-enabling inherit_descriptions below.
+    _delete_product_from_channel(context, sku, channel_idx)
     _ensure_product_on_channel(context, sku, channel_idx)
     url = context.api.url(f"api/pim/v2/admin/{channel_idx}/products/{sku}/")
     context.api.patch(url, json={"inherit_descriptions": True})
+    # toggle-override on a description feature needs an existing ProductAttribute row to flip;
+    # enabling inheritance does not materialize one. Add it AFTER enabling — order matters, a
+    # pre-existing local description would block enabling inherit_descriptions.
+    context.api.patch(url, json={"attributes": [{"feature_idx": "name", "value_txt_t9n": {"en": sku}}]})
 
 
 @given('product "{sku}" on "{channel_idx}" inherits from default')

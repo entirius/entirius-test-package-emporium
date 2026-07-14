@@ -32,3 +32,5 @@ ENT-CFG02,standard-rate,1399,
 ENT-BND01,standard-rate,1799,1499
 ENT-BND02,standard-rate,2299,1899
 ENT-CUS01,standard-rate,899,
+1C01/N,standard-rate,549,
+2R04/NR,standard-rate,449,

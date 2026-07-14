@@ -77,8 +77,10 @@ Feature: PIM Admin API -- Translation Inheritance
 
   @inheritance @toggle
   Scenario: Toggle language override on inherited attribute
-    Given product "TEST-INHERIT-001" on "default-europe" has description inheritance enabled
-    When I POST "/api/pim/v2/admin/default-europe/products/TEST-INHERIT-001/toggle-override/" with JSON:
+    # Dedicated product: toggle needs a local override attribute, which would otherwise block
+    # re-enabling inheritance on the shared TEST-INHERIT-001 in a re-run without reseed.
+    Given product "TEST-INHERIT-OVR-001" on "default-europe" has description inheritance enabled
+    When I POST "/api/pim/v2/admin/default-europe/products/TEST-INHERIT-OVR-001/toggle-override/" with JSON:
       """
       {
         "feature_idx": "name",

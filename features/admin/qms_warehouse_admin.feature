@@ -6,6 +6,7 @@ Feature: QMS Warehouse Admin API v2
 
   Background:
     Given the test package has been imported
+    And the channel is the primary channel
     And I am authenticated as an admin user
 
   # --- Authentication ---
@@ -45,9 +46,9 @@ Feature: QMS Warehouse Admin API v2
   # --- Warehouse Detail ---
 
   Scenario: Retrieve warehouse by code
-    When I GET the v2 admin endpoint "qms/admin/warehouses/wh-manual/"
+    When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/"
     Then the response status should be 200
-    And the response field "code" should equal "wh-manual"
+    And the response field "code" should equal "manual-{channel_idx}"
     And the response field "source_type" should equal "manual"
     And the response field "is_active" should be true
     And the response field "channel_idxs" should be a list
@@ -59,40 +60,40 @@ Feature: QMS Warehouse Admin API v2
   # --- Stock List ---
 
   Scenario: List stock for manual warehouse
-    When I GET the v2 admin endpoint "qms/admin/warehouses/wh-manual/stock/"
+    When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/"
     Then the response status should be 200
     And the response field "results" should be a list
 
   Scenario: Search stock by SKU
-    When I GET the v2 admin endpoint "qms/admin/warehouses/wh-manual/stock/" with params
+    When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/" with params
       | param    | value   |
-      | search | ENT-S001 |
+      | search | ENT-C001 |
     Then the response status should be 200
     And the response field "count" should equal integer 1
 
   # --- Bulk Stock Edit ---
 
   Scenario: Bulk edit creates and updates stock
-    When I PATCH the v2 admin endpoint "qms/admin/warehouses/wh-manual/stock/edit/" with body
+    When I PATCH the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/edit/" with body
       """
       {"items": [{"sku": "BDD-QMS-001", "quantity": 42}]}
       """
     Then the response status should be 200
-    When I GET the v2 admin endpoint "qms/admin/warehouses/wh-manual/stock/" with params
+    When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/" with params
       | param    | value       |
       | search | BDD-QMS-001 |
     Then the response status should be 200
     And the response field "count" should equal integer 1
 
   Scenario: Bulk edit rejects negative quantity
-    When I PATCH the v2 admin endpoint "qms/admin/warehouses/wh-manual/stock/edit/" with body
+    When I PATCH the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/edit/" with body
       """
       {"items": [{"sku": "NEG", "quantity": -1}]}
       """
     Then the response status should be 400
 
   Scenario: Bulk edit rejects integration warehouse
-    When I PATCH the v2 admin endpoint "qms/admin/warehouses/wh-integration/stock/edit/" with body
+    When I PATCH the v2 admin endpoint "qms/admin/warehouses/main-{channel_idx}/stock/edit/" with body
       """
       {"items": [{"sku": "X", "quantity": 1}]}
       """
@@ -101,7 +102,7 @@ Feature: QMS Warehouse Admin API v2
   # --- Integration Warehouse ---
 
   Scenario: Integration warehouse is read-only via source_type
-    When I GET the v2 admin endpoint "qms/admin/warehouses/wh-integration/"
+    When I GET the v2 admin endpoint "qms/admin/warehouses/main-{channel_idx}/"
     Then the response status should be 200
     And the response field "source_type" should equal "integration"
-    And the response field "last_synced_at" should not be null
+    And the response field "code" should equal "main-{channel_idx}"

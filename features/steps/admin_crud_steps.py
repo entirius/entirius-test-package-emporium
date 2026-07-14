@@ -126,6 +126,7 @@ def step_save_first_result_field(context, field, alias):
 @then('the response field "{field}" should equal "{value}"')
 def step_field_equals_str(context, field, value):
     data = context.response_data
+    value = _resolve_placeholders(value, context)  # e.g. code == "manual-{channel_idx}"
     assert field in data, f"Field '{field}' missing. Keys: {list(data.keys())}"
     actual = str(data[field])
     assert actual == value, f"Expected '{field}' = '{value}', got '{actual}'"

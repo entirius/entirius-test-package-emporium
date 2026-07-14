@@ -10,3 +10,66 @@
     idx: default-europe
     label: Default Europe
     language: 2
+# --- b2b group + demo customers (features/admin/accounts_admin.feature) ------------------
+# The accounts admin suite searches customers by name ("kowalski"), filters by group ("b2b"),
+# and asserts the groups list carries code "b2b". auth.User carries the searchable name/email
+# (search matches user__first_name/last_name/email); Customer links it to the b2b Group
+# (filter matches group__code). High pks (9100+) clear the CSV/superuser-created rows; loaddata
+# resets sequences after. Explicit created_at/updated_at + date_joined: auto_now(_add) fields are
+# NOT NULL and loaddata does not populate them. Password "!" = unusable (these accounts never log in).
+- model: django_accounts.group
+  pk: 9101
+  fields:
+    code: b2b
+    name: B2B Wholesale
+    is_active: true
+    created_at: 2026-01-01T00:00:00+00:00
+    updated_at: 2026-01-01T00:00:00+00:00
+- model: auth.user
+  pk: 9101
+  fields:
+    username: jan.kowalski
+    password: "!"
+    first_name: Jan
+    last_name: Kowalski
+    email: jan.kowalski@example.com
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    date_joined: 2026-01-01T00:00:00+00:00
+- model: auth.user
+  pk: 9102
+  fields:
+    username: anna.nowak
+    password: "!"
+    first_name: Anna
+    last_name: Nowak
+    email: anna.nowak@example.com
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    date_joined: 2026-01-01T00:00:00+00:00
+- model: django_accounts.customer
+  pk: 9101
+  fields:
+    user: 9101
+    uid: 91010000-0000-4000-8000-000000000001
+    group: 9101
+    source_channel: 1
+    language: 1
+    is_active: true
+    is_verified: true
+    created_at: 2026-01-01T00:00:00+00:00
+    updated_at: 2026-01-01T00:00:00+00:00
+- model: django_accounts.customer
+  pk: 9102
+  fields:
+    user: 9102
+    uid: 91020000-0000-4000-8000-000000000002
+    group: null
+    source_channel: 1
+    language: 2
+    is_active: true
+    is_verified: false
+    created_at: 2026-01-01T00:00:00+00:00
+    updated_at: 2026-01-01T00:00:00+00:00

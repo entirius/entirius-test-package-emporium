@@ -16,7 +16,7 @@ Feature: Product Types Import Verification
 
   Scenario: CSV has correct count of simple products
     Given the CSV product type counts are loaded for the primary channel
-    Then the CSV should contain 28 "simple" products
+    Then the CSV should contain 30 "simple" products
 
   Scenario: CSV has correct count of configurable products
     Given the CSV product type counts are loaded for the primary channel
@@ -32,7 +32,7 @@ Feature: Product Types Import Verification
 
   Scenario: Total product count matches expected
     Given the CSV product type counts are loaded for the primary channel
-    Then the total CSV product count should be 33
+    Then the total CSV product count should be 35
 
   Scenario: All configurable products exist in API
     Given the channel is the primary channel

@@ -78,7 +78,7 @@ if [ -d "$FIXTURE_DIR" ]; then
                 *_golden*) echo "  Skipping $(basename "$fixture") (unit-test fixture)"; continue ;;
             esac
             echo "  Loading $(basename "$fixture")..."
-            manage.py loaddata --format=yaml "$fixture" || echo "WARNING: $(basename "$fixture") failed"
+            python manage.py loaddata --format=yaml "$fixture" || echo "WARNING: $(basename "$fixture") failed"
         fi
     done
 else
@@ -90,14 +90,14 @@ echo "========================================"
 echo "Step 2: PIM Configuration"
 echo "========================================"
 echo ""
-manage.py config-load-pim-channels "$PACKAGE_DIR/volkanos-config/pim-channels.csv"
+python manage.py config-load-pim-channels "$PACKAGE_DIR/volkanos-config/pim-channels.csv"
 echo "Attempting to load PIM features (may fail — debug on the go)..."
-manage.py config-load-pim-features "$PACKAGE_DIR/volkanos-config/pim-features.csv" || echo "WARNING: config-load-pim-features failed — features loaded from fixture"
-manage.py config-load-pim-features-sets "$PACKAGE_DIR/volkanos-config/pim-features-sets.csv"
+python manage.py config-load-pim-features "$PACKAGE_DIR/volkanos-config/pim-features.csv" || echo "WARNING: config-load-pim-features failed — features loaded from fixture"
+python manage.py config-load-pim-features-sets "$PACKAGE_DIR/volkanos-config/pim-features-sets.csv"
 
 if [ -f "$PACKAGE_DIR/volkanos-config/pim-feature-position-in-features-sets.csv" ]; then
     echo "Loading feature positions in feature sets..."
-    manage.py config-load-pim-feature-position-in-features-sets "$PACKAGE_DIR/volkanos-config/pim-feature-position-in-features-sets.csv" || echo "WARNING: config-load-pim-feature-position-in-features-sets failed — positions may use defaults"
+    python manage.py config-load-pim-feature-position-in-features-sets "$PACKAGE_DIR/volkanos-config/pim-feature-position-in-features-sets.csv" || echo "WARNING: config-load-pim-feature-position-in-features-sets failed — positions may use defaults"
 fi
 
 echo ""
@@ -105,10 +105,10 @@ echo "========================================"
 echo "Step 3: Attributes"
 echo "========================================"
 echo ""
-manage.py attributes-import-from-csv badge "$PACKAGE_DIR/attributes--badge.csv"
-manage.py attributes-import-from-csv brand "$PACKAGE_DIR/attributes--brand.csv"
-manage.py attributes-import-from-csv series "$PACKAGE_DIR/attributes--series.csv"
-manage.py attributes-import-from-csv options "$PACKAGE_DIR/attributes--options.csv"
+python manage.py attributes-import-from-csv badge "$PACKAGE_DIR/attributes--badge.csv"
+python manage.py attributes-import-from-csv brand "$PACKAGE_DIR/attributes--brand.csv"
+python manage.py attributes-import-from-csv series "$PACKAGE_DIR/attributes--series.csv"
+python manage.py attributes-import-from-csv options "$PACKAGE_DIR/attributes--options.csv"
 
 echo ""
 echo "========================================"
@@ -118,7 +118,7 @@ echo ""
 for ch in "${CHANNEL_LIST[@]}"; do
     CSV="$PACKAGE_DIR/categories--${ch}.csv"
     if [ -f "$CSV" ]; then
-        manage.py categories-import-from-csv "$ch" "$CSV"
+        python manage.py categories-import-from-csv "$ch" "$CSV"
     else
         echo "WARNING: $CSV not found — skipping categories for $ch"
     fi
@@ -137,7 +137,7 @@ fi
 for ch in "${CHANNEL_LIST[@]}"; do
     CSV="$PACKAGE_DIR/products--${ch}.csv"
     if [ -f "$CSV" ]; then
-        manage.py products-import-from-csv "$ch" "$CSV" $SKIP_PICS
+        python manage.py products-import-from-csv "$ch" "$CSV" $SKIP_PICS
     else
         echo "WARNING: $CSV not found — skipping products for $ch"
     fi
@@ -151,7 +151,7 @@ echo ""
 for ch in "${CHANNEL_LIST[@]}"; do
     CSV="$PACKAGE_DIR/products-position--${ch}.csv"
     if [ -f "$CSV" ]; then
-        manage.py products-position-import-from-csv "$ch" "$CSV"
+        python manage.py products-position-import-from-csv "$ch" "$CSV"
     else
         echo "WARNING: $CSV not found — skipping product positions for $ch"
     fi
@@ -166,17 +166,17 @@ for ch in "${CHANNEL_LIST[@]}"; do
     CSV="$PACKAGE_DIR/pricelist--${ch}.csv"
     CUR="${CHANNEL_CURRENCY[$ch]}"
     if [ -f "$CSV" ]; then
-        manage.py import-pricelist-from-csv "$ch" "$CSV" --currency_code="$CUR"
+        python manage.py import-pricelist-from-csv "$ch" "$CSV" --currency_code="$CUR"
     else
         echo "WARNING: $CSV not found — skipping pricelist for $ch"
     fi
 done
-manage.py manage-pricelists
+python manage.py manage-pricelists
 
 echo ""
 echo "Step 7b: Bundle Component Prices"
 echo ""
-manage.py shell -c "
+python manage.py shell -c "
 from django_pricemanager.models import Price, PriceList, ProductRepresentation
 from django_pim.models.product_bundle.bundle_link import BundleLink
 count = 0
@@ -211,7 +211,7 @@ echo ""
 if [ -z "$SKIP_PICS" ]; then
     echo "Generating thumbnails for imported images..."
     for ch in "${CHANNEL_LIST[@]}"; do
-        manage.py pim-thumbs-generate "$ch" || echo "WARNING: pim-thumbs-generate $ch failed"
+        python manage.py pim-thumbs-generate "$ch" || echo "WARNING: pim-thumbs-generate $ch failed"
     done
 else
     echo "Skipping thumbnail generation (no images imported)"
@@ -223,9 +223,9 @@ echo "Step 7d: Omnibus Prices (EU compliance)"
 echo "========================================"
 echo ""
 for ch in "${CHANNEL_LIST[@]}"; do
-    manage.py fill-omnibus-product-representation-from-pim "$ch"
+    python manage.py fill-omnibus-product-representation-from-pim "$ch"
 done
-manage.py calculate-omnibus-price
+python manage.py calculate-omnibus-price
 
 echo ""
 echo "========================================"
@@ -254,7 +254,7 @@ wait_for_qms() {
         # before the worker even picks the task up. Count BOTH non-terminal states as
         # pending so the wait actually blocks until the xray push has finished writing
         # checkout.Stock; otherwise the next step (or a second push) races incomplete data.
-        RESULT=$(manage.py shell -c "
+        RESULT=$(python manage.py shell -c "
 from django_qms.models import XrayPointInTime
 pits = XrayPointInTime.objects.all()
 print(f'{pits.count()},{pits.filter(proces_status__in=[\"waiting\",\"processing\"]).count()}')
@@ -283,7 +283,7 @@ wait_for_checkout_stock() {
     while [ $ELAPSED -lt $MAX_WAIT ]; do
         sleep 5
         ELAPSED=$((ELAPSED + 5))
-        CUR=$(manage.py shell -c "from django_checkout.models import Stock
+        CUR=$(python manage.py shell -c "from django_checkout.models import Stock
 print(Stock.objects.filter(quantity__gt=0).count())" 2>/dev/null | tail -1)
         if [ "${CUR:-x}" = "${PREV:-y}" ] && [ "${CUR:-0}" -gt 0 ] 2>/dev/null; then
             STABLE=$((STABLE + 1))
@@ -300,7 +300,7 @@ print(Stock.objects.filter(quantity__gt=0).count())" 2>/dev/null | tail -1)
     echo "WARNING: checkout.Stock not settled after ${MAX_WAIT}s — proceeding anyway"
 }
 
-manage.py qms-manage-quantities
+python manage.py qms-manage-quantities
 wait_for_qms
 
 echo ""
@@ -308,7 +308,7 @@ echo "========================================"
 echo "Step 9: Matrix (Read Model)"
 echo "========================================"
 echo ""
-manage.py fill-read-model
+python manage.py fill-read-model
 
 echo ""
 echo "========================================"
@@ -322,9 +322,9 @@ echo ""
 # that every representation exists, wait for completion, then rebuild the read model so
 # Matrix reflects the reconciled stock. Idempotent: re-pushing the same qty is a no-op
 # for products already correct.
-manage.py qms-manage-quantities
+python manage.py qms-manage-quantities
 wait_for_checkout_stock
-manage.py fill-read-model
+python manage.py fill-read-model
 
 echo ""
 echo "========================================"
@@ -335,7 +335,7 @@ for dp_csv in "$PACKAGE_DIR"/deliverypoints--*.csv; do
     [ -f "$dp_csv" ] || continue
     DP_TYPE=$(basename "$dp_csv" | sed 's/deliverypoints--//;s/\.csv//')
     echo "Importing delivery points: $DP_TYPE"
-    manage.py import_deliverypoints --file "$dp_csv" --type "$DP_TYPE" --mode incremental
+    python manage.py import_deliverypoints --file "$dp_csv" --type "$DP_TYPE" --mode incremental
 done
 
 echo ""

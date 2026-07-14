@@ -149,6 +149,13 @@ FIXTURE_FILES=(
 )
 
 for fixture in "${FIXTURE_FILES[@]}"; do
+    # Fixture filename starts with the app label; skip apps this service does not run
+    # (e.g. django_contact_forms ships ahead of its module — spec-first).
+    APP="${fixture%%.*}"
+    if ! docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python -c \"import django, os; os.environ.setdefault('DJANGO_SETTINGS_MODULE','main.settings'); django.setup(); from django.apps import apps; apps.get_app_config('$APP')\"" > /dev/null 2>&1; then
+        echo "Skipping $fixture ($APP not installed in this service)"
+        continue
+    fi
     echo "Loading $fixture..."
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/$fixture"
 done

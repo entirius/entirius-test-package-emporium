@@ -20,6 +20,19 @@ for arg in "$@"; do
     esac
 done
 
+# ── Progress: every phase goes through step(); the EXIT trap names the phase that failed ──
+SEED_START=$SECONDS
+SEED_STEP="init"
+step() {
+    SEED_STEP="$1"
+    echo ""
+    echo "========================================"
+    echo "[$((SECONDS - SEED_START))s] $1"
+    echo "========================================"
+    echo ""
+}
+trap 'code=$?; if [ $code -ne 0 ]; then echo ""; echo "SEED FAILED (exit $code) during: $SEED_STEP"; fi' EXIT
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
 
@@ -109,11 +122,7 @@ if [ "$OMNIBUS_ONLY" = "1" ]; then
     exit 0
 fi
 
-echo ""
-echo "========================================"
-echo "Step 1: Reset + Migrate Database"
-echo "========================================"
-echo ""
+step "Step 1: Reset + Migrate Database"
 echo "Dropping and recreating database..."
 docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$DB_NAME' AND pid <> pg_backend_pid();" > /dev/null 2>&1 || true
 docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "DROP DATABASE IF EXISTS \"$DB_NAME\";" > /dev/null 2>&1
@@ -122,11 +131,7 @@ echo "Database recreated."
 echo "Running migrations..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate --noinput"
 
-echo ""
-echo "========================================"
-echo "Step 2: Load Fixtures"
-echo "========================================"
-echo ""
+step "Step 2: Load Fixtures"
 # NOTE: never add *_golden* fixtures here — they are unit-test catalogues reusing real-seed
 # pks (channels 1/2). import-package.sh skips them by glob; this list must omit them too.
 FIXTURE_FILES=(
@@ -160,11 +165,7 @@ for fixture in "${FIXTURE_FILES[@]}"; do
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/$fixture"
 done
 
-echo ""
-echo "========================================"
-echo "Step 3: Create Superuser"
-echo "========================================"
-echo ""
+step "Step 3: Create Superuser"
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SUPERUSER_PASSWORD=admin123 python manage.py createsuperuser --noinput --username admin --email admin@entirius.com 2>/dev/null || echo 'Superuser already exists'"
 echo "Creating Customer profile for admin user..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"
@@ -182,11 +183,7 @@ EmailAddress.objects.get_or_create(user=u, email=u.email, defaults={'verified': 
 print(f'Customer uid={c.uid} created={created}')
 \""
 
-echo ""
-echo "========================================"
-echo "Step 3b: Create Test Users"
-echo "========================================"
-echo ""
+step "Step 3b: Create Test Users"
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"
 from django.contrib.auth import get_user_model
 U = get_user_model()
@@ -195,25 +192,13 @@ u.set_password('testuser123'); u.is_active = True; u.save()
 print('testuser', 'created' if created else 'reset')
 \""
 
-echo ""
-echo "========================================"
-echo "Step 4: Import Package Data"
-echo "========================================"
-echo ""
+step "Step 4: Import Package Data"
 docker exec -e SVC_DIR="$SVC_DIR" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
 
-echo ""
-echo "========================================"
-echo "Step 5: Upload ContentDB Images"
-echo "========================================"
-echo ""
+step "Step 5: Upload ContentDB Images"
 docker exec "$CONTAINER" bash /entirius/test-package/scripts/upload-contentdb-images.sh || echo "Image upload skipped (optional)"
 
-echo ""
-echo "========================================"
-echo "Step 6: Post-Seed Syncs"
-echo "========================================"
-echo ""
+step "Step 6: Post-Seed Syncs"
 # Sync channels from PIM to dependent modules
 echo "Syncing ContentDB languages..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_contentdb_languages 2>/dev/null || true"
@@ -296,11 +281,7 @@ echo "Seeding manual Warehouse per channel (operator-editable)..."
 docker cp "$PACKAGE_ROOT/scripts/seed-manual-warehouse.py" "$CONTAINER":/tmp/seed-manual-warehouse.py
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SETTINGS_MODULE=main.settings python /tmp/seed-manual-warehouse.py 2>&1 | tail -8"
 
-echo ""
-echo "========================================"
-echo "Seed Complete!"
-echo "========================================"
-echo ""
+step "Seed Complete!"
 OMNIBUS_COUNT=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'python manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
 echo "Pipeline status: omnibus calculated for $OMNIBUS_COUNT records"
 echo ""
@@ -319,3 +300,6 @@ if [ -f "$PACKAGE_ROOT/package/volkanos-config/channels.conf" ]; then
     done
 fi
 echo ""
+
+echo ""
+echo "SEED OK in $((SECONDS - SEED_START))s"

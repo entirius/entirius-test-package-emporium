@@ -1,8 +1,10 @@
 #!/bin/bash
 #
-# entirius-docker-seed.sh — Seeds Volkanos DB from entirius-docker host
-# Prerequisites: entirius-docker running with backend + celery
-# Usage: ./scripts/entirius-docker-seed.sh
+# seed.sh — Seeds a running Volkanos service with the Emporium test package (host side).
+# Prerequisites: a compose stack (e.g. entirius-zeno) with the service, a celery worker,
+# and this repo mounted at /entirius/test-package inside the containers.
+# Usage: CONTAINER=<service-container> SVC_DIR=<service dir in container> ./scripts/seed.sh
+# Defaults target entirius-zeno (make seed wires them up).
 #
 
 set -e
@@ -21,13 +23,16 @@ done
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Detect container name
-CONTAINER=$(docker ps --filter "name=volkanos" --filter "status=running" --format '{{.Names}}' | head -1)
-DB_CONTAINER="${DB_CONTAINER:-entirius-docker-db-1}"
+# Container/service knobs — the harness (e.g. zeno `make seed`) passes them in.
+CONTAINER="${CONTAINER:-$(docker ps --filter "name=service" --filter "status=running" --format '{{.Names}}' | head -1)}"
+DB_CONTAINER="${DB_CONTAINER:?DB_CONTAINER not set (postgres container)}"
+SVC_DIR="${SVC_DIR:-/entirius/services/entirius-service-volkanos}"
+DB_USER="${DB_USER:-entirius}"
+DB_NAME="${DB_NAME:-entirius}"
 
 if [ -z "$CONTAINER" ]; then
-    echo "ERROR: No running volkanos container found."
-    echo "Start entirius-docker first: cd entirius-docker && make dev"
+    echo "ERROR: No running service container found."
+    echo "Start the stack first (zeno: make up) or pass CONTAINER=<name>."
     exit 1
 fi
 
@@ -40,9 +45,9 @@ if [ "$CELERY_CHECK" = "0" ]; then
     echo "ERROR: Celery worker is not running!"
     echo "QMS import requires Celery. Start it before seeding."
     echo ""
-    echo "Option 1: If celery service is in docker-compose.yml, restart with 'make dev'"
-    echo "Option 2: Run manually:"
-    echo "  docker exec -d $CONTAINER bash -c 'cd /entirius/service/$PROJECT_NAME && celery -A main worker -l info -Q celery,quantities,fill_product_representation,pricemanager_create_pricelist &'"
+    echo "zeno: the worker compose service should be up (make up / make dev); check: docker compose ps worker"
+    echo "Manual fallback:"
+    echo "  docker exec -d -w $SVC_DIR $CONTAINER celery -A main worker -l info -Q celery,quantities,fill_product_representation,pricemanager_create_pricelist"
     exit 1
 fi
 echo "Celery is running."
@@ -50,12 +55,7 @@ echo "Celery is running."
 # Check volume mount
 echo "Checking test package mount..."
 docker exec "$CONTAINER" test -d /entirius/test-package/package || {
-    echo "ERROR: /entirius/test-package not mounted in container."
-    echo ""
-    echo "Add to docker-compose.dev.yml under volkanos volumes:"
-    echo "  - \${TEST_PACKAGE_PATH:-./repos/entirius-test-package}:/entirius/test-package"
-    echo ""
-    echo "Then restart: make dev"
+    echo "ERROR: /entirius/test-package not mounted in container (zeno: make clone-tests, then restart)."
     exit 1
 }
 
@@ -67,10 +67,10 @@ PACKAGE_DIR="/entirius/test-package/package"
 # fill read model per shop. Safe to re-run on any DB state.
 run_omnibus_pipeline() {
     echo "Backfilling PriceHistory for omnibus demo..."
-    docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py backfill_demo_price_history 2>&1 | tail -2" || true
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py backfill_demo_price_history 2>&1 | tail -2" || true
 
     echo "Calculating omnibus prices per channel..."
-    docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && manage.py shell -c "
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'manage.py shell -c "
 from django_pricemanager.models import Channel
 from django.core.management import call_command
 qs = Channel.objects.all()
@@ -85,7 +85,7 @@ for c in qs:
 "'
 
     echo "Filling matrix omnibus + read model..."
-    docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && manage.py shell -c "
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'manage.py shell -c "
 from django_pim.models import Shop
 from django.core.management import call_command
 for s in Shop.objects.all():
@@ -103,7 +103,7 @@ if [ "$OMNIBUS_ONLY" = "1" ]; then
     echo "Omnibus-only mode (skipping fixture reload)"
     echo "========================================"
     run_omnibus_pipeline
-    OMNIBUS_COUNT=$(docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
+    OMNIBUS_COUNT=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
     echo ""
     echo "Pipeline status: omnibus calculated for $OMNIBUS_COUNT records"
     exit 0
@@ -115,12 +115,12 @@ echo "Step 1: Reset + Migrate Database"
 echo "========================================"
 echo ""
 echo "Dropping and recreating database..."
-docker exec "$DB_CONTAINER" psql -U volkanos -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'volkanos' AND pid <> pg_backend_pid();" > /dev/null 2>&1 || true
-docker exec "$DB_CONTAINER" psql -U volkanos -d postgres -c "DROP DATABASE IF EXISTS volkanos;" > /dev/null 2>&1
-docker exec "$DB_CONTAINER" psql -U volkanos -d postgres -c "CREATE DATABASE volkanos OWNER volkanos;" > /dev/null 2>&1
+docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$DB_NAME' AND pid <> pg_backend_pid();" > /dev/null 2>&1 || true
+docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "DROP DATABASE IF EXISTS \"$DB_NAME\";" > /dev/null 2>&1
+docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "CREATE DATABASE \"$DB_NAME\" OWNER \"$DB_USER\";" > /dev/null 2>&1
 echo "Database recreated."
 echo "Running migrations..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py migrate --noinput"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py migrate --noinput"
 
 echo ""
 echo "========================================"
@@ -150,7 +150,7 @@ FIXTURE_FILES=(
 
 for fixture in "${FIXTURE_FILES[@]}"; do
     echo "Loading $fixture..."
-    docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/$fixture"
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/$fixture"
 done
 
 echo ""
@@ -158,9 +158,9 @@ echo "========================================"
 echo "Step 3: Create Superuser"
 echo "========================================"
 echo ""
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && DJANGO_SUPERUSER_PASSWORD=admin123 manage.py createsuperuser --noinput --username admin --email admin@entirius.com 2>/dev/null || echo 'Superuser already exists'"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SUPERUSER_PASSWORD=admin123 manage.py createsuperuser --noinput --username admin --email admin@entirius.com 2>/dev/null || echo 'Superuser already exists'"
 echo "Creating Customer profile for admin user..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py shell -c \"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py shell -c \"
 from django.contrib.auth.models import User
 from django_accounts.models import Customer
 from django_regional.models import Language
@@ -180,21 +180,27 @@ echo "========================================"
 echo "Step 3b: Create Test Users"
 echo "========================================"
 echo ""
-docker exec "$CONTAINER" python /entirius/docker/ensure-test-users.py
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py shell -c \"
+from django.contrib.auth import get_user_model
+U = get_user_model()
+u, created = U.objects.get_or_create(username='testuser', defaults={'email': 'testuser@entirius.com'})
+u.set_password('testuser123'); u.is_active = True; u.save()
+print('testuser', 'created' if created else 'reset')
+\""
 
 echo ""
 echo "========================================"
 echo "Step 4: Import Package Data"
 echo "========================================"
 echo ""
-docker exec "$CONTAINER" bash -c "chmod +x /entirius/test-package/scripts/import-package.sh && /entirius/test-package/scripts/import-package.sh $PACKAGE_DIR"
+docker exec -e SVC_DIR="$SVC_DIR" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
 
 echo ""
 echo "========================================"
 echo "Step 5: Upload ContentDB Images"
 echo "========================================"
 echo ""
-docker exec "$CONTAINER" bash -c "chmod +x /entirius/test-package/scripts/upload-contentdb-images.sh && /entirius/test-package/scripts/upload-contentdb-images.sh" || echo "Image upload skipped (optional)"
+docker exec "$CONTAINER" bash /entirius/test-package/scripts/upload-contentdb-images.sh || echo "Image upload skipped (optional)"
 
 echo ""
 echo "========================================"
@@ -203,18 +209,18 @@ echo "========================================"
 echo ""
 # Sync channels from PIM to dependent modules
 echo "Syncing ContentDB languages..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_contentdb_languages 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_contentdb_languages 2>/dev/null || true"
 echo "Syncing ContentDB channels..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_contentdb_channels 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_contentdb_channels 2>/dev/null || true"
 
 # Load agreements module fixtures + sync + publish
 echo "Loading agreements fixtures..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py loaddata default_agreements 2>/dev/null || true"
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py loaddata legal_pages 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py loaddata default_agreements 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py loaddata legal_pages 2>/dev/null || true"
 echo "Syncing agreement channels..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_agreement_channels 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_agreement_channels 2>/dev/null || true"
 echo "Auto-publishing agreement versions..."
-docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && DJANGO_SETTINGS_MODULE=main.settings python -c "
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'DJANGO_SETTINGS_MODULE=main.settings python -c "
 import django; django.setup()
 try:
     from django_agreements.services import version_service
@@ -233,7 +239,7 @@ except ImportError:
 
 # Populate CurrentPrice from legacy PriceList snapshots (PM v3 architecture)
 echo "Populating CurrentPrice from PriceList snapshots..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py migrate_to_current_price 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py migrate_to_current_price 2>/dev/null || true"
 
 # Omnibus pipeline (PH backfill + calculate + fill read model).
 # EU compliance: shows lowest 30-day price during promo. Seed data has
@@ -245,35 +251,35 @@ run_omnibus_pipeline
 
 # Sync FAQ channels from PIM
 echo "Syncing FAQ channels..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_faq_channels --verbosity 0 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_faq_channels --verbosity 0 2>/dev/null || true"
 
 # Sync Deliverypoints channels from PIM
 echo "Syncing Deliverypoints channels..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_dp_channels --verbosity 0 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_dp_channels --verbosity 0 2>/dev/null || true"
 
 # Sync voucher channels from PIM (the DB reset above drops the boot-time sync) and
 # seed voucher channel config + campaigns + product-vouchers. Idempotent; product
 # anchors are resolved by SKU so this MUST run after the package import (Step 4).
 echo "Syncing voucher channels..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py sync_voucher_channels 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py sync_voucher_channels 2>/dev/null || true"
 echo "Seeding voucher config (channels/campaigns/product-vouchers)..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && DJANGO_SETTINGS_MODULE=main.settings python /entirius/test-package/scripts/seed-vouchers.py 2>&1 | tail -12" || echo "Voucher seed skipped (module absent?)"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SETTINGS_MODULE=main.settings python /entirius/test-package/scripts/seed-vouchers.py 2>&1 | tail -12" || echo "Voucher seed skipped (module absent?)"
 
 # Discover Volkanos modules (munin)
 echo "Discovering modules..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py discover_modules --verbosity 0 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py discover_modules --verbosity 0 2>/dev/null || true"
 
 # Seed demo enrichment proposals (text + picture) so the CMS review queue has examples to review.
 # Runs after the catalogue import — targets the seeded ENT-S00x products via the registered adapter.
 echo "Seeding demo enrichment proposals..."
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py seed_demo_proposals --verbosity 0 2>/dev/null || true"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py seed_demo_proposals --verbosity 0 2>/dev/null || true"
 
 # Backfill QMS Warehouse from authoritative checkout.Stock so the CMS Stock panel
 # has data. Warehouse/WarehouseStock is the CMS-facing entry point; further edits
 # propagate back to checkout.Stock via signals. XRAY remains the engine for both channels.
 echo "Backfilling QMS Warehouse (integration) for each seeded channel..."
-for ch in $(docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && manage.py shell --no-imports -c "from django_checkout.models import Channel; print(\" \".join(Channel.objects.values_list(\"idx\", flat=True)))"' 2>/dev/null); do
-    docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && manage.py backfill_warehouse --supplier-code=$ch --channel-idx=$ch --warehouse-code=main-$ch 2>&1 | tail -2"
+for ch in $(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'manage.py shell --no-imports -c "from django_checkout.models import Channel; print(\" \".join(Channel.objects.values_list(\"idx\", flat=True)))"' 2>/dev/null); do
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "manage.py backfill_warehouse --supplier-code=$ch --channel-idx=$ch --warehouse-code=main-$ch 2>&1 | tail -2"
 done
 
 # Seed a manual Warehouse per channel so testers can exercise the CMS edit flow
@@ -281,14 +287,14 @@ done
 # touching the integration warehouses (which are read-only in the UI).
 echo "Seeding manual Warehouse per channel (operator-editable)..."
 docker cp "$PACKAGE_ROOT/scripts/seed-manual-warehouse.py" "$CONTAINER":/tmp/seed-manual-warehouse.py
-docker exec "$CONTAINER" bash -c "cd /entirius/service/\$PROJECT_NAME && DJANGO_SETTINGS_MODULE=main.settings python /tmp/seed-manual-warehouse.py 2>&1 | tail -8"
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SETTINGS_MODULE=main.settings python /tmp/seed-manual-warehouse.py 2>&1 | tail -8"
 
 echo ""
 echo "========================================"
 echo "Seed Complete!"
 echo "========================================"
 echo ""
-OMNIBUS_COUNT=$(docker exec "$CONTAINER" bash -c 'cd /entirius/service/$PROJECT_NAME && manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
+OMNIBUS_COUNT=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
 echo "Pipeline status: omnibus calculated for $OMNIBUS_COUNT records"
 echo ""
 echo "Admin panel: http://localhost:8000/admin/"

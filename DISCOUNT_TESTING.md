@@ -8,7 +8,7 @@ Comprehensive guide for testing discount rules in the Volkanos checkout system.
 # From entirius-docker root
 
 # Import test package (includes discount fixtures)
-./repos/entirius-test-package/scripts/entirius-docker-seed.sh
+./repos/entirius-test-package/scripts/seed.sh
 
 # Run all discount rule tests
 make test-tags TAGS=@discount-rules
@@ -471,7 +471,7 @@ Enable verbose output: `behave --verbose --tags=@discount-rules`
 1. Edit `fixtures/django_checkout.discounts.yaml`
 2. Update `package/discount-rules.csv`
 3. Update `DISCOUNT_RULES.md` documentation
-4. Re-import: `./repos/entirius-test-package/scripts/entirius-docker-seed.sh`
+4. Re-import: `./repos/entirius-test-package/scripts/seed.sh`
 5. Run tests to verify
 
 ## See Also

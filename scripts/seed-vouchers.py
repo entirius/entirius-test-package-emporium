@@ -6,7 +6,7 @@
 
 Run from inside the volkanos container, AFTER the package import (products must
 exist — ProductVoucher.product is a PROTECT FK to pim.Product). Wired into
-entirius-docker-seed.sh Step 6, after `sync_voucher_channels`.
+seed.sh Step 6, after `sync_voucher_channels`.
 
 Why a Python seed (not a loaddata fixture): ProductVoucher / VoucherProductFilter
 FK + M2M target pim.Product, which is CSV-imported (Step 4) AFTER fixtures load

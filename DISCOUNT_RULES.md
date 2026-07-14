@@ -235,7 +235,7 @@ Scenario: Apply 15% discount code at min 100 PLN
 
 ```bash
 # From entirius-docker root
-./repos/entirius-test-package/scripts/entirius-docker-seed.sh
+./repos/entirius-test-package/scripts/seed.sh
 ```
 
 ## Discount Modifier Types Reference

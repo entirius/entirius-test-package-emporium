@@ -59,7 +59,7 @@ menu-scrolling tests — see `categories--*.csv`.
 9. **QMS** — quantities (requires Celery)
 10. **Matrix** — read model generation
 
-Entry points: `../scripts/entirius-docker-seed.sh` (host side) →
+Entry points: `../scripts/seed.sh` (host side) →
 `../scripts/import-package.sh` (container side).
 
 ## Devtools — bulk data generation

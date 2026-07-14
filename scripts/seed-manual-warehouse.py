@@ -4,7 +4,7 @@
 
 """Seed a manual Warehouse per channel with a few SKU rows.
 
-Run from inside the volkanos container (via entirius-docker-seed.sh).
+Run from inside the volkanos container (via seed.sh).
 
 Lets QA test the CMS manual edit flow + signal propagation
 (WarehouseStock change -> checkout.Stock update -> Matrix re-render).

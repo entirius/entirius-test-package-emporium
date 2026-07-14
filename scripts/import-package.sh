@@ -58,7 +58,7 @@ for ch in "${CHANNEL_LIST[@]}"; do
     echo "  $ch -> ${CHANNEL_CURRENCY[$ch]}"
 done
 
-cd "/entirius/service/${PROJECT_NAME:?PROJECT_NAME not set}"
+cd "${SVC_DIR:?SVC_DIR not set}"
 
 echo ""
 echo "========================================"
@@ -73,7 +73,7 @@ if [ -d "$FIXTURE_DIR" ]; then
             # *_golden* fixtures are unit-test catalogues (own channels at pk 1/2, features at
             # pk 3+) — loading them here would overwrite the real seed records. Skip them.
             # This glob-skip is the canonical guard; the FIXTURE_FILES allow-list in
-            # entirius-docker-seed.sh is a load-ordering convenience, not a safety boundary.
+            # seed.sh is a load-ordering convenience, not a safety boundary.
             case "$(basename "$fixture")" in
                 *_golden*) echo "  Skipping $(basename "$fixture") (unit-test fixture)"; continue ;;
             esac

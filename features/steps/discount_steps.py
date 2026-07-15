@@ -21,6 +21,28 @@ from entirius_tests.csv_loader import (
 # ─────────────────────────────────────────────────────────────────────────
 
 
+def _cart_body(context, items, discounts=None):
+    """Full v1 cart PUT body around the given items (schema rejects partial bodies)."""
+    cart_data = getattr(context, "cart_data", None) or {}
+    return {
+        "cart": {
+            "items": items,
+            "discounts": discounts or [],
+            "discount_amount": None,
+            "base_total_price": None,
+            "base_netto_price": None,
+            "total_price": None,
+            "validation_status": None,
+        },
+        "addresses": cart_data.get("addresses"),
+        "payment_method": cart_data.get("payment_method"),
+        "shipping_method": cart_data.get("shipping_method"),
+        "language_code": cart_data.get("language_code", "en"),
+        "currency_code": cart_data.get("currency_code", "EUR"),
+        "country_code": cart_data.get("country_code", "PL"),
+    }
+
+
 @given("I have an empty cart")
 def step_have_empty_cart(context):
     """Create a new empty cart or clear existing cart."""
@@ -71,16 +93,22 @@ def step_add_product_to_cart(context, sku, qty):
 
 @given("I add products totaling at least {amount:d} PLN")
 def step_add_products_totaling(context, amount):
-    """Add sufficient products to reach minimum cart value (in EUR despite name PLN)."""
+    """Add sufficient products to reach minimum cart value (in EUR despite name PLN).
+
+    The runtime cart price is the only source of truth (pricelists/tax/special prices
+    shift with the dataset), so probe with 1 unit and derive the needed quantity."""
     if not hasattr(context, "cart_id") or context.cart_id is None:
         raise ValueError("Cart not created. Use 'Given I have an empty cart' first")
 
-    # Strategy: Use ENT-C001 (~567 EUR) for better control over cart total
-    # ENT-C001 is cheaper than ENT-S001 (1239 EUR), so we can hit thresholds more precisely
-    estimated_unit_price = 567  # EUR price of ENT-C001
-    quantity_needed = max(1, (amount // estimated_unit_price) + 1)
+    probe_body = _cart_body(context, items=[{"sku": "ENT-C001", "quantity": 1, "offer_price": None, "extra": None}])
+    url = context.api.checkout_url(context.channel, f"carts/{context.cart_id}/")
+    response = context.api.put(url, json=probe_body)
+    items = response.json().get("data", {}).get("cart", {}).get("items", [])
+    unit_price = float(items[0]["base_unit_price"]) if items else 0.0
+    if unit_price <= 0:
+        raise AssertionError(f"Probe item has no price (items={items}) — stock/price pipeline not settled?")
+    quantity_needed = max(1, -(-amount // int(unit_price)))  # ceil division
 
-    # Store items to be sent with the discount apply step
     if not hasattr(context, "pending_items"):
         context.pending_items = []
     context.pending_items.append({"sku": "ENT-C001", "quantity": quantity_needed, "offer_price": None, "extra": None})

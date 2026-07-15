@@ -72,11 +72,21 @@ def step_post_absolute_url_json(context, path: str) -> None:
         context.response_data = {}
 
 
+def _kv_table_rows(table):
+    """Yield [key, value] pairs from a "| key | value |" step table. behave parses a header-less
+    single-pair table as the heading row with zero data rows, so fall back to the headings — this
+    was the real cause of the pim_inheritance 'flaky' False: the PATCH body came out empty and only
+    'passed' when the product already had the flag set from earlier state."""
+    return list(table.rows) or [table.headings]
+
+
 @when('I POST "{path}" with:')
 def step_post_absolute_url_table(context, path: str) -> None:
     resolved = _resolve_absolute_path(path, context)
     url = context.api.url(resolved)
-    body = {row[0]: _coerce_table_value(_resolve_absolute_path(row[1], context)) for row in context.table}
+    body = {
+        row[0]: _coerce_table_value(_resolve_absolute_path(row[1], context)) for row in _kv_table_rows(context.table)
+    }
     context.response = context.api.post(url, json=body)
     try:
         context.response_data = context.response.json()
@@ -88,7 +98,7 @@ def step_post_absolute_url_table(context, path: str) -> None:
 def step_patch_absolute_url_table(context, path: str) -> None:
     resolved = _resolve_absolute_path(path, context)
     url = context.api.url(resolved)
-    body = {row[0]: _coerce_table_value(row[1]) for row in context.table}
+    body = {row[0]: _coerce_table_value(row[1]) for row in _kv_table_rows(context.table)}
     context.response = context.api.patch(url, json=body)
     try:
         context.response_data = context.response.json()

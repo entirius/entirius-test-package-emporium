@@ -11,10 +11,10 @@ Feature: Suppliers Admin API -- Push to PIM
     And regional language "pl" id is stored as "lang_id"
     And regional currency "PLN" id is stored as "curr_id"
 
-  Scenario: Push approved DEMO-007 SP to demo target channel
-    # DEMO-007 fixture status is 'approved' against profile default-pl -> default-europe.
-    # Own SP per push scenario: push is one-shot (approved -> pushed, no re-push) in 2.0.0.
-    When I POST to the v2 admin endpoint "suppliers/admin/products/7/push/" with body
+  Scenario: Push approved PUSH-003 SP to demo target channel
+    # PUSH-003 (bdd-push-sup) is approved and feed-less, so it stays pushable this late in the run
+    # (demo-supplier's own SPs get delisted by its feed runs). push is one-shot in 2.0.0.
+    When I POST to the v2 admin endpoint "suppliers/admin/products/8/push/" with body
       """
       {}
       """
@@ -63,13 +63,13 @@ Feature: Suppliers Admin API -- Push to PIM
     And the response field "suppliers_processed" should equal integer 1
 
   Scenario: Force re-push does not duplicate pushed_to_channel_idxs (D24/D33)
-    # DEMO-007 was pushed above; re-push is one-shot so refresh goes through force-repush,
+    # PUSH-003 was pushed above; re-push is one-shot so refresh goes through force-repush,
     # which must not duplicate the already-pushed channel.
-    When I POST to the v2 admin endpoint "suppliers/admin/products/7/force-repush/" with body
+    When I POST to the v2 admin endpoint "suppliers/admin/products/8/force-repush/" with body
       """
       {}
       """
     Then the response status should be 200
-    When I GET the v2 admin endpoint "suppliers/admin/products/7/"
+    When I GET the v2 admin endpoint "suppliers/admin/products/8/"
     Then the response status should be 200
     And the response field "pushed_to_channel_idxs" should be a list

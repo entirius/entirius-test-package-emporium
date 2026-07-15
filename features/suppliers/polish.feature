@@ -46,11 +46,17 @@ Feature: Polish cleanup — per-row quick approve + ImportLog count split
 
   @import-log @pushed-delisted-counts
   Scenario: ImportLog list response carries pushed_delisted_count + mass_delisting_triggered
-    # Lock the additive shape on ImportLogResponse. Test package import does
-    # not provoke any pushed-product delisting, so both values are at their
-    # defaults (0 / False) — the assertion is that the FIELD NAMES are present
-    # in the serialiser output, never missing. CMS dashboards (future) and
-    # operator-facing logs depend on this.
+    # Lock the additive shape on ImportLogResponse (fields present, at defaults 0/False when no
+    # pushed product was delisted). Trigger our OWN feed run so the newest ImportLog is one we
+    # control — demo-supplier has no pushed SPs (push scenarios use bdd-push-sup), so this import
+    # delists nothing. Reading results.0 right after our own trigger avoids depending on the delist
+    # counts of other features' earlier runs.
+    When I POST to the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/feeds/main-catalog/trigger/" with body
+      """
+      {"mode": "full", "async": false}
+      """
+    Then the response status should be 200
+    And the response field "run_id" should not be null
     When I GET the v2 admin endpoint "suppliers/admin/import-logs/"
     Then the response status should be 200
     And the response field "results" should be a list

@@ -35,13 +35,13 @@ Feature: Suppliers Admin API -- Review Audit Trail
     And the response field "reviewed_at" should not be null
 
   Scenario: Push sets pushed_by and pushed_at while keeping reviewed_by
-    # DEMO-004 is approved in fixture
-    When I POST to the v2 admin endpoint "suppliers/admin/products/4/push/" with body
+    # PUSH-001 (bdd-push-sup) is approved and feed-less, so it is still pushable here
+    When I POST to the v2 admin endpoint "suppliers/admin/products/6/push/" with body
       """
       {}
       """
     Then the response status should be 200
-    When I GET the v2 admin endpoint "suppliers/admin/products/4/"
+    When I GET the v2 admin endpoint "suppliers/admin/products/6/"
     Then the response status should be 200
     And the response field "pushed_at" should not be null
     And the response field "pushed_by_id" should not be null

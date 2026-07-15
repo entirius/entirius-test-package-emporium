@@ -73,25 +73,36 @@ DEMO_PROFILE_IDX = "default-pl"
 DEMO_CHANNEL = "default-europe"
 DEMO_FEATURE_SET = "furniture"
 DEMO_LINK_SKU = "0001-0007"  # RealProduct the manual-link scenarios attach demo-supplier to
-# (external_id, status) in creation order == PK order. push is one-shot in 2.0.0 (approved ->
-# pushed, no re-push), so scenarios that push cannot share one SP across features — each gets a
-# dedicated approved SP by PK:
-#   1 DEMO-001 new       -> audit approve/requeue, force-repush "non-pushed" (400)
-#   2 DEMO-002 new       -> audit reject
-#   3 DEMO-003 new       -> spare
-#   4 DEMO-004 approved  -> audit "Push sets pushed_by"
-#   5 DEMO-005 rejected  -> force-repush "on rejected" (400)
-#   6 DEMO-006 approved  -> force-repush "on pushed SP" (push then force-repush)
-#   7 DEMO-007 approved  -> multi-channel push + idempotent re-push (force-repush)
+# (external_id, status, category_path) in creation order == PK order. demo-supplier owns the
+# CRUD/feed/mapping/review scenarios. Its feed runs (delta/full) delist unmatched SPs
+# (approved -> rejected), so NO push scenario targets these — push lives on bdd-push-sup (feed-less,
+# below). category_path (surgery x3 / implants x2) is the vocabulary mapping-ux-validate samples for
+# data-values + the BOOL type-incompatibility warning.
+#   1 DEMO-001 new       surgery   -> audit approve/requeue, force-repush "non-pushed" (400)
+#   2 DEMO-002 new       surgery   -> audit reject
+#   3 DEMO-003 new       surgery
+#   4 DEMO-004 new       implants
+#   5 DEMO-005 rejected  implants  -> force-repush "on rejected" (400)
 DEMO_PRODUCTS = [
-    ("DEMO-001", ProductStatus.NEW),
-    ("DEMO-002", ProductStatus.NEW),
-    ("DEMO-003", ProductStatus.NEW),
-    ("DEMO-004", ProductStatus.APPROVED),
-    ("DEMO-005", ProductStatus.REJECTED),
-    ("DEMO-006", ProductStatus.APPROVED),
-    ("DEMO-007", ProductStatus.APPROVED),
+    ("DEMO-001", ProductStatus.NEW, "surgery"),
+    ("DEMO-002", ProductStatus.NEW, "surgery"),
+    ("DEMO-003", ProductStatus.NEW, "surgery"),
+    ("DEMO-004", ProductStatus.NEW, "implants"),
+    ("DEMO-005", ProductStatus.REJECTED, "implants"),
 ]
+
+# --- bdd-push-sup: feed-less supplier owning every push / force-repush scenario ------------
+# push is one-shot in 2.0.0 (approved -> pushed) AND demo-supplier's feed runs delist its SPs before
+# the f/m-lettered push features run. Both problems vanish if push targets live on a supplier with
+# NO feed: nothing imports, nothing delists, each scenario keeps its own approved SP. PKs land at
+# 6,7,8 (after demo's 1..5, before feed-imported SUP-* at 9+).
+PUSH_IDX = "bdd-push-sup"
+PUSH_SKU_PREFIX = "BPS"
+PUSH_PROFILE_IDX = "default-pl"
+#   6 PUSH-001 -> audit "Push sets pushed_by"
+#   7 PUSH-002 -> force-repush "on pushed SP" (push then force-repush)
+#   8 PUSH-003 -> multi-channel push + idempotent re-push (force-repush)
+PUSH_PRODUCTS = ["PUSH-001", "PUSH-002", "PUSH-003"]
 
 
 def _lang(iso2: str) -> Language:
@@ -220,10 +231,10 @@ def _ensure_warehouse() -> str:
 
 def _ensure_demo_supplier() -> str:
     """Create the demo-supplier fixture: supplier + main-catalog feed + default-pl profile +
-    DEMO-001..004 SupplierProducts + the 0001-0007 link anchor. Idempotent via update_or_create
+    DEMO-001..005 SupplierProducts + the 0001-0007 link anchor. Idempotent via update_or_create
     on natural keys, so a re-run resets statuses (approve/reject tests mutate them) and preserves
-    PKs. Generated DMS- push artifacts are dropped first so DEMO-004's re-push does not hit
-    'Product already exists'."""
+    PKs. Generated DMS- push artifacts are dropped first (belt-and-braces; push now targets
+    bdd-push-sup, not demo)."""
     from contextlib import suppress
 
     from django.contrib.auth.models import User
@@ -285,7 +296,7 @@ def _ensure_demo_supplier() -> str:
     admin = User.objects.filter(is_superuser=True).order_by("id").first()
     now = timezone.now()
     reviewed_states = {ProductStatus.APPROVED, ProductStatus.REJECTED}
-    for external_id, status in DEMO_PRODUCTS:
+    for external_id, status, category_path in DEMO_PRODUCTS:
         reviewed = status in reviewed_states
         SupplierProduct.objects.update_or_create(
             supplier=supplier,
@@ -297,6 +308,9 @@ def _ensure_demo_supplier() -> str:
                 "currency": "PLN",
                 "stock": 10,
                 "ean": "",  # blank -> push skips RealProduct EAN validation
+                # category_path is the raw feed vocabulary mapping-ux-validate samples (data-values +
+                # BOOL type-incompatibility). Text values never parse as BOOL -> 100% failure.
+                "data": {"category_path": category_path},
                 "status": status,
                 "pushed_to_channel_idxs": [],
                 "pushed_by": None,
@@ -309,15 +323,84 @@ def _ensure_demo_supplier() -> str:
     return f"demo-supplier: feed {DEMO_FEED_IDX}, profile {DEMO_PROFILE_IDX}, {len(DEMO_PRODUCTS)} SPs, link {DEMO_LINK_SKU}"
 
 
+def _ensure_push_supplier() -> str:
+    """Create bdd-push-sup: a feed-less supplier whose approved SPs (PUSH-001..003) back every
+    push / force-repush scenario. No feed -> no import -> no delisting, so the SPs stay 'approved'
+    however late (alphabetically) their feature runs. Mirrors demo-supplier's push-relevant config
+    (feature_set + active default-europe profile) so push() resolves feature_set + a real channel."""
+    from contextlib import suppress
+
+    from django.contrib.auth.models import User
+    from django.utils import timezone
+    from django_pim.models import Product, RealProduct
+
+    with suppress(Exception):
+        Product.objects.filter(real_product__sku__startswith=f"{PUSH_SKU_PREFIX}-").delete()
+    with suppress(Exception):
+        RealProduct.objects.filter(sku__startswith=f"{PUSH_SKU_PREFIX}-").delete()
+
+    pln = Currency.objects.get(iso3="PLN")
+    supplier, _ = Supplier.objects.update_or_create(
+        idx=PUSH_IDX,
+        defaults={
+            "name": "BDD Push Supplier",
+            "supplier_role": SupplierRole.TRADE,
+            "supplier_type": SupplierType.FEED,
+            "review_mode": ReviewMode.MANUAL,
+            "is_active": True,
+            "default_language": _lang("pl"),
+            "default_currency": pln,
+            "sku_prefix": PUSH_SKU_PREFIX,
+            "default_feature_set_idx": DEMO_FEATURE_SET,
+            "qty_subtract": 0,
+            "qty_minimum": 0,
+        },
+    )
+    SupplierMappingProfile.objects.update_or_create(
+        supplier=supplier,
+        idx=PUSH_PROFILE_IDX,
+        defaults={
+            "name": "Default PL",
+            "target_channel_idxs": [DEMO_CHANNEL],
+            "is_active": True,
+            "import_language": _lang("pl"),
+        },
+    )
+    admin = User.objects.filter(is_superuser=True).order_by("id").first()
+    for external_id in PUSH_PRODUCTS:
+        SupplierProduct.objects.update_or_create(
+            supplier=supplier,
+            external_id=external_id,
+            defaults={
+                "feed": None,
+                "name": f"{external_id} push product",
+                "cost": Decimal("100.0000"),
+                "currency": "PLN",
+                "stock": 10,
+                "ean": "",
+                "status": ProductStatus.APPROVED,
+                "pushed_to_channel_idxs": [],
+                "pushed_by": None,
+                "pushed_at": None,
+                "real_product": None,
+                "reviewed_by": admin,
+                "reviewed_at": timezone.now(),
+            },
+        )
+    return f"{PUSH_IDX}: profile {PUSH_PROFILE_IDX}, {len(PUSH_PRODUCTS)} approved SPs (no feed)"
+
+
 def main() -> None:
     _wipe_prior_run()
     _upsert_suppliers()
     demo_msg = _ensure_demo_supplier()
+    push_msg = _ensure_push_supplier()
     anchor_msg = _ensure_anchor()
     warehouse_msg = _ensure_warehouse()
     print("=== seed-suppliers-e2e ===")
-    print(f"suppliers ready: {', '.join(SUPPLIER_IDXS)}, {DEMO_IDX}")
+    print(f"suppliers ready: {', '.join(SUPPLIER_IDXS)}, {DEMO_IDX}, {PUSH_IDX}")
     print(demo_msg)
+    print(push_msg)
     print(anchor_msg)
     print(warehouse_msg)
     print("=== done ===")

@@ -32,7 +32,9 @@ from django_qms.services import warehouse_service
 # SKU listed here becomes out-of-stock. Keep purchase-test-critical SKUs OUT of this
 # list — notably the voucher-template ENT-S001 (SALE auto-issue / redemption tests buy
 # it) and the cart product ENT-C002. Demo with non-critical SKUs only.
-SEED_SKUS = ["ENT-C001", "ENT-C005", "ENT-S003", "ENT-B001"]
+# ENT-O003 replaces ENT-C001: with redis live, the qty=0 signal sync clobbers checkout
+# stock — and ENT-C001 is the cart-totaling SKU of the discount suite (critical).
+SEED_SKUS = ["ENT-O003", "ENT-C005", "ENT-S003", "ENT-B001"]
 
 for ch in CheckoutChannel.objects.all():
     code = f"manual-{ch.idx}"

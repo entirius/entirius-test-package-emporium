@@ -67,7 +67,7 @@ Feature: QMS Warehouse Admin API v2
   Scenario: Search stock by SKU
     When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/" with params
       | param    | value   |
-      | search | ENT-C001 |
+      | search | ENT-O003 |
     Then the response status should be 200
     And the response field "count" should equal integer 1
 

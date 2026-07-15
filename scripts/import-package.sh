@@ -278,23 +278,27 @@ print(f'{pits.count()},{pits.filter(proces_status__in=[\"waiting\",\"processing\
 # a minimum drain time has elapsed (the floor defeats the plateau false-positive).
 wait_for_checkout_stock() {
     echo "Waiting for checkout.Stock to settle (xray->checkout push)..."
-    local MAX_WAIT=180 MIN_WAIT=45 ELAPSED=10 STABLE=0 PREV=-1 CUR
+    # Plateau alone false-positives: sale/voucher SKUs (ENT-S001, ENT-C001) land LAST,
+    # so additionally require these sentinels to be purchasable before declaring settled.
+    local MAX_WAIT=300 MIN_WAIT=45 ELAPSED=10 STABLE=0 PREV=-1 CUR SENT
     sleep 10
     while [ $ELAPSED -lt $MAX_WAIT ]; do
         sleep 5
         ELAPSED=$((ELAPSED + 5))
         CUR=$(python manage.py shell -c "from django_checkout.models import Stock
 print(Stock.objects.filter(quantity__gt=0).count())" 2>/dev/null | tail -1)
+        SENT=$(python manage.py shell -c "from django_checkout.models import Stock
+print(Stock.objects.filter(product__sku__in=['ENT-S001','ENT-C001'], quantity__gt=0).values('product__sku').distinct().count())" 2>/dev/null | tail -1)
         if [ "${CUR:-x}" = "${PREV:-y}" ] && [ "${CUR:-0}" -gt 0 ] 2>/dev/null; then
             STABLE=$((STABLE + 1))
         else
             STABLE=0
         fi
-        if [ $STABLE -ge 4 ] && [ $ELAPSED -ge $MIN_WAIT ]; then
-            echo "checkout.Stock settled at ${CUR} non-zero rows (${ELAPSED}s)"
+        if [ $STABLE -ge 4 ] && [ $ELAPSED -ge $MIN_WAIT ] && [ "${SENT:-0}" -ge 2 ] 2>/dev/null; then
+            echo "checkout.Stock settled at ${CUR} non-zero rows, sentinels present (${ELAPSED}s)"
             return 0
         fi
-        echo "  ${ELAPSED}s: ${CUR:-?} non-zero stock rows (stable x${STABLE})..."
+        echo "  ${ELAPSED}s: ${CUR:-?} non-zero stock rows (stable x${STABLE}, sentinels ${SENT:-0}/2)..."
         PREV="$CUR"
     done
     echo "WARNING: checkout.Stock not settled after ${MAX_WAIT}s — proceeding anyway"

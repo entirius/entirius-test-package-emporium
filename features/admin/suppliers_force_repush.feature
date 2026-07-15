@@ -26,14 +26,14 @@ Feature: Suppliers Admin API -- Force Re-push
     Then the response status should be 400
 
   Scenario: Force re-push on pushed SP succeeds and emits force_repush_executed event
-    # Pre-push DEMO-004 (already approved in fixture)
-    When I POST to the v2 admin endpoint "suppliers/admin/products/4/push/" with body
+    # Own approved SP (DEMO-006): push once, then force-repush. push is one-shot in 2.0.0.
+    When I POST to the v2 admin endpoint "suppliers/admin/products/6/push/" with body
       """
       {}
       """
     Then the response status should be 200
     # Now force re-push. Status is at least pushed_pending_images.
-    When I POST to the v2 admin endpoint "suppliers/admin/products/4/force-repush/" with body
+    When I POST to the v2 admin endpoint "suppliers/admin/products/6/force-repush/" with body
       """
       {}
       """

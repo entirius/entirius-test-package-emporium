@@ -22,25 +22,6 @@ def step_every_category_tree_deep(context, depth):
         assert actual == depth, f"Category '{item.get('idx')}' has tree_deep={actual}, expected {depth}"
 
 
-@then("I save the Matrix categories response")
-def step_save_matrix_categories(context):
-    context.matrix_categories = extract_items(context.response)
-
-
-@then("the Matrix categories should match Cynthia categories by idx and name")
-def step_matrix_matches_cynthia(context):
-    matrix_cats = context.matrix_categories
-    cynthia_cats = extract_items(context.response)
-    matrix_by_idx = {c["idx"]: c["name"] for c in matrix_cats}
-    cynthia_by_idx = {c["idx"]: c["name"] for c in cynthia_cats}
-    missing = set(cynthia_by_idx.keys()) - set(matrix_by_idx.keys())
-    assert not missing, f"Categories in Cynthia but missing from Matrix: {missing}"
-    for idx in cynthia_by_idx:
-        assert matrix_by_idx[idx] == cynthia_by_idx[idx], (
-            f"Category '{idx}' name mismatch: Matrix='{matrix_by_idx[idx]}', Cynthia='{cynthia_by_idx[idx]}'"
-        )
-
-
 # --- Product Positions ---
 
 

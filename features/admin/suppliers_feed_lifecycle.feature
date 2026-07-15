@@ -25,7 +25,7 @@ Feature: Suppliers Admin API -- Feed Lifecycle
         "idx": "bdd-extra-feed",
         "connector_kind": "xml_feed",
         "feed_config": {
-          "feed_url": "file:///entirius/test-package/package/supplier-feed.xml",
+          "feed_url": "http://fixtures:8000/package/supplier-feed.xml",
           "product_xpath": ".//product",
           "field_mapping": {"external_id": "./sku/text()", "name": "./name/text()", "cost": "./price/text()"}
         },
@@ -43,7 +43,7 @@ Feature: Suppliers Admin API -- Feed Lifecycle
       {"limit": 5}
       """
     Then the response status should be 200
-    And the response field "samples" should be a list
+    And the response field "raw_products" should be a list
 
   Scenario: Trigger feed run (sync xml_feed) creates ImportLog
     When I POST to the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/feeds/main-catalog/trigger/" with body
@@ -51,8 +51,8 @@ Feature: Suppliers Admin API -- Feed Lifecycle
       {"mode": "full", "async": false}
       """
     Then the response status should be 200
-    And the response field "import_log_id" should not be null
-    And the response field "status" should not be null
+    And the response field "run_id" should not be null
+    And the response field "status" should equal "success"
 
   Scenario: Re-trigger feed without changes results in unchanged>=existing
     When I POST to the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/feeds/main-catalog/trigger/" with body
@@ -72,7 +72,7 @@ Feature: Suppliers Admin API -- Feed Lifecycle
         "idx": "bdd-bad-feed",
         "connector_kind": "xml_feed",
         "feed_config": {
-          "feed_url": "file:///entirius/test-package/package/does-not-exist.xml",
+          "feed_url": "http://fixtures:8000/package/does-not-exist.xml",
           "product_xpath": ".//product",
           "field_mapping": {"external_id": "./sku/text()"}
         },

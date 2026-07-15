@@ -49,7 +49,7 @@ Feature: Suppliers Admin API -- Mapping Validation
     And the response field "source_field" should equal "manufacturer"
     Given I ensure mapping profile "bdd-extra-profile" for supplier "demo-supplier" is cleaned up
 
-  Scenario: Attribute mapping with non-existent PIM feature is rejected
+  Scenario: Attribute mapping with non-existent PIM feature is rejected (404)
     Given I ensure mapping profile "bdd-bad-mapping" for supplier "demo-supplier" is cleaned up
     When I POST to the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/mapping-profiles/" with body
       """
@@ -71,11 +71,11 @@ Feature: Suppliers Admin API -- Mapping Validation
         "is_required": false
       }
       """
-    Then the response status should be 400
+    Then the response status should be 404
     Given I ensure mapping profile "bdd-bad-mapping" for supplier "demo-supplier" is cleaned up
 
-  Scenario: Active profiles cannot share target channels (D24)
-    # demo-supplier already has active default-pl profile targeting pl-demo-profident3
+  Scenario: Active profile cannot target a non-existent channel (D24, 404)
+    # Channel existence is validated before the disjoint-check, so an unknown channel 404s.
     Given I ensure mapping profile "bdd-overlap-profile" for supplier "demo-supplier" is cleaned up
     When I POST to the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/mapping-profiles/" with body
       """
@@ -86,7 +86,7 @@ Feature: Suppliers Admin API -- Mapping Validation
         "is_active": true
       }
       """
-    Then the response status should be 400
+    Then the response status should be 404
     Given I ensure mapping profile "bdd-overlap-profile" for supplier "demo-supplier" is cleaned up
 
   Scenario: Removing channel from profile target_channel_idxs emits channel_removed_from_profile event (D26)

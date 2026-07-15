@@ -46,8 +46,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   ├── environment.py      # before_all: API client + channels; before_scenario: reset + clear auth
 │   ├── steps/              # Shared step definitions (HTTP verbs, assertions, admin CRUD, domains)
 │   ├── admin/  suppliers/  matrix/  matrix_v2/  pim_csv/  checkout/
-│   ├── contentdb/  pricemanager/  qms/  faq/  deliverypoints/  agreements/  contact_forms/
-│   └── cynthia/            # DEPRECATED: cynthia API removed from the service — migrate to matrix v2
+│   └── contentdb/  pricemanager/  qms/  faq/  deliverypoints/  agreements/  contact_forms/
 ├── package/                # Emporium demo dataset (CSV; see package/README.md)
 ├── fixtures/               # Django YAML fixtures (loaddata)
 ├── images/                 # Product images per SKU
@@ -67,8 +66,7 @@ Key settings table: see `README.md`.
 ## Step patterns (essentials)
 
 - Public (CSV-driven): `the channel is the primary channel`, `the response count should match
-  CSV product count`, `the first/last CSV product SKU should exist`, `the first CSV product
-  detail should be accessible by url_key`, `the CSV attributes should be non-empty`.
+  CSV product count`, `the CSV attributes should be non-empty`.
 - ContentDB: `I GET the ContentDB published endpoint "{path}"` (+ `with channel` / `with routes`).
 - Admin v2 (JWT): `Given I am authenticated as an admin/regular user`;
   `When I GET/POST/PATCH/DELETE the v2 admin endpoint "{path}" [with body|with params|without auth]`.
@@ -80,7 +78,7 @@ Key settings table: see `README.md`.
 
 - Public v1: matrix (`products/`, `variants/`, `bundle-config/`, `prices-bundle/`, `options/`,
   search, `fetch_attributes=true`), contentdb (`published/{type}/`, `channels/`, `routes/`,
-  `content-types/`), checkout v1 `carts/` (discount rules). Cynthia v1 — deprecated, service no longer ships it.
+  `content-types/`), checkout v1 `carts/` (discount rules).
 - Public v2: matrix_v2 (`products/` + `count/`, `search/`, `categories/`, `options/`, `stock/`, `omnibus/`).
 - Admin v2 (JWT + IsAdminUser): `/api/token/`; pim products/categories per channel
   (+ `bulk/`), features, feature-sets (+ `features/`), attributes, attributes-groups;

@@ -25,12 +25,6 @@ class ApiClient:
     def url(self, path: str) -> str:
         return f"{self.base_url}/{path.lstrip('/')}"
 
-    def cynthia_url(self, channel: str, path: str = "") -> str:
-        base = f"{self.base_url}/api/cynthia/v{self.api_version}/{channel}"
-        if path:
-            return f"{base}/{path.lstrip('/')}"
-        return f"{base}/"
-
     def matrix_url(self, channel: str, path: str = "") -> str:
         base = f"{self.base_url}/api/matrix/v{self.api_version}/{channel}"
         if path:

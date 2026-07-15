@@ -31,7 +31,7 @@ Feature: Suppliers Admin API -- Manual ProductSupplierLink
     And the response field "is_preferred" should be false
     Given I ensure product supplier link for sku "0001-0007" supplier "demo-supplier" is cleaned up
 
-  Scenario: Create link for non-existent SKU returns 400
+  Scenario: Create link for non-existent SKU returns 404
     Given I ensure product supplier link for sku "BDD-NONEXIST-SKU" supplier "demo-supplier" is cleaned up
     When I POST to the v2 admin endpoint "suppliers/admin/product-links/" with body
       """
@@ -45,7 +45,7 @@ Feature: Suppliers Admin API -- Manual ProductSupplierLink
         "notes": ""
       }
       """
-    Then the response status should be 400
+    Then the response status should be 404
 
   Scenario: Set preferred unsets sibling preferred at the same SKU (D25)
     # Create a supplier so we have 2 distinct suppliers per SKU
@@ -149,11 +149,13 @@ Feature: Suppliers Admin API -- Manual ProductSupplierLink
       """
     Then the response status should be 201
     Then I save the response field "id" as "saved.imm_pk"
+    # real_product_sku is immutable: the PATCH is accepted (200) but the value is silently ignored
     When I PATCH the v2 admin endpoint "suppliers/admin/product-links/{saved.imm_pk}/" with body
       """
       {"real_product_sku": "0001-0008"}
       """
-    Then the response status should be 400
+    Then the response status should be 200
+    And the response field "real_product_sku" should equal "0001-0007"
     Given I ensure product supplier link for sku "0001-0007" supplier "demo-supplier" is cleaned up
 
   Scenario: Update notes / priority works (mutable operator fields)

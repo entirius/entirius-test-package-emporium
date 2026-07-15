@@ -36,19 +36,6 @@ Feature: Matrix Categories Listing API
     And the response should be a non-empty list
     And every category should have tree_deep equal to 1
 
-  Scenario: Categories match Cynthia output
-    Given the channel is the primary channel
-    When I GET the Matrix endpoint "categories/" with params
-      | param | value |
-      | depth | 1     |
-    Then the response status should be 200
-    And I save the Matrix categories response
-    When I GET the Cynthia endpoint "categories/" with params
-      | param | value |
-      | depth | 1     |
-    Then the response status should be 200
-    And the Matrix categories should match Cynthia categories by idx and name
-
   Scenario: All imported leaf categories are present
     Given the channel is the primary channel
     And the CSV categories are loaded for the primary channel

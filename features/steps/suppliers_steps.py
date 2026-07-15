@@ -93,15 +93,18 @@ def step_ensure_sp_cleaned(context, eid, supplier_idx):
 
 @given('I ensure product supplier link for sku "{sku}" supplier "{supplier_idx}" is cleaned up')
 def step_ensure_link_cleaned(context, sku, supplier_idx):
+    # The list exposes supplier_id (int), not supplier_idx, and the supplier_idx query param does
+    # not filter — resolve idx -> id and match on it so only THIS supplier's link(s) for the sku
+    # are dropped (a sibling supplier may hold a link on the same sku). Delete all matches.
+    sup = context.api.get(context.api.url(f"{_BASE}/suppliers/{supplier_idx}/"))
+    supplier_id = sup.json().get("id") if sup.status_code == 200 else None
     url = context.api.url(f"{_BASE}/product-links/")
-    resp = context.api.get(url, params={"real_product_sku": sku, "supplier_idx": supplier_idx, "page_size": 100})
+    resp = context.api.get(url, params={"real_product_sku": sku, "page_size": 100})
     if resp.status_code != 200:
         return
     for item in resp.json().get("results", []):
-        if item.get("real_product_sku") == sku and item.get("supplier_idx") == supplier_idx:
-            del_url = context.api.url(f"{_BASE}/product-links/{item['id']}/")
-            context.api.delete(del_url)
-            return
+        if item.get("real_product_sku") == sku and item.get("supplier_id") == supplier_id:
+            context.api.delete(context.api.url(f"{_BASE}/product-links/{item['id']}/"))
 
 
 # ---------------------------------------------------------------------------

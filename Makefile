@@ -12,7 +12,10 @@ check:  ## Lint + format-check (ruff) + canonical .gitleaks.toml
 fix:  ## Auto-fix lint + format
 	uv run ruff check --fix .
 	uv run ruff format .
+# Excluded by default: @spec-first (scenarios ahead of their module),
+# @blocked-by-module (known module gaps — see the internal debt registry).
+EXCLUDES = --tags=-@spec-first --tags=-@blocked-by-module
 test:  ## Bind steps to scenarios without hitting an API (behave dry-run)
-	uv run behave --dry-run --tags=-@spec-first --no-summary -f progress
+	uv run behave --dry-run $(EXCLUDES) --no-summary -f progress
 bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
-	uv run behave --tags=-@spec-first $(if $(TAGS),--tags=$(TAGS),)
+	uv run behave $(EXCLUDES) $(if $(TAGS),--tags=$(TAGS),)

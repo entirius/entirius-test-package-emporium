@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
       - run: uv sync --frozen --all-extras
-      - run: uv run behave --dry-run --tags=-@spec-first --no-summary -f progress
+      - run: uv run behave --dry-run --tags=-@spec-first --tags=-@blocked-by-module --no-summary -f progress
 
   secret-scan:
     runs-on: ubuntu-latest

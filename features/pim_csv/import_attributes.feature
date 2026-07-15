@@ -10,13 +10,17 @@ Feature: Attribute Import Verification
 
   Scenario: Products have badge attributes from CSV
     Given the CSV attributes are loaded for type "badge"
-    When I GET the Cynthia endpoint "products/"
+    When I GET the Matrix endpoint "products/" with params
+      | param     | value |
+      | page_size | 100   |
     Then the response status should be 200
     And products with badges should reference valid badge values
 
   Scenario: Products have series attributes from CSV
     Given the CSV attributes are loaded for type "series"
-    When I GET the Cynthia endpoint "products/"
+    When I GET the Matrix endpoint "products/" with params
+      | param     | value |
+      | page_size | 100   |
     Then the response status should be 200
     And products with series should reference valid series values
 

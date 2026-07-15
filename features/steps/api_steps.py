@@ -12,30 +12,6 @@ from entirius_tests.assertions import assert_status, extract_items
 from entirius_tests.csv_loader import load_products
 
 
-@when('I GET the Cynthia endpoint "{path}"')
-def step_get_cynthia(context, path):
-    url = context.api.cynthia_url(context.channel, path)
-    context.response = context.api.get(url, params={"limit": 100})
-    context.response_data = context.response.json()
-
-
-@when('I GET the Cynthia endpoint "{path}" with params')
-def step_get_cynthia_with_params(context, path):
-    url = context.api.cynthia_url(context.channel, path)
-    params = {"limit": 100}
-    for row in context.table:
-        params[row["param"]] = row["value"]
-    context.response = context.api.get(url, params=params)
-    context.response_data = context.response.json()
-
-
-@when('I GET the Cynthia detail "{path}"')
-def step_get_cynthia_detail(context, path):
-    url = context.api.cynthia_url(context.channel, path)
-    context.response = context.api.get(url)
-    context.response_data = context.response.json()
-
-
 @when('I GET the Matrix endpoint "{path}"')
 def step_get_matrix(context, path):
     url = context.api.matrix_url(context.channel, path)

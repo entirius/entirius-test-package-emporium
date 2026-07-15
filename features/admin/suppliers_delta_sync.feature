@@ -17,7 +17,7 @@ Feature: Suppliers Admin API -- Delta Sync, Cost Updates, Retention
       {"mode": "delta", "async": false}
       """
     Then the response status should be 200
-    And the response field "import_log_id" should not be null
+    And the response field "run_id" should not be null
 
   Scenario: Delta sync emits cost_updated events for pushed SPs
     # Run delta after at least one push happened (DEMO-004 from previous test or fresh push)
@@ -53,7 +53,7 @@ Feature: Suppliers Admin API -- Delta Sync, Cost Updates, Retention
         "idx": "bdd-delta-feed",
         "connector_kind": "xml_feed",
         "feed_config": {
-          "feed_url": "file:///entirius/test-package/package/supplier-feed.xml",
+          "feed_url": "http://fixtures:8000/package/supplier-feed.xml",
           "product_xpath": ".//product",
           "field_mapping": {"external_id": "./sku/text()", "name": "./name/text()", "cost": "./price/text()"}
         },

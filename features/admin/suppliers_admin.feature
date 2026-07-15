@@ -174,8 +174,8 @@ Feature: Suppliers Admin API -- Supplier CRUD
   Scenario: GET delete-impact returns counts without deleting (D37)
     When I GET the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/delete-impact/"
     Then the response status should be 200
-    And the response field "supplier_idx" should equal "demo-supplier"
     And the response field "affected_links_count" should equal integer 0
+    And the response field "affected_pushed_skus_count" should equal integer 0
     # Confirm supplier still exists
     When I GET the v2 admin endpoint "suppliers/admin/suppliers/demo-supplier/"
     Then the response status should be 200

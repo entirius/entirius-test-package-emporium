@@ -37,20 +37,26 @@ Feature: Product Types Import Verification
   Scenario: All configurable products exist in API
     Given the channel is the primary channel
     And the CSV products of type "config" are loaded for the primary channel
-    When I GET the Cynthia endpoint "products/"
+    When I GET the Matrix endpoint "products/" with params
+      | param     | value |
+      | page_size | 100   |
     Then the response status should be 200
     And every CSV product SKU should exist in the API response
 
   Scenario: All bundle products exist in API
     Given the channel is the primary channel
     And the CSV products of type "bundle" are loaded for the primary channel
-    When I GET the Cynthia endpoint "products/"
+    When I GET the Matrix endpoint "products/" with params
+      | param     | value |
+      | page_size | 100   |
     Then the response status should be 200
     And every CSV product SKU should exist in the API response
 
   Scenario: All custom products exist in API
     Given the channel is the primary channel
     And the CSV products of type "custom" are loaded for the primary channel
-    When I GET the Cynthia endpoint "products/"
+    When I GET the Matrix endpoint "products/" with params
+      | param     | value |
+      | page_size | 100   |
     Then the response status should be 200
     And every CSV product SKU should exist in the API response

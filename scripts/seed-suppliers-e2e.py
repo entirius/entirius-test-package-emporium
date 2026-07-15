@@ -68,18 +68,29 @@ SKU_PREFIXES = [f"{p[1]}-" for p in PRESETS]
 DEMO_IDX = "demo-supplier"
 DEMO_SKU_PREFIX = "DMS"
 DEMO_FEED_IDX = "main-catalog"
-DEMO_FEED_URL = "file:///entirius/test-package/package/supplier-feed.xml"
+DEMO_FEED_URL = "http://fixtures:8000/package/supplier-feed.xml"
 DEMO_PROFILE_IDX = "default-pl"
 DEMO_CHANNEL = "default-europe"
 DEMO_FEATURE_SET = "furniture"
 DEMO_LINK_SKU = "0001-0007"  # RealProduct the manual-link scenarios attach demo-supplier to
-# (external_id, status) in creation order == PK order. DEMO-004 pre-approved so the push/audit
-# scenarios (products/4) act on an approved SP; DEMO-001/002 stay `new` for approve/reject.
+# (external_id, status) in creation order == PK order. push is one-shot in 2.0.0 (approved ->
+# pushed, no re-push), so scenarios that push cannot share one SP across features — each gets a
+# dedicated approved SP by PK:
+#   1 DEMO-001 new       -> audit approve/requeue, force-repush "non-pushed" (400)
+#   2 DEMO-002 new       -> audit reject
+#   3 DEMO-003 new       -> spare
+#   4 DEMO-004 approved  -> audit "Push sets pushed_by"
+#   5 DEMO-005 rejected  -> force-repush "on rejected" (400)
+#   6 DEMO-006 approved  -> force-repush "on pushed SP" (push then force-repush)
+#   7 DEMO-007 approved  -> multi-channel push + idempotent re-push (force-repush)
 DEMO_PRODUCTS = [
     ("DEMO-001", ProductStatus.NEW),
     ("DEMO-002", ProductStatus.NEW),
     ("DEMO-003", ProductStatus.NEW),
     ("DEMO-004", ProductStatus.APPROVED),
+    ("DEMO-005", ProductStatus.REJECTED),
+    ("DEMO-006", ProductStatus.APPROVED),
+    ("DEMO-007", ProductStatus.APPROVED),
 ]
 
 
@@ -273,8 +284,9 @@ def _ensure_demo_supplier() -> str:
 
     admin = User.objects.filter(is_superuser=True).order_by("id").first()
     now = timezone.now()
+    reviewed_states = {ProductStatus.APPROVED, ProductStatus.REJECTED}
     for external_id, status in DEMO_PRODUCTS:
-        approved = status == ProductStatus.APPROVED
+        reviewed = status in reviewed_states
         SupplierProduct.objects.update_or_create(
             supplier=supplier,
             external_id=external_id,
@@ -287,8 +299,11 @@ def _ensure_demo_supplier() -> str:
                 "ean": "",  # blank -> push skips RealProduct EAN validation
                 "status": status,
                 "pushed_to_channel_idxs": [],
-                "reviewed_by": admin if approved else None,
-                "reviewed_at": now if approved else None,
+                "pushed_by": None,
+                "pushed_at": None,
+                "real_product": None,
+                "reviewed_by": admin if reviewed else None,
+                "reviewed_at": now if reviewed else None,
             },
         )
     return f"demo-supplier: feed {DEMO_FEED_IDX}, profile {DEMO_PROFILE_IDX}, {len(DEMO_PRODUCTS)} SPs, link {DEMO_LINK_SKU}"

@@ -20,7 +20,7 @@ Feature: Suppliers Admin API -- Review Audit Trail
     Then the response status should be 200
     And the response field "status" should equal "approved"
     And the response field "reviewed_at" should not be null
-    And the response field "reviewed_by" should not be null
+    And the response field "reviewed_by_id" should not be null
 
   Scenario: Reject sets reviewed_by, reject keeps audit
     # DEMO-002 fixture is status=new
@@ -44,7 +44,7 @@ Feature: Suppliers Admin API -- Review Audit Trail
     When I GET the v2 admin endpoint "suppliers/admin/products/4/"
     Then the response status should be 200
     And the response field "pushed_at" should not be null
-    And the response field "pushed_by" should not be null
+    And the response field "pushed_by_id" should not be null
 
   Scenario: Bulk re-queue rejected back to queued preserves original reviewed_by/reviewed_at (D29)
     # First reject DEMO-001 (was approved earlier in this feature run; idempotent re-reject)
@@ -59,7 +59,7 @@ Feature: Suppliers Admin API -- Review Audit Trail
     # Bulk requeue DEMO-001 (rejected -> queued)
     When I POST to the v2 admin endpoint "suppliers/admin/products/bulk-requeue/" with body
       """
-      {"sp_ids": [1]}
+      {"ids": [1]}
       """
     Then the response status should be 200
     When I GET the v2 admin endpoint "suppliers/admin/products/1/"

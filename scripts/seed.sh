@@ -259,14 +259,6 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_faq_channe
 echo "Syncing Deliverypoints channels..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_dp_channels --verbosity 0 2>/dev/null || true"
 
-# Sync voucher channels from PIM (the DB reset above drops the boot-time sync) and
-# seed voucher channel config + campaigns + product-vouchers. Idempotent; product
-# anchors are resolved by SKU so this MUST run after the package import (Step 4).
-echo "Syncing voucher channels..."
-docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_voucher_channels 2>/dev/null || true"
-echo "Seeding voucher config (channels/campaigns/product-vouchers)..."
-docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SETTINGS_MODULE=main.settings python /entirius/test-package/scripts/seed-vouchers.py 2>&1 | tail -12" || echo "Voucher seed skipped (module absent?)"
-
 # Discover Volkanos modules (munin)
 echo "Discovering modules..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py discover_modules --verbosity 0 2>/dev/null || true"

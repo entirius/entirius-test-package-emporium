@@ -43,6 +43,13 @@ class ApiClient:
             return f"{base}/{path.lstrip('/')}"
         return f"{base}/"
 
+    def checkout_v2_url(self, channel: str, path: str = "") -> str:
+        # Fixed "v2" — api_version steers the legacy v1 routes only.
+        base = f"{self.base_url}/api/checkout/v2/{channel}"
+        if path:
+            return f"{base}/{path.lstrip('/')}"
+        return f"{base}/"
+
     def _headers_for(self, url: str) -> dict[str, str]:
         """Return extra headers based on the URL (e.g. API key for checkout)."""
         if "/api/checkout/" in url and self.checkout_api_key:

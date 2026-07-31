@@ -99,12 +99,15 @@
     free_delivery_above_brutto: '200.00'
     cash_on_delivery_available: false
     cash_on_delivery_fee: null
+# country ALL: the channel offers DE/FR/GR/PL in checkout — a DE-only option left
+# FR/GR carts with an empty shipping-methods list (loaddata bypasses save(), so
+# country_code is set explicitly).
 - model: django_checkout.shippingoption
   pk: 2
   fields:
     method: 2
-    country: 5
-    country_code: DE
+    country: null
+    country_code: ALL
     currency: 3
     tax_rate: '0.00'
     price_brutto: '9.99'

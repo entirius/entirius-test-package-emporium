@@ -21,4 +21,4 @@ bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
 	uv run behave $(EXCLUDES) $(if $(TAGS),--tags=$(TAGS),)
 E2E_BASE_URL ?= http://localhost:3100
 e2e:  ## Run e2e suites against live PWAs (E2E_BASE_URL = storefront; CMS_BASE_URL, API_BASE_URL via env)
-	uv run pytest e2e/ --base-url $(E2E_BASE_URL)
+	uv run --extra e2e pytest e2e/ --base-url $(E2E_BASE_URL)

@@ -13,6 +13,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["ruff", "pre-commit"]
+e2e = ["pytest>=8", "pytest-playwright>=0.5"]
 
 [project.urls]
 Repository = "https://github.com/entirius/entirius-test-package-emporium"
@@ -37,6 +38,7 @@ ignore = ["E501"]
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "features/**" = ["S101"]
+"e2e/**" = ["S101"]
 "features/environment.py" = ["S112"]
 "features/steps/pim_advanced_steps.py" = ["B904"]
 "features/steps/matrix_steps.py" = ["B904"]
@@ -53,4 +55,4 @@ known-first-party = ["entirius_tests"]
 quote-style = "double"
 
 [tool.deptry]
-pep621_dev_dependency_groups = ["dev"]
+pep621_dev_dependency_groups = ["dev", "e2e"]

@@ -1,4 +1,4 @@
-.PHONY: help install check fix test bdd
+.PHONY: help install check fix test bdd e2e
 .DEFAULT_GOAL := help
 
 help:  ## List targets
@@ -19,3 +19,6 @@ test:  ## Bind steps to scenarios without hitting an API (behave dry-run)
 	uv run behave --dry-run $(EXCLUDES) --no-summary -f progress
 bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
 	uv run behave $(EXCLUDES) $(if $(TAGS),--tags=$(TAGS),)
+E2E_BASE_URL ?= http://localhost:3100
+e2e:  ## Run storefront e2e against a live PWA (E2E_BASE_URL optional)
+	uv run pytest e2e/storefront/ --base-url $(E2E_BASE_URL)

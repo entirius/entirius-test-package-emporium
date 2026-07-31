@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := help
 
 help:  ## List targets
-	@grep -E '^[a-z-]+:.*##' $(firstword $(MAKEFILE_LIST)) | awk -F':.*##' '{printf "  %-16s %s\n", $$1, $$2}'
+	@grep -E '^[a-z0-9-]+:.*##' $(firstword $(MAKEFILE_LIST)) | awk -F':.*##' '{printf "  %-16s %s\n", $$1, $$2}'
 install:  ## Sync dependencies (uv, incl. extras)
 	uv sync --all-extras
 check:  ## Lint + format-check (ruff) + canonical .gitleaks.toml

@@ -19,7 +19,11 @@ make check                   # ruff lint + format check
 make test                    # behave dry-run: steps bind, no API needed
 make bdd                     # full suite against a live API
 make bdd TAGS=@matrix-v2     # by tag
+make e2e                     # Playwright e2e (storefront + CMS) against live frontends
 ```
+
+`make e2e` needs browsers once: `uv run playwright install chromium`. Frontend URLs:
+`E2E_BASE_URL` (storefront, default `:3100`), `CMS_BASE_URL` (default `:8180`).
 
 Configuration comes from environment variables, `behave.ini` (gitignored — copy
 `behave.ini.example`), or auto-discovery, in that priority order.
@@ -66,7 +70,7 @@ Point `test_package_path` at any directory with the standard CSV layout to switc
 ├── scripts/            # Seed and import scripts (host + container side)
 ├── features/           # Behave BDD features + step definitions
 ├── src/entirius_tests/ # Shared test library (API client, CSV loader, assertions)
-├── e2e/                # Playwright browser tests (planned)
+├── e2e/                # Playwright e2e (storefront order flow, CMS order visibility)
 └── load/               # Load tests (planned)
 ```
 

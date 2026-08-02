@@ -37,17 +37,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Container/service knobs — the harness (e.g. zeno `make seed`) passes them in.
-CONTAINER="${CONTAINER:-$(docker ps --filter "name=service" --filter "status=running" --format '{{.Names}}' | head -1)}"
+# Both containers are required explicitly: auto-detecting by name substring can grab
+# a container from an unrelated compose project running on the same host.
+CONTAINER="${CONTAINER:?CONTAINER not set (service container) - is the stack up? (zeno: make up)}"
 DB_CONTAINER="${DB_CONTAINER:?DB_CONTAINER not set (postgres container)}"
 SVC_DIR="${SVC_DIR:-/entirius/services/entirius-service-volkanos}"
 DB_USER="${DB_USER:-entirius}"
 DB_NAME="${DB_NAME:-entirius}"
-
-if [ -z "$CONTAINER" ]; then
-    echo "ERROR: No running service container found."
-    echo "Start the stack first (zeno: make up) or pass CONTAINER=<name>."
-    exit 1
-fi
+# Host port of the service — the summary URLs must be clickable from the host.
+# Harnesses pass SERVICE_PORT (zeno: 8100); standalone falls back to the container port.
+SERVICE_URL="http://localhost:${SERVICE_PORT:-8000}"
 
 echo "Using container: $CONTAINER"
 
@@ -287,13 +286,13 @@ step "Seed Complete!"
 OMNIBUS_COUNT=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'python manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")
 echo "Pipeline status: omnibus calculated for $OMNIBUS_COUNT records"
 echo ""
-echo "Admin panel: http://localhost:8000/admin/"
+echo "Admin panel: ${SERVICE_URL}/admin/"
 echo "Credentials: admin / admin123"
 echo ""
 echo "API endpoints (replace {channel} with your configured channel):"
-echo "  Matrix:     http://localhost:8000/api/matrix/1/{channel}/products/?language=en&currency=EUR"
-echo "  Checkout:   http://localhost:8000/api/checkout/1/{channel}/"
-echo "  ContentDB:  http://localhost:8000/api/contentdb/v1/published/static-page/?routes=home&language=EN&access_rights=1"
+echo "  Matrix:     ${SERVICE_URL}/api/matrix/1/{channel}/products/?language=en&currency=EUR"
+echo "  Checkout:   ${SERVICE_URL}/api/checkout/1/{channel}/"
+echo "  ContentDB:  ${SERVICE_URL}/api/contentdb/v1/published/static-page/?routes=home&language=EN&access_rights=1"
 echo ""
 echo "Configured channels (from package):"
 if [ -f "$PACKAGE_ROOT/package/volkanos-config/channels.conf" ]; then

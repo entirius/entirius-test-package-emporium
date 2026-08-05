@@ -39,7 +39,7 @@ PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
 # Container/service knobs — the harness (e.g. zeno `make seed`) passes them in.
 # Both containers are required explicitly: auto-detecting by name substring can grab
 # a container from an unrelated compose project running on the same host.
-CONTAINER="${CONTAINER:?CONTAINER not set (service container) - is the stack up? (zeno: make up)}"
+CONTAINER="${CONTAINER:?not set - pass CONTAINER=<service container name> (zeno: make up + make seed does this)}"
 DB_CONTAINER="${DB_CONTAINER:?DB_CONTAINER not set (postgres container)}"
 SVC_DIR="${SVC_DIR:-/entirius/services/entirius-service-volkanos}"
 DB_USER="${DB_USER:-entirius}"

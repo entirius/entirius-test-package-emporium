@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import requests
 from behave import then, when
 
 from entirius_tests.assertions import extract_items
@@ -216,32 +217,42 @@ def step_first_column_heading(context, heading):
     assert actual == heading, f"Expected first column heading '{heading}', got '{actual}'"
 
 
-# --- Admin v1 DELETE + error body assertions ---
+# --- Admin v1 requests + error body assertions ---
 
 
-@when('I DELETE the ContentDB admin endpoint "{path}"')
-def step_delete_contentdb_admin(context, path):
-    url = f"{context.api.base_url}/api-admin/contentdb/v1/{path.lstrip('/')}"
-    context.response = context.api.delete(url)
-    if context.response.status_code == 204:
-        context.response_data = {}
-    else:
-        try:
-            context.response_data = context.response.json()
-        except Exception:
-            context.response_data = {}
-
-
-@when('I DELETE the ContentDB admin endpoint "{path}" without auth')
-def step_delete_contentdb_admin_no_auth(context, path):
-    import requests
-
-    url = f"{context.api.base_url}/api-admin/contentdb/v1/{path.lstrip('/')}"
-    context.response = requests.delete(url, timeout=30)
+def _store_body(context):
     try:
         context.response_data = context.response.json()
     except Exception:
         context.response_data = {}
+
+
+@when('I GET the ContentDB admin endpoint "{path}"')
+def step_get_contentdb_admin(context, path):
+    context.response = context.api.get(context.api.contentdb_admin_url(path), params={"limit": 100})
+    _store_body(context)
+
+
+@when('I GET the ContentDB admin endpoint "{path}" without auth')
+def step_get_contentdb_admin_no_auth(context, path):
+    # Bypass the session client so the Background's Authorization header is not sent.
+    context.response = requests.get(context.api.contentdb_admin_url(path), timeout=30)
+    _store_body(context)
+
+
+@when('I DELETE the ContentDB admin endpoint "{path}"')
+def step_delete_contentdb_admin(context, path):
+    context.response = context.api.delete(context.api.contentdb_admin_url(path))
+    if context.response.status_code == 204:
+        context.response_data = {}
+    else:
+        _store_body(context)
+
+
+@when('I DELETE the ContentDB admin endpoint "{path}" without auth')
+def step_delete_contentdb_admin_no_auth(context, path):
+    context.response = requests.delete(context.api.contentdb_admin_url(path), timeout=30)
+    _store_body(context)
 
 
 @then('the response data list should contain "{text}"')

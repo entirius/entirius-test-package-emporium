@@ -68,6 +68,8 @@ Key settings table: see `README.md`.
 - Public (CSV-driven): `the channel is the primary channel`, `the response count should match
   CSV product count`, `the CSV attributes should be non-empty`.
 - ContentDB: `I GET the ContentDB published endpoint "{path}"` (+ `with channel` / `with routes`).
+- ContentDB admin v1 (JWT, `/api-admin/` prefix — not the v2 `/api/` shape):
+  `I GET/DELETE the ContentDB admin endpoint "{path}" [without auth]`.
 - Admin v2 (JWT): `Given I am authenticated as an admin/regular user`;
   `When I GET/POST/PATCH/DELETE the v2 admin endpoint "{path}" [with body|with params|without auth]`.
 - Assertions: `the response field "{field}" should equal/be true/be null/be a dict…`,
@@ -80,6 +82,8 @@ Key settings table: see `README.md`.
   search, `fetch_attributes=true`), contentdb (`published/{type}/`, `channels/`, `routes/`,
   `content-types/`), checkout v1 `carts/` (discount rules).
 - Public v2: matrix_v2 (`products/` + `count/`, `search/`, `categories/`, `options/`, `stock/`, `omnibus/`).
+- Admin v1 (JWT + IsAdminUser | ContentTypePermission): contentdb `/api-admin/contentdb/v1/`
+  (`channels/`, `languages/`, `content-types/`, content DELETE guards) — auth contract only.
 - Admin v2 (JWT + IsAdminUser): `/api/token/`; pim products/categories per channel
   (+ `bulk/`), features, feature-sets (+ `features/`), attributes, attributes-groups;
   suppliers mapping-profiles + validate.

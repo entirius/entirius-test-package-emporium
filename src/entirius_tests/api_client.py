@@ -37,6 +37,13 @@ class ApiClient:
             return f"{base}/{path.lstrip('/')}"
         return f"{base}/"
 
+    def contentdb_admin_url(self, path: str = "") -> str:
+        # Admin routes live under /api-admin/, not the /api/ prefix used by public routes.
+        base = f"{self.base_url}/api-admin/contentdb/v{self.api_version}"
+        if path:
+            return f"{base}/{path.lstrip('/')}"
+        return f"{base}/"
+
     def checkout_url(self, channel: str, path: str = "") -> str:
         base = f"{self.base_url}/api/checkout/v{self.api_version}/{channel}"
         if path:

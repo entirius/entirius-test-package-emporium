@@ -12,8 +12,26 @@ import sys
 from pathlib import Path
 
 from entirius_tests.api_client import ApiClient
+from entirius_tests.munin import MODULE_TAGS, MUNIN_REGISTRY_PATH, parse_modules
 
 logger = logging.getLogger("entirius_tests")
+
+
+def probe_installed_modules(api: ApiClient) -> set[str] | None:
+    """Module keys from the public munin registry; None when the probe fails
+    (backend down / munin absent / empty registry) — then nothing is skipped and
+    features fail with their real errors instead of a silent skip."""
+    try:
+        resp = api.get(api.url(MUNIN_REGISTRY_PATH))
+        if resp.status_code == 200:
+            modules = parse_modules(resp.json())
+            if modules is None:
+                logger.warning("munin registry empty/unshaped — module-tagged features will run")
+            return modules
+        logger.warning("munin probe HTTP %s — module-tagged features will run", resp.status_code)
+    except Exception as exc:  # noqa: BLE001 — any probe failure means "don't skip"
+        logger.warning("munin module probe failed (%s) — module-tagged features will run", exc)
+    return None
 
 
 def discover_channels(package_path: str) -> list[str]:
@@ -67,6 +85,18 @@ def before_all(context):
         context.primary_channel = context.channels[0]
     else:
         context.primary_channel = "default-europe"
+
+    context.installed_modules = probe_installed_modules(context.api)
+
+
+def before_feature(context, feature):
+    """Skip module-tagged features when the backend does not adopt the module."""
+    if context.installed_modules is None:
+        return
+    for tag in MODULE_TAGS:
+        if tag in feature.tags and tag not in context.installed_modules:
+            feature.skip(reason=f"module '{tag}' not installed (munin registry)")
+            return
 
 
 def before_scenario(context, scenario):

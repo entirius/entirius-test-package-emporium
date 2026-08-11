@@ -1,6 +1,6 @@
 [project]
 name = "entirius-test-package-emporium"
-version = "1.0.0"
+version = "1.1.0"
 description = "BDD test suite and demo data package (Emporium) for the Entirius/Volkanos platform"
 authors = [{ name = "Entirius" }]
 readme = "README.md"

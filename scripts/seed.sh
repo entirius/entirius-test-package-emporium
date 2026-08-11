@@ -50,18 +50,26 @@ SERVICE_URL="http://localhost:${SERVICE_PORT:-8000}"
 
 echo "Using container: $CONTAINER"
 
-# Check Celery is running
-echo "Checking Celery worker..."
-CELERY_CHECK=$(docker exec "$CONTAINER" bash -c "celery -A main inspect ping 2>/dev/null | grep -c 'pong'" 2>/dev/null || echo "0")
-if [ "$CELERY_CHECK" = "0" ]; then
-    echo "ERROR: Celery worker is not running!"
-    echo "QMS import requires Celery. Start it before seeding."
-    echo ""
-    echo "zeno: the worker compose service should be up (make up / make dev); check: docker compose ps worker"
-    echo "Manual fallback:"
-    echo "  docker exec -d -w $SVC_DIR $CONTAINER celery -A main worker -l info -Q celery,quantities,fill_product_representation,pricemanager_create_pricelist"
-    exit 1
-fi
+# Check Celery is running. A dev-mode worker re-syncs its venv before starting
+# celery (first run takes minutes), so poll instead of a single-shot ping —
+# `make dev && make seed` must not race the worker's first boot.
+echo "Checking Celery worker (waits up to ${CELERY_WAIT:-300}s for a dev worker's first venv sync)..."
+CELERY_DEADLINE=$(( $(date +%s) + ${CELERY_WAIT:-300} ))
+while true; do
+    CELERY_CHECK=$(docker exec "$CONTAINER" bash -c "celery -A main inspect ping 2>/dev/null | grep -c 'pong'" 2>/dev/null || echo "0")
+    [ "$CELERY_CHECK" != "0" ] && break
+    if [ "$(date +%s)" -ge "$CELERY_DEADLINE" ]; then
+        echo "ERROR: Celery worker is not running!"
+        echo "QMS import requires Celery. Start it before seeding."
+        echo ""
+        echo "zeno: the worker compose service should be up (make up / make dev); check: docker compose ps worker"
+        echo "Manual fallback:"
+        echo "  docker exec -d -w $SVC_DIR $CONTAINER celery -A main worker -l info -Q celery,quantities,fill_product_representation,pricemanager_create_pricelist"
+        exit 1
+    fi
+    echo "  ... celery not answering yet, retrying"
+    sleep 5
+done
 echo "Celery is running."
 
 # Check volume mount
@@ -73,6 +81,15 @@ docker exec "$CONTAINER" test -d /entirius/test-package/package || {
 
 FIXTURES_DIR="/entirius/test-package/fixtures"
 PACKAGE_DIR="/entirius/test-package/package"
+
+# Optional-module probes — one Django boot per app, results reused by every step.
+app_installed() {
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python -c \"import django, os; os.environ.setdefault('DJANGO_SETTINGS_MODULE','main.settings'); django.setup(); from django.apps import apps; apps.get_app_config('$1')\"" > /dev/null 2>&1
+}
+HAS_SUPPLIERS=$(app_installed django_suppliers && echo 1 || echo 0)
+HAS_ATLAS=$(app_installed django_atlas && echo 1 || echo 0)
+HAS_PRICEFIGHTER=$(app_installed django_pricefighter && echo 1 || echo 0)
+echo "Optional modules: suppliers=$HAS_SUPPLIERS atlas=$HAS_ATLAS pricefighter=$HAS_PRICEFIGHTER"
 
 # Omnibus pipeline — extracted as a function so `seed-fresh` and `seed-omnibus`
 # share one implementation. Runs PH backfill → omnibus calc per channel →
@@ -129,6 +146,12 @@ docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d postgres -c "CREATE DATABASE \
 echo "Database recreated."
 echo "Running migrations..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate --noinput"
+# The DB is fresh but Redis is not — DRF throttle counters (e.g. pricefighter apply,
+# 30/hour per user) and other cached state would leak into the new environment and
+# 429 the BDD suite on repeated seed+bdd cycles.
+echo "Clearing Django cache (throttle counters, cached state)..."
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"from django.core.cache import cache; cache.clear(); print('cache cleared')\"" \
+    || echo "WARNING: cache clear failed — stale throttle counters may 429 the BDD apply scenarios"
 
 step "Step 2: Load Fixtures"
 # NOTE: never add *_golden* fixtures here — they are unit-test catalogues reusing real-seed
@@ -195,10 +218,19 @@ print('testuser', 'created' if created else 'reset')
 step "Step 3c: Suppliers E2E Prep"
 # Preset suppliers (incl. "novatrade") + anchor product for the @suppliers scenarios;
 # without it the suite depends on suppliers pre-existing in the environment.
-if docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python -c \"import django, os; os.environ.setdefault('DJANGO_SETTINGS_MODULE','main.settings'); django.setup(); from django.apps import apps; apps.get_app_config('django_suppliers')\"" > /dev/null 2>&1; then
+if [ "$HAS_SUPPLIERS" = "1" ]; then
     docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-suppliers-e2e.py"
 else
     echo "Skipping suppliers prep (django_suppliers not installed)"
+fi
+
+step "Step 3d: Atlas E2E Prep"
+# EAN anchors, duplicate RealProduct pairs, atlas sources (nova/push/watchers) +
+# warehouse — everything Step 6x and the @atlas BDD suite address by natural key.
+if [ "$HAS_ATLAS" = "1" ]; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-atlas-e2e.py"
+else
+    echo "Skipping atlas prep (django_atlas not installed)"
 fi
 
 step "Step 4: Import Package Data"
@@ -281,6 +313,31 @@ done
 echo "Seeding manual Warehouse per channel (operator-editable)..."
 docker cp "$PACKAGE_ROOT/scripts/seed-manual-warehouse.py" "$CONTAINER":/tmp/seed-manual-warehouse.py
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "DJANGO_SETTINGS_MODULE=main.settings python /tmp/seed-manual-warehouse.py 2>&1 | tail -8"
+
+step "Step 6x: Atlas Pipeline"
+# Real import through the xml_feed connector (fixtures container over HTTP), then
+# the workload script shapes the operator queues: approve+push (auto-match, tolerance
+# violation), queued for Swipe, rejected, Updated-tab bump, monitoring observations.
+if [ "$HAS_ATLAS" = "1" ]; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py execute_source_feed --source-idx atl-nova --feed-idx main --mode full
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-atlas-workload.py"
+else
+    echo "Skipping atlas pipeline (django_atlas not installed)"
+fi
+
+step "Step 6y: PriceFighter Prep"
+# Channel + representation sync from PIM, then the workload script: pricemanager
+# costs/baseline/bounds, quote configs, pricing rules, observations covering every
+# recommendation type, and a couple of real applies for the History panel.
+# Both apps required: the pricefighter seed hard-imports django_atlas (observations)
+# and reads the atl-watch-* sources created by Step 3d.
+if [ "$HAS_PRICEFIGHTER" = "1" ] && [ "$HAS_ATLAS" = "1" ]; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_pricefighter_channels"
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py pricefighter_full_sync"
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-pricefighter-e2e.py"
+else
+    echo "Skipping pricefighter prep (needs django_pricefighter AND django_atlas)"
+fi
 
 step "Seed Complete!"
 OMNIBUS_COUNT=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'python manage.py shell -c "from django_omnibus.models import OmnibusPrice; print(OmnibusPrice.objects.count())"' 2>/dev/null | tail -1 || echo "?")

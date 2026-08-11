@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Atlas procurement feed for the atl-nova source (django_atlas xml_feed connector).
+     Served by the zeno `fixtures` container as
+       http://fixtures:8000/package/source-feeds/atlas-nova-v1.xml
+
+     EAN namespace 5902… is reserved for atlas (supplier feeds own 59012341000xx,
+     the suppliers anchor owns 5900000000017).
+
+     Post-seed roles (statuses set by scripts/seed-atlas-workload.py):
+       ATL-N001  auto-match: EAN + weight equal to anchor ATL-ANCHOR-1        -> pushed
+       ATL-N002  auto-match: EAN of anchor ATL-ANCHOR-2, weight within 10%   -> pushed
+       ATL-N003  EAN of anchor ATL-ANCHOR-3, weight 5x off -> tolerance
+                 violation event + fresh per-source RealProduct              -> pushed
+       ATL-N004  plain push; workload bumps data_changed_at afterwards       -> pushed (Updated tab)
+       ATL-N005..N009  review queue (Swipe default filter); N009 is out of stock -> queued
+       ATL-N010, N011  untouched fresh imports (N011 has no EAN)             -> new
+       ATL-N012  rejected by the workload script (no EAN)                    -> rejected
+
+     No <images> on purpose: image-less pushes land straight at `pushed`
+     (pushed_pending_images would depend on the async image pipeline). -->
+<catalog>
+  <product>
+    <sku>ATL-N001</sku>
+    <name>Nordic Oak Shelf</name>
+    <price currency="EUR">149.00</price>
+    <stock>20</stock>
+    <ean>5902000000011</ean>
+    <url>https://nova.example/p/atl-n001</url>
+    <weight_g>1500</weight_g>
+    <category>furniture/shelves</category>
+    <description>Wall-mounted oak shelf, 90cm</description>
+  </product>
+  <product>
+    <sku>ATL-N002</sku>
+    <name>Slim Ash Console</name>
+    <price currency="EUR">219.00</price>
+    <stock>8</stock>
+    <ean>5902000000028</ean>
+    <url>https://nova.example/p/atl-n002</url>
+    <weight_g>820</weight_g>
+    <category>furniture/consoles</category>
+    <description>Narrow hallway console in ash</description>
+  </product>
+  <product>
+    <sku>ATL-N003</sku>
+    <name>Granite Side Table</name>
+    <price currency="EUR">320.00</price>
+    <stock>5</stock>
+    <ean>5902000000035</ean>
+    <url>https://nova.example/p/atl-n003</url>
+    <weight_g>5000</weight_g>
+    <category>furniture/tables</category>
+    <description>Side table with granite top</description>
+  </product>
+  <product>
+    <sku>ATL-N004</sku>
+    <name>Birch Plant Stand</name>
+    <price currency="EUR">59.00</price>
+    <stock>40</stock>
+    <ean>5902000000042</ean>
+    <url>https://nova.example/p/atl-n004</url>
+    <weight_g>900</weight_g>
+    <category>furniture/stands</category>
+    <description>Three-leg birch plant stand</description>
+  </product>
+  <product>
+    <sku>ATL-N005</sku>
+    <name>Walnut Magazine Rack</name>
+    <price currency="EUR">79.00</price>
+    <stock>15</stock>
+    <ean>5902000000059</ean>
+    <url>https://nova.example/p/atl-n005</url>
+    <weight_g>1100</weight_g>
+    <category>furniture/racks</category>
+    <description>Floor magazine rack in walnut</description>
+  </product>
+  <product>
+    <sku>ATL-N006</sku>
+    <name>Pine Coat Hanger</name>
+    <price currency="EUR">39.00</price>
+    <stock>60</stock>
+    <ean>5902000000066</ean>
+    <url>https://nova.example/p/atl-n006</url>
+    <weight_g>700</weight_g>
+    <category>furniture/hallway</category>
+    <description>Standing pine coat hanger</description>
+  </product>
+  <product>
+    <sku>ATL-N007</sku>
+    <name>Beech Step Stool</name>
+    <price currency="EUR">45.00</price>
+    <stock>25</stock>
+    <ean>5902000000073</ean>
+    <url>https://nova.example/p/atl-n007</url>
+    <weight_g>1300</weight_g>
+    <category>furniture/stools</category>
+    <description>Two-step beech stool</description>
+  </product>
+  <product>
+    <sku>ATL-N008</sku>
+    <name>Cedar Shoe Bench</name>
+    <price currency="EUR">129.00</price>
+    <stock>12</stock>
+    <ean>5902000000080</ean>
+    <url>https://nova.example/p/atl-n008</url>
+    <weight_g>2400</weight_g>
+    <category>furniture/hallway</category>
+    <description>Entryway bench with shoe rack</description>
+  </product>
+  <product>
+    <sku>ATL-N009</sku>
+    <name>Maple Wall Hook Set</name>
+    <price currency="EUR">25.00</price>
+    <stock>0</stock>
+    <ean>5902000000097</ean>
+    <url>https://nova.example/p/atl-n009</url>
+    <weight_g>300</weight_g>
+    <category>furniture/hallway</category>
+    <description>Set of five maple wall hooks</description>
+  </product>
+  <product>
+    <sku>ATL-N010</sku>
+    <name>Elm Bedside Caddy</name>
+    <price currency="EUR">35.00</price>
+    <stock>30</stock>
+    <ean>5902000000103</ean>
+    <url>https://nova.example/p/atl-n010</url>
+    <weight_g>450</weight_g>
+    <category>furniture/bedroom</category>
+    <description>Clip-on bedside organizer</description>
+  </product>
+  <product>
+    <sku>ATL-N011</sku>
+    <name>Rattan Basket Trio</name>
+    <price currency="EUR">49.00</price>
+    <stock>18</stock>
+    <ean></ean>
+    <url>https://nova.example/p/atl-n011</url>
+    <weight_g>600</weight_g>
+    <category>furniture/storage</category>
+    <description>Set of three rattan baskets</description>
+  </product>
+  <product>
+    <sku>ATL-N012</sku>
+    <name>Cork Board Organizer</name>
+    <price currency="EUR">29.00</price>
+    <stock>22</stock>
+    <ean></ean>
+    <url>https://nova.example/p/atl-n012</url>
+    <weight_g>350</weight_g>
+    <category>furniture/office</category>
+    <description>Cork board with letter tray</description>
+  </product>
+</catalog>

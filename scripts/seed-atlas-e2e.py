@@ -136,9 +136,9 @@ def _ensure_realproducts():
         with suppress(Exception):
             Product.objects.filter(real_product__sku=sku).delete()
         # The anchor must be the unique holder of its EAN (duplicates pairs excepted).
-        RealProduct.objects.filter(ean=ean).exclude(
-            sku__in=[s for s, e, _ in ANCHORS + DUPLICATES if e == ean]
-        ).update(ean=None)
+        RealProduct.objects.filter(ean=ean).exclude(sku__in=[s for s, e, _ in ANCHORS + DUPLICATES if e == ean]).update(
+            ean=None
+        )
         RealProduct.objects.update_or_create(sku=sku, defaults={"ean": ean, "weight": weight})
     return f"realproducts: {len(ANCHORS)} anchors, {len(DUPLICATES)} duplicate rows"
 

@@ -139,7 +139,10 @@ def main():
     from django.db.models import Count
 
     counts = dict(
-        SourceProduct.objects.filter(source=nova).values_list("status").annotate(n=Count("id")).values_list("status", "n")
+        SourceProduct.objects.filter(source=nova)
+        .values_list("status")
+        .annotate(n=Count("id"))
+        .values_list("status", "n")
     )
     print("=== seed-atlas-workload ===")
     print(f"transitions: approved={approved} queued={queued} rejected={rejected}")

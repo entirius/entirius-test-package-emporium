@@ -32,6 +32,4 @@ def module_installed(key: str) -> bool:
 
 def require_module(key: str) -> pytest.MarkDecorator:
     """Module gate for a test module: `pytestmark = require_module("atlas")`."""
-    return pytest.mark.skipif(
-        not module_installed(key), reason=f"module '{key}' not installed (munin registry)"
-    )
+    return pytest.mark.skipif(not module_installed(key), reason=f"module '{key}' not installed (munin registry)")

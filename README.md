@@ -77,6 +77,9 @@ Point `test_package_path` at any directory with the standard CSV layout to switc
 Dataset details (channels, catalog, import pipeline): [`package/README.md`](package/README.md).
 Discount rules: [`DISCOUNT_RULES.md`](DISCOUNT_RULES.md).
 The Emporium universe (brand, series, categories, copy tone): [`docs/brandbook.md`](docs/brandbook.md).
+Operator checklists (manual scenarios the automation leaves to a human):
+[`docs/operator-atlas.md`](docs/operator-atlas.md),
+[`docs/operator-pricefighter.md`](docs/operator-pricefighter.md).
 
 ## Reports
 

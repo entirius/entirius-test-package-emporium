@@ -40,3 +40,9 @@ def step_field_contains_candidate(context, field, ref):
     refs = [item.get("ref") for item in items]
     assert match is not None, f"No candidate ref={ref!r} in '{field}'. Refs seen: {refs}"
     context.saved["lookup_candidate"] = match
+
+
+@then('the response field "{field}" should not equal "{value}"')
+def step_field_not_equal(context, field, value):
+    actual = context.response_data.get(field)
+    assert str(actual) != value, f"Expected '{field}' != '{value}', got '{actual}'"

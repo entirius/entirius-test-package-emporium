@@ -295,7 +295,12 @@ def _make_dirty_ean(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct,
     atlas = AtlasProduct(
         _source_for(i), f"DIRTY-{i:02d}", ean, _other_brand(brand), name, weight, atl_img, "dirty_ean", i
     )
-    why = "Same GTIN and product name; the atlas feed's brand field is corrupted (dirty data) — still one product."
+    why = (
+        "Same GTIN and product name; the atlas feed's brand field is corrupted (dirty data) — still one "
+        "product (human ground truth). The engine currently CAPS this at review, not match — brand_conflict "
+        "is a capping flag even when gtin_exact identifies the pair (scoring.py CAPPING_FLAGS); label is the "
+        "human verdict on purpose, pending an operator decision on whether the engine should agree."
+    )
     return pim, atlas, "match", why
 
 
@@ -319,7 +324,12 @@ def _make_name_only(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct,
         "name_only",
         i,
     )
-    why = "No EAN on either side; name and brand near-identical, weight within tolerance — fuzzy-name only match."
+    why = (
+        "No EAN on either side; name and brand near-identical, weight within tolerance — fuzzy-name only "
+        "match (human ground truth). The engine currently lands this at review (score ~60 < the 75 match "
+        "threshold, no identifier to force it higher) — label is the human verdict on purpose, pending an "
+        "operator decision on whether the threshold or the label should move."
+    )
     return pim, atlas, "match", why
 
 

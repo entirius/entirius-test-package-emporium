@@ -36,9 +36,14 @@ CHANNEL = "default-europe"
 FEATURE_SET = "furniture"
 SOURCE_IDXS = ["atl-lookup-a", "atl-lookup-b"]
 SKU_PREFIX = "LKP-PIM-"
-# The exact_dup pair this script hands to enrichment as a ready-to-accept proposal (index 1 — index 0
-# is reserved for the @lookup create-hook BDD scenario, which reuses its EAN on a brand-new product).
+# Reserved exact_dup indices (both documented here so seed-lookup.py and the .feature file agree —
+# a BDD step comment cannot import a Python constant, so it names the constant instead):
+#   index 1 -> PROPOSAL_PAIR_INDEX: the pending duplicate_in_pim proposal the @lookup-oneshot accept
+#              scenario consumes.
+#   index 2 -> CREATE_HOOK_PAIR_INDEX: the "Creating a PIM product with a duplicate EAN..." scenario
+#              reuses this pair's atlas EAN on a brand-new PIM product (features/lookup/lookup_check.feature).
 PROPOSAL_PAIR_INDEX = 1
+CREATE_HOOK_PAIR_INDEX = 2
 EMBED_TIMEOUT_S = 2
 
 

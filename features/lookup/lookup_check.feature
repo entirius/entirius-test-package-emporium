@@ -26,10 +26,14 @@ Feature: Lookup — cross-catalog duplicate detection
     And the response field "candidates" should contain a candidate for "atl-lookup-a:EXACT-00"
 
   Scenario: An image-only search returns a ranked candidate list with reasons
+    # exact_dup-00-pim.png is LKP-PIM-EXACT-00's own fingerprinted photo — the pHash near-hash
+    # leg (blocking.py) self-matches it at distance 0 regardless of the image-embedding backend,
+    # so this must come back with at least one hit, not just an (possibly empty) list.
     Given I use the lookup fixture image "exact_dup-00-pim.png"
     When I POST an image to the lookup admin endpoint "search/"
     Then the response status should be 200
     And the response field "hits" should be a list
+    And the response field "hits" should have at least one item with "reasons, basic"
 
   Scenario: An image-only check of a look-alike photo never promotes to match (photo_lookalike)
     # The image-only guard (research r01 §2/§3): a candidate whose only positive evidence is its

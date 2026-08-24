@@ -46,3 +46,15 @@ def step_field_contains_candidate(context, field, ref):
 def step_field_not_equal(context, field, value):
     actual = context.response_data.get(field)
     assert str(actual) != value, f"Expected '{field}' != '{value}', got '{actual}'"
+
+
+@then('the response field "{field}" should have at least one item with "{keys}"')
+def step_field_has_item_with_keys(context, field, keys):
+    """A list assertion that would pass on zero items is not a real assertion — require at
+    least one item, and require it to carry the given (comma-separated) non-empty keys."""
+    items = context.response_data.get(field) or []
+    assert items, f"'{field}' has no items"
+    required = [key.strip() for key in keys.split(",")]
+    first = items[0]
+    missing = [key for key in required if not first.get(key)]
+    assert not missing, f"First item in '{field}' missing/empty keys {missing}. Has: {list(first.keys())}"

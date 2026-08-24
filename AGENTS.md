@@ -32,7 +32,12 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 - **Auth lifecycle**: `context.api.clear_auth_token()` in `before_scenario`;
   re-authenticate per scenario via a Background step.
 - **context.saved**: per-scenario dict for inter-step state; URL paths resolve
-  `{channel_idx}` and `{saved.alias}` placeholders automatically.
+  `{channel_idx}` and `{saved.alias}` placeholders automatically — the alias name itself carries
+  the `saved.` prefix (`I save the response field "id" as "saved.proposal_id"`, then
+  `{saved.proposal_id}` in a later path), it is not special templating syntax.
+- **One-shot scenarios** (`@lookup-oneshot` here; also suppliers audit-trail, atlas push/merge):
+  mutate a specific pre-seeded row once per database — re-running them against an already-consumed
+  DB fails on purpose. A BDD re-run needs a fresh `make seed` (zeno `AGENTS.md` §Green baselines).
 
 ## Architecture
 
@@ -45,13 +50,17 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 ├── features/               # Behave BDD features
 │   ├── environment.py      # before_all: API client + channels; before_scenario: reset + clear auth
 │   ├── steps/              # Shared step definitions (HTTP verbs, assertions, admin CRUD, domains)
-│   ├── admin/  suppliers/  matrix/  matrix_v2/  pim_csv/  checkout/
+│   ├── admin/  suppliers/  matrix/  matrix_v2/  pim_csv/  checkout/  lookup/
 │   └── contentdb/  pricemanager/  qms/  faq/  deliverypoints/  agreements/  contact_forms/
 ├── package/                # Emporium demo dataset (CSV; see package/README.md)
 ├── fixtures/               # Django YAML fixtures (loaddata)
+│   └── lookup/             # Calibration set (dev-plan 09): pim_products.json, atlas_products.json,
+│                           # labelled_pairs.csv, img/*.png — see scripts/generate-lookup-fixtures.py
 ├── images/                 # Product images per SKU
 ├── devtools/               # Bulk data multiplier (stress tests)
 ├── scripts/                # Seed (host) + import (container) + behave.ini generator
+│   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
+│   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── e2e/                    # Playwright E2E (planned)
 └── load/                   # Load tests k6 (planned)
 ```
@@ -87,6 +96,23 @@ Key settings table: see `README.md`.
 - Admin v2 (JWT + IsAdminUser): `/api/token/`; pim products/categories per channel
   (+ `bulk/`), features, feature-sets (+ `features/`), attributes, attributes-groups;
   suppliers mapping-profiles + validate.
+- Lookup (`@lookup`, `features/lookup/lookup_check.feature`, 7 scenarios): `lookup/admin/search/`
+  and `lookup/admin/check/` (JSON or multipart `image` file), reused generic v2-admin steps for
+  everything except the multipart upload, the `hits`/`candidates`/`possible_duplicates`
+  "contains a candidate for `<ref>`" assertion and "should not equal"
+  (`features/steps/lookup_steps.py` — the lookup API's lists are never the generic `results`
+  shape). BDD proves the flow runs (test-strategy.md §5) — it does not assert a decision per pair
+  class; that calibration lives in `manage.py lookup_eval` (numbers) and in the lookup module's own
+  golden-pair tests (`entirius-django-lookup/tests/test_calibration_fixture_pairs.py`, mirroring
+  the same fixture pairs — multipack, dirty_ean, name_only, photo_lookalike; `exact_dup`/`variant`
+  already had equivalents there). Scenarios: exact EAN match (exact_dup), image-only search
+  (`hits` list), image-only check of a look-alike photo never promoting to `match`
+  (photo_lookalike — the image-only guard, research r01 §2/§3), the PIM create-hook
+  (`possible_duplicates`, plan 07, reuses the exact_dup pair at index 2 — see
+  `scripts/seed-lookup.py` `CREATE_HOOK_PAIR_INDEX`), 401 without a token on both endpoints, and
+  `@lookup-oneshot` the `duplicate_in_pim` enrichment proposal accept (`enrichment/admin/proposals/`,
+  plan 06, pair index 1 — `PROPOSAL_PAIR_INDEX`) — `ContentProposal.status` becomes `applied`, not
+  `accepted`, on accept.
 
 ## Writing a new feature
 

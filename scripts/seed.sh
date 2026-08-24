@@ -89,7 +89,8 @@ app_installed() {
 HAS_SUPPLIERS=$(app_installed django_suppliers && echo 1 || echo 0)
 HAS_ATLAS=$(app_installed django_atlas && echo 1 || echo 0)
 HAS_PRICEFIGHTER=$(app_installed django_pricefighter && echo 1 || echo 0)
-echo "Optional modules: suppliers=$HAS_SUPPLIERS atlas=$HAS_ATLAS pricefighter=$HAS_PRICEFIGHTER"
+HAS_LOOKUP=$(app_installed django_lookup && echo 1 || echo 0)
+echo "Optional modules: suppliers=$HAS_SUPPLIERS atlas=$HAS_ATLAS pricefighter=$HAS_PRICEFIGHTER lookup=$HAS_LOOKUP"
 
 # Omnibus pipeline — extracted as a function so `seed-fresh` and `seed-omnibus`
 # share one implementation. Runs PH backfill → omnibus calc per channel →
@@ -323,6 +324,19 @@ if [ "$HAS_ATLAS" = "1" ]; then
     docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-atlas-workload.py"
 else
     echo "Skipping atlas pipeline (django_atlas not installed)"
+fi
+
+step "Step 6z: Lookup Calibration Prep"
+# Loads fixtures/lookup/{pim_products,atlas_products}.json (pair-class design in
+# scripts/generate-lookup-fixtures.py), attaches pictures from the in-network `fixtures` host,
+# backfills fingerprints (+ images when `embed` answers) and seeds one pending duplicate-in-pim
+# proposal for the @lookup-oneshot accept scenario. After atlas (needs atl-lookup-* to be free
+# source idxs and the `default-europe` channel from Step 4) and before pricefighter (unrelated,
+# disjoint SKU/idx sets — order between the two does not matter functionally).
+if [ "$HAS_LOOKUP" = "1" ]; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-lookup.py"
+else
+    echo "Skipping lookup calibration prep (django_lookup not installed)"
 fi
 
 step "Step 6y: PriceFighter Prep"

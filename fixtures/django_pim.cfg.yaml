@@ -984,6 +984,33 @@
     frontend_input_type: 0
     filter_type: 0
     display_order: 10
+# Business-unit feature `mpn` — no system feature for it in PIM (django_lookup's
+# MPN_FEATURE_IDX convention, dev-plan 09): plain text, not translated, not tied
+# to any feature set (feature-set membership is a CMS form hint, not an ACL —
+# django_pim.services.product_service._set_product_attributes looks features up
+# by idx regardless of feature set).
+- model: django_pim.feature
+  pk: 28
+  fields:
+    scope: 1
+    idx: mpn
+    magento_idx: mpn
+    name_t9n:
+      en: MPN
+      de: MPN
+      es: MPN
+      pl: MPN
+    is_required: false
+    is_visible: true
+    is_filterable: false
+    is_searchable: true
+    is_comparable: false
+    is_for_customization: false
+    extra_value: {}
+    feature_type: 3
+    frontend_input_type: 0
+    filter_type: 0
+    display_order: 10
 # Sample category with SEO fields
 - model: django_pim.productcategory
   pk: 1

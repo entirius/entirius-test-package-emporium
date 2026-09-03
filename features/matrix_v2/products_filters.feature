@@ -27,16 +27,51 @@ Feature: Matrix v2 Product Filters & Sorting
     When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sku=ENT-S004"
     Then the response status is 200
 
-  # ── Sorting ────────────────────────────────────────────────
+  # ── Sorting (s_<field>=<dir> prefix, consistent with q_ / r_) ──
 
   Scenario: Sort by name ascending
-    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sort=name&sort_dir=asc&page_size=5"
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_name=asc&page_size=5"
     Then the response status is 200
     And "results" is a list
 
   Scenario: Sort by price ascending
-    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sort=price&sort_dir=asc&page_size=5"
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_price=asc&page_size=5"
     Then the response status is 200
+
+  Scenario: Multi-sort by repeated s_ params (URL order = precedence)
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_price=asc&s_name=asc&page_size=5"
+    Then the response status is 200
+    And "results" is a list
+
+  Scenario: Sort by a sortable feature idx
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_weight_kg=asc&page_size=5"
+    Then the response status is 200
+    And "results" is a list
+
+  # Status 200 alone cannot tell the two sort contracts apart -- an ignored param
+  # is still a 200. meta is what separates "recognised" from "silently dropped".
+
+  Scenario: A s_ sort param is recognised, not dropped
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_name=asc&page_size=5"
+    Then the response status is 200
+    And "meta.status" is "ok"
+    And "meta.warnings" has exactly 0 items
+
+  Scenario: The retired sort/sort_dir pair is reported as unknown
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sort=name&sort_dir=asc&page_size=5"
+    Then the response status is 200
+    And "meta.status" is "warning"
+    And "meta.warnings" has exactly 2 items
+
+  # The warning code carries the whole point: a param the API never heard of also
+  # yields status=warning with one entry, so only the code separates "s_ prefix
+  # understood, field not sortable" from "s_ prefix not supported at all".
+  Scenario: A s_ param naming an unsortable field is reported
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&s_bogus_field=asc&page_size=5"
+    Then the response status is 200
+    And "meta.status" is "warning"
+    And "meta.warnings" has exactly 1 item
+    And "meta.warnings.0.code" is "sort.unknown_field"
 
   # ── Category filter ────────────────────────────────────────
 
@@ -64,6 +99,54 @@ Feature: Matrix v2 Product Filters & Sorting
     Then the response status is 200
     And "results" is a list
     And "results" has exactly 0 items
+
+  # ── Free-text search on the listing ────────────────────────
+  # v1 honours ?search= on products/; v2 must not silently drop the param and
+  # return the full catalogue. Mirrors features/matrix/search.feature.
+
+  @search
+  Scenario: Search narrows the listing
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&search=Sofa&page_size=100"
+    Then the response status is 200
+    And "results" has at least 1 item
+
+  @search
+  Scenario: Search with no match returns empty
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&search=xyznonexistent12345zzz&page_size=100"
+    Then the response status is 200
+    And "results" has exactly 0 items
+
+  @search
+  Scenario: Blank search is not a filter
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&search=&page_size=100"
+    Then the response status is 200
+    And "results" has at least 1 item
+
+  @search
+  Scenario: Count endpoint honours search
+    When I GET "/api/matrix/v2/default-europe/products/count/?language=en&currency=EUR&country=PL&search=xyznonexistent12345zzz"
+    Then the response status is 200
+    And "count" is 0
+
+  # ── Unknown query params ───────────────────────────────────
+
+  Scenario: Tracking param is reported in meta, not rejected
+    # Storefront forwards the whole browser query string, so 400 would break the page.
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&utm_source=newsletter&page_size=1"
+    Then the response status is 200
+    And "meta.status" is "warning"
+    And "meta.warnings" has exactly 1 item
+
+  Scenario: Legacy v1 limit param is reported, not honoured
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&limit=1&page_size=5"
+    Then the response status is 200
+    And "results" has exactly 5 items
+    And "meta.status" is "warning"
+
+  Scenario: Declared params produce no warnings
+    When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&page=1&page_size=5&include=visual_assets&search=Sofa&product_type=SIMPLE&on_stock=true"
+    Then the response status is 200
+    And "meta.status" is "ok"
 
   # ── Unknown channel ────────────────────────────────────────
 

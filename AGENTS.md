@@ -13,6 +13,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make check` | lint + format-check (ruff) |
 | `make fix` | auto-fix lint + format |
 | `make test` | behave dry-run — steps bind to scenarios, no API needed |
+| `make unit` | pytest — unit tests for the assertion step definitions, no API needed |
 | `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`) |
 
 ## Conventions
@@ -74,8 +75,8 @@ Key settings table: see `README.md`.
 
 ## Step patterns (essentials)
 
-- Public (CSV-driven): `the channel is the primary channel`, `the response count should match
-  CSV product count`, `the CSV attributes should be non-empty`.
+- Public (CSV-driven): `the channel is the primary channel`, `the response count should be at
+  least the CSV product count`, `the CSV attributes should be non-empty`.
 - ContentDB: `I GET the ContentDB published endpoint "{path}"` (+ `with channel` / `with routes`).
 - ContentDB admin v1 (JWT, `/api-admin/` prefix — not the v2 `/api/` shape):
   `I GET/DELETE the ContentDB admin endpoint "{path}" [without auth]`.

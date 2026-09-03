@@ -46,6 +46,32 @@ Feature: Matrix v2 Simple Endpoints
     Then the response status is 200
     And the response has key "results"
 
+  Scenario: Tree nodes carry has_children
+    When I GET "/api/matrix/v2/default-europe/categories/?language=en"
+    Then the response status is 200
+    And the response is a list
+    And each response item has key "has_children"
+
+  Scenario: Batch url_key returns multiple results
+    When I GET "/api/matrix/v2/default-europe/categories/?language=en&url_key=sofas&url_key=bedroom"
+    Then the response status is 200
+    And "results" has exactly 2 items
+    And the first result field "url_key" equals "sofas"
+
+  Scenario: parent_url_key returns the subtree children
+    When I GET "/api/matrix/v2/default-europe/categories/?language=en&parent_url_key=sofas"
+    Then the response status is 200
+    And the response is a list
+    And the response collection contains an item with "url_key" equal to "living-room-sofas"
+    And the response collection contains an item with "url_key" equal to "sofa-beds"
+
+  Scenario: parent_url_key with depth=1 stays one level
+    When I GET "/api/matrix/v2/default-europe/categories/?language=en&parent_url_key=sofas&depth=1"
+    Then the response status is 200
+    And the response is a list
+    And each response item has key "has_children"
+    And each response item has an empty "children" list
+
   # ── Search ───────────────────────────────────────────
 
   Scenario: Search returns sections

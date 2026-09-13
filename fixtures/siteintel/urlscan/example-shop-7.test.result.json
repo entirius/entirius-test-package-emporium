@@ -3987,7 +3987,7 @@
               "origin-agent-cluster": "?1",
               "X-Content-Type-Options": "nosniff",
               "X-FB-Connection-Quality": "UNKNOWN; q=-1, rtt=-1, rtx=0, c=13, mss=1368, tbw=3452, tp=-1, tpl=-1, uplat=5, ullat=-1",
-              "content-security-policy": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;",
+              "content-security-policy": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;",
               "Strict-Transport-Security": "max-age=31536000; preload; includeSubDomains",
               "cross-origin-opener-policy": "same-origin-allow-popups",
               "cross-origin-resource-policy": "cross-origin",
@@ -4024,7 +4024,7 @@
             "securityHeaders": [
               {
                 "name": "content-security-policy",
-                "value": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -4072,7 +4072,7 @@
             "security_headers": [
               {
                 "name": "content-security-policy",
-                "value": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src 'self' blob: *;script-src 'nonce-okWBApRS' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -4209,7 +4209,7 @@
               "Cross-Origin-Opener-Policy": "same-origin; report-to=\"apps-themes\"",
               "Access-Control-Allow-Origin": "*",
               "Cross-Origin-Resource-Policy": "cross-origin",
-              "Content-Security-Policy-Report-Only": "require-trusted-types-for 'script'; report-uri https://third-party-322.test/csp/apps-themes"
+              "Content-Security-Policy-Report-Only": "require-trusted-types-for 'script'; report-uri https://third-party-323.test/csp/apps-themes"
             },
             "mimeType": "font/woff2",
             "protocol": "http/1.1",
@@ -4392,7 +4392,7 @@
               "Cross-Origin-Opener-Policy": "same-origin; report-to=\"apps-themes\"",
               "Access-Control-Allow-Origin": "*",
               "Cross-Origin-Resource-Policy": "cross-origin",
-              "Content-Security-Policy-Report-Only": "require-trusted-types-for 'script'; report-uri https://third-party-322.test/csp/apps-themes"
+              "Content-Security-Policy-Report-Only": "require-trusted-types-for 'script'; report-uri https://third-party-323.test/csp/apps-themes"
             },
             "mimeType": "font/woff2",
             "protocol": "http/1.1",
@@ -5655,7 +5655,7 @@
               "origin-agent-cluster": "?1",
               "X-Content-Type-Options": "nosniff",
               "X-FB-Connection-Quality": "UNKNOWN; q=-1, rtt=-1, rtx=0, c=90, mss=1368, tbw=104398, tp=-1, tpl=-1, uplat=228, ullat=0",
-              "content-security-policy": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;",
+              "content-security-policy": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;",
               "Strict-Transport-Security": "max-age=31536000; preload; includeSubDomains",
               "cross-origin-opener-policy": "same-origin-allow-popups",
               "cross-origin-resource-policy": "cross-origin",
@@ -5692,7 +5692,7 @@
             "securityHeaders": [
               {
                 "name": "content-security-policy",
-                "value": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -5740,7 +5740,7 @@
             "security_headers": [
               {
                 "name": "content-security-policy",
-                "value": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-415.test https://third-party-416.test wss://third-party-416.test wss://third-party-415.test wss://third-party-417.test wss://third-party-418.test https://third-party-417.test https://third-party-418.test *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src 'self' blob: *;script-src 'nonce-DDhCci5X' *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* blob: 'self';style-src 'self' data: blob: 'unsafe-inline';connect-src 'self' data: blob: https://third-party-417.test https://third-party-418.test wss://third-party-418.test wss://third-party-417.test wss://third-party-419.test wss://third-party-420.test https://third-party-419.test https://third-party-420.test *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* *.third-party-244.test;font-src 'self' data: blob: *;img-src 'self' data: blob: *;media-src 'self' data: blob: *;child-src 'self' data: blob: *;frame-src 'self' data: blob: *;manifest-src 'self' data: blob: *;object-src 'self' data: blob: *;worker-src 'self' data: blob: *;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -6056,7 +6056,7 @@
               "Access-Control-Allow-Origin": "https://example-shop-7.test",
               "Cross-Origin-Resource-Policy": "cross-origin",
               "Access-Control-Allow-Credentials": "true",
-              "Content-Security-Policy-Report-Only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://third-party-322.test/csp/scaffolding/ascnsrsggc:137:0",
+              "Content-Security-Policy-Report-Only": "script-src 'none'; form-action 'none'; frame-src 'none'; report-uri https://third-party-323.test/csp/scaffolding/ascnsrsggc:137:0",
               "Cross-Origin-Opener-Policy-Report-Only": "same-origin; report-to=ascnsrsggc:137:0"
             },
             "mimeType": "text/plain",
@@ -8920,12 +8920,12 @@
               "Content-Encoding": "zstd",
               "X-XSS-Protection": "0",
               "Transfer-Encoding": "chunked",
-              "permissions-policy": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-420.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\"",
+              "permissions-policy": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-422.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\"",
               "reporting-endpoints": "coop_report=\"https://third-party-58.test/browser_reporting/coop/?minimize=0\", default=\"https://third-party-58.test/ajax/browser_error_reports/?device_level=unknown&brsid=7626712835502739375&cpp=C3&cv=1036982718&st=1775732458040\", permissions_policy=\"https://third-party-58.test/ajax/browser_error_reports/\"",
               "origin-agent-cluster": "?1",
               "X-Content-Type-Options": "nosniff",
               "X-FB-Connection-Quality": "EXCELLENT; q=0.9, rtt=6, rtx=0, c=10, mss=1368, tbw=3451, tp=-1, tpl=-1, uplat=329, ullat=0",
-              "content-security-policy": "default-src blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test *.third-party-359.test *.third-party-422.test *.third-party-423.test;script-src *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-414.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-422.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-424.test wss://third-party-425.test wss://third-party-426.test wss://third-party-427.test/ third-party-428.test *.third-party-421.test *.third-party-429.test *.third-party-152.test *.third-party-430.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-414.test *.third-party-421.test https://fonts.gstatic.com;img-src *.third-party-414.test *.third-party-214.test data: https://*.third-party-421.test third-party-214.test *.third-party-244.test third-party-421.test third-party-414.test third-party-52.test blob: android-webview-video-poster: *.third-party-423.test *.third-party-429.test *.third-party-431.test *.third-party-432.test *.third-party-433.test *.third-party-434.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-414.test *.third-party-421.test third-party-58.test *.third-party-214.test data: *.third-party-432.test *.third-party-433.test https://*.third-party-434.test;child-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;frame-src *.third-party-214.test *.third-party-421.test third-party-421.test data: third-party-138.test *.third-party-414.test third-party-437.test *.third-party-437.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;object-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;",
+              "content-security-policy": "default-src blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test *.third-party-360.test *.third-party-424.test *.third-party-425.test;script-src *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-416.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-424.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-426.test wss://third-party-427.test wss://third-party-428.test wss://third-party-429.test/ third-party-430.test *.third-party-423.test *.third-party-431.test *.third-party-152.test *.third-party-432.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-416.test *.third-party-423.test https://fonts.gstatic.com;img-src *.third-party-416.test *.third-party-214.test data: https://*.third-party-423.test third-party-214.test *.third-party-244.test third-party-423.test third-party-416.test third-party-52.test blob: android-webview-video-poster: *.third-party-425.test *.third-party-431.test *.third-party-433.test *.third-party-434.test *.third-party-435.test *.third-party-436.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-416.test *.third-party-423.test third-party-58.test *.third-party-214.test data: *.third-party-434.test *.third-party-435.test https://*.third-party-436.test;child-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;frame-src *.third-party-214.test *.third-party-423.test third-party-423.test data: third-party-138.test *.third-party-416.test third-party-439.test *.third-party-439.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;object-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;",
               "Strict-Transport-Security": "max-age=15552000; preload",
               "cross-origin-opener-policy": "same-origin-allow-popups",
               "cross-origin-resource-policy": "cross-origin"
@@ -8961,7 +8961,7 @@
             "securityHeaders": [
               {
                 "name": "content-security-policy",
-                "value": "default-src blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test *.third-party-359.test *.third-party-422.test *.third-party-423.test;script-src *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-414.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-422.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-424.test wss://third-party-425.test wss://third-party-426.test wss://third-party-427.test/ third-party-428.test *.third-party-421.test *.third-party-429.test *.third-party-152.test *.third-party-430.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-414.test *.third-party-421.test https://fonts.gstatic.com;img-src *.third-party-414.test *.third-party-214.test data: https://*.third-party-421.test third-party-214.test *.third-party-244.test third-party-421.test third-party-414.test third-party-52.test blob: android-webview-video-poster: *.third-party-423.test *.third-party-429.test *.third-party-431.test *.third-party-432.test *.third-party-433.test *.third-party-434.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-414.test *.third-party-421.test third-party-58.test *.third-party-214.test data: *.third-party-432.test *.third-party-433.test https://*.third-party-434.test;child-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;frame-src *.third-party-214.test *.third-party-421.test third-party-421.test data: third-party-138.test *.third-party-414.test third-party-437.test *.third-party-437.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;object-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test *.third-party-360.test *.third-party-424.test *.third-party-425.test;script-src *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-416.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-424.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-426.test wss://third-party-427.test wss://third-party-428.test wss://third-party-429.test/ third-party-430.test *.third-party-423.test *.third-party-431.test *.third-party-152.test *.third-party-432.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-416.test *.third-party-423.test https://fonts.gstatic.com;img-src *.third-party-416.test *.third-party-214.test data: https://*.third-party-423.test third-party-214.test *.third-party-244.test third-party-423.test third-party-416.test third-party-52.test blob: android-webview-video-poster: *.third-party-425.test *.third-party-431.test *.third-party-433.test *.third-party-434.test *.third-party-435.test *.third-party-436.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-416.test *.third-party-423.test third-party-58.test *.third-party-214.test data: *.third-party-434.test *.third-party-435.test https://*.third-party-436.test;child-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;frame-src *.third-party-214.test *.third-party-423.test third-party-423.test data: third-party-138.test *.third-party-416.test third-party-439.test *.third-party-439.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;object-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -8973,7 +8973,7 @@
               },
               {
                 "name": "permissions-policy",
-                "value": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-420.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\""
+                "value": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-422.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\""
               }
             ],
             "security_details": {
@@ -9009,7 +9009,7 @@
             "security_headers": [
               {
                 "name": "content-security-policy",
-                "value": "default-src blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test *.third-party-359.test *.third-party-422.test *.third-party-423.test;script-src *.third-party-214.test *.third-party-414.test *.third-party-359.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-414.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-414.test *.third-party-359.test wss://*.third-party-214.test:* wss://*.third-party-422.test:* wss://*.third-party-414.test third-party-419.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-424.test wss://third-party-425.test wss://third-party-426.test wss://third-party-427.test/ third-party-428.test *.third-party-421.test *.third-party-429.test *.third-party-152.test *.third-party-430.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-414.test *.third-party-421.test https://fonts.gstatic.com;img-src *.third-party-414.test *.third-party-214.test data: https://*.third-party-421.test third-party-214.test *.third-party-244.test third-party-421.test third-party-414.test third-party-52.test blob: android-webview-video-poster: *.third-party-423.test *.third-party-429.test *.third-party-431.test *.third-party-432.test *.third-party-433.test *.third-party-434.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-414.test *.third-party-421.test third-party-58.test *.third-party-214.test data: *.third-party-432.test *.third-party-433.test https://*.third-party-434.test;child-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;frame-src *.third-party-214.test *.third-party-421.test third-party-421.test data: third-party-138.test *.third-party-414.test third-party-437.test *.third-party-437.test https://third-party-435.test/ https://*.third-party-435.test/ https://third-party-436.test/ https://*.third-party-436.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;object-src data: blob: 'self' https://*.third-party-421.test *.third-party-214.test *.third-party-414.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;"
+                "value": "default-src blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test *.third-party-360.test *.third-party-424.test *.third-party-425.test;script-src *.third-party-214.test *.third-party-416.test *.third-party-360.test 127.0.0.1:* 'nonce-UeT43wwE' blob: 'self' third-party-52.test 'wasm-unsafe-eval' https://accounts.google.com https://*.third-party-155.test *.google.com;style-src *.third-party-416.test data: *.third-party-214.test 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com;connect-src *.third-party-214.test third-party-214.test *.third-party-416.test *.third-party-360.test wss://*.third-party-214.test:* wss://*.third-party-424.test:* wss://*.third-party-416.test third-party-421.test ws://localhost:* blob: *.third-party-244.test 'self' http://localhost:3103 wss://third-party-426.test wss://third-party-427.test wss://third-party-428.test wss://third-party-429.test/ third-party-430.test *.third-party-423.test *.third-party-431.test *.third-party-152.test *.third-party-432.test https://accounts.google.com https://*.third-party-155.test;font-src data: *.third-party-214.test *.third-party-416.test *.third-party-423.test https://fonts.gstatic.com;img-src *.third-party-416.test *.third-party-214.test data: https://*.third-party-423.test third-party-214.test *.third-party-244.test third-party-423.test third-party-416.test third-party-52.test blob: android-webview-video-poster: *.third-party-425.test *.third-party-431.test *.third-party-433.test *.third-party-434.test *.third-party-435.test *.third-party-436.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://*.third-party-155.test;media-src *.third-party-244.test blob: *.third-party-416.test *.third-party-423.test third-party-58.test *.third-party-214.test data: *.third-party-434.test *.third-party-435.test https://*.third-party-436.test;child-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;frame-src *.third-party-214.test *.third-party-423.test third-party-423.test data: third-party-138.test *.third-party-416.test third-party-439.test *.third-party-439.test https://third-party-437.test/ https://*.third-party-437.test/ https://third-party-438.test/ https://*.third-party-438.test/ https://third-party-144.test https://third-party-143.test https://www.google.com https://third-party-238.test *.google.com *.third-party-184.test;manifest-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;object-src data: blob: 'self' https://*.third-party-423.test *.third-party-214.test *.third-party-416.test;worker-src blob: *.third-party-214.test data:;block-all-mixed-content;upgrade-insecure-requests;"
               },
               {
                 "name": "cross-origin-resource-policy",
@@ -9021,7 +9021,7 @@
               },
               {
                 "name": "permissions-policy",
-                "value": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-420.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\""
+                "value": "accelerometer=(), attribution-reporting=(self), autoplay=(), bluetooth=(), browsing-topics=(self), camera=(self \"https://third-party-422.test\"), ch-device-memory=(), ch-downlink=(), ch-dpr=(), ch-ect=(), ch-rtt=(), ch-save-data=(), ch-ua-arch=(), ch-ua-bitness=(), ch-viewport-height=(), ch-viewport-width=(), ch-width=(), clipboard-read=(self), clipboard-write=(self), compute-pressure=(), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=*, geolocation=(self), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(self), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), private-state-token-issuance=(), publickey-credentials-get=(self), screen-wake-lock=(), serial=(), shared-storage=(), shared-storage-select-url=(), private-state-token-redemption=(), usb=(), unload=(self), window-management=(), xr-spatial-tracking=(self);report-to=\"permissions_policy\""
               }
             ],
             "remote_ip_address": "192.0.2.167"
@@ -26469,11 +26469,11 @@
           {
             "name": "third-party-52.test",
             "type": "CNAME",
-            "address": "third-party-440.test.",
+            "address": "third-party-442.test.",
             "dnssec_valid": false
           },
           {
-            "name": "third-party-440.test",
+            "name": "third-party-442.test",
             "type": "A",
             "address": "192.0.2.129",
             "dnssec_valid": false
@@ -26481,11 +26481,11 @@
           {
             "name": "third-party-52.test",
             "type": "CNAME",
-            "address": "third-party-440.test.",
+            "address": "third-party-442.test.",
             "dnssec_valid": false
           },
           {
-            "name": "third-party-440.test",
+            "name": "third-party-442.test",
             "type": "AAAA",
             "address": "2001:db8::3c",
             "dnssec_valid": false
@@ -26583,11 +26583,11 @@
           {
             "name": "third-party-58.test",
             "type": "CNAME",
-            "address": "third-party-443.test.",
+            "address": "third-party-445.test.",
             "dnssec_valid": false
           },
           {
-            "name": "third-party-443.test",
+            "name": "third-party-445.test",
             "type": "A",
             "address": "192.0.2.167",
             "dnssec_valid": false
@@ -26595,11 +26595,11 @@
           {
             "name": "third-party-58.test",
             "type": "CNAME",
-            "address": "third-party-443.test.",
+            "address": "third-party-445.test.",
             "dnssec_valid": false
           },
           {
-            "name": "third-party-443.test",
+            "name": "third-party-445.test",
             "type": "AAAA",
             "address": "2001:db8::5b",
             "dnssec_valid": false
@@ -26634,7 +26634,7 @@
         "data": [
           {
             "ip": "192.0.2.162",
-            "ptr": "third-party-502.test."
+            "ptr": "third-party-504.test."
           }
         ]
       },
@@ -26764,7 +26764,7 @@
           {
             "app": "jQuery",
             "icon": "jQuery.svg",
-            "website": "https://third-party-340.test",
+            "website": "https://third-party-341.test",
             "categories": [
               {
                 "name": "JavaScript libraries",
@@ -26874,8 +26874,8 @@
           "punycode": "example-shop-7.test",
           "registrar": "Consulting Service Sp. z o.o.",
           "nameservers": [
-            "third-party-503.test",
-            "third-party-504.test"
+            "third-party-505.test",
+            "third-party-506.test"
           ],
           "created_date": "1999-10-20T11:00:00.000Z",
           "updated_date": "2025-10-14T06:10:44.000Z",
@@ -27133,21 +27133,21 @@
     "url": "https://example-shop-7.test/en",
     "time": "2026-04-09T11:00:48.544Z",
     "uuid": "c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
-    "domURL": "https://third-party-346.test/client/v4/accounts/ac619c457ce4e5800a41ec75084337e7/urlscanner/v2/dom/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
+    "domURL": "https://third-party-347.test/client/v4/accounts/ac619c457ce4e5800a41ec75084337e7/urlscanner/v2/dom/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
     "domain": "example-shop-7.test",
     "method": "api",
     "source": "api",
     "status": "finished",
-    "dom_url": "https://third-party-346.test/client/v4/accounts/ac619c457ce4e5800a41ec75084337e7/urlscanner/v2/dom/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
+    "dom_url": "https://third-party-347.test/client/v4/accounts/ac619c457ce4e5800a41ec75084337e7/urlscanner/v2/dom/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
     "options": {
       "customHeaders": {},
       "custom_headers": {}
     },
     "success": true,
     "timeEnd": "2026-04-09T11:01:09.975Z",
-    "reportURL": "https://third-party-347.test/scan/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
+    "reportURL": "https://third-party-348.test/scan/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
     "apexDomain": "example-shop-7.test",
-    "report_url": "https://third-party-347.test/scan/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
+    "report_url": "https://third-party-348.test/scan/c321fa20-e5be-4ee6-82fc-9051a5b9e7ac",
     "visibility": "unlisted",
     "apex_domain": "example-shop-7.test"
   },

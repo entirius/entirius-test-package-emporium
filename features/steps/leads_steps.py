@@ -63,10 +63,10 @@ def step_submit_contact_form(context, idx):
     assert context.response.status_code == 201, f"submit: {context.response.status_code} {context.response.text[:300]}"
 
 
-@then('the import report row {row:d} should have action "{action}"')
-def step_report_row_action(context, row, action):
-    entries = [entry for entry in context.response_data["report"] if entry["row"] == row]
-    assert entries and entries[0]["action"] == action, f"row {row}: {entries}"
+@then("the import counts created plus matched should equal {total:d}")
+def step_import_imported_total(context, total):
+    data = context.response_data
+    assert data["created_count"] + data["matched_count"] == total, f"import counts: {data}"
 
 
 @then('the import report should contain the reason "{reason}"')

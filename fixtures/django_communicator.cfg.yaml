@@ -1,0 +1,307 @@
+# =========================================================================
+# django_communicator seed — channel default-europe in sandbox mode, four templates (two AI prompts,
+# two static), one version each, and a suppressed email + domain (pks 1–99, allocation table in plan 09).
+#
+# AI prompt bodies: system prompt, a line `=== USER ===`, user prompt — sanitised from the prototype
+# prompts (roadmap extract), [SENDER] kept as a placeholder text. Model `fake-chat`: zeno's toolbox
+# channel only sees fake models; the fake answers `communicator.*` tags with {subject, body_paragraphs}.
+# `followup` is static + auto_approve; its body is the pool text of the sequence step (`{body}`).
+# Inbound: MailboxConfig polls GreenMail IMAP in-compose (greenmail:3143, sandbox/sandbox, no SSL; the password is
+# encrypted on load with the service SECRET_KEY).
+# Sending: policy business days 08:00–17:00 (channel tz), cap 10, spread off so BDD is deterministic;
+# sequence `followup` 3/5/7 days over six synthetic pool texts.
+# language references django_regional.language pk (pl=1, en=2).
+# =========================================================================
+
+# --- Channel ---
+- model: django_communicator.channel
+  pk: 1
+  fields:
+    idx: default-europe
+    label: Default Europe Communicator
+    default_language: 1
+    languages: [1, 2]
+    timezone: Europe/Warsaw
+    country: PL
+    mode: sandbox
+    sandbox_mailbox: sandbox@greenmail.test
+    live_enabled: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Templates (current_version points at the version rows below) ---
+- model: django_communicator.messagetemplate
+  pk: 1
+  fields:
+    channel: 1
+    key: lead.cold.shop
+    kind: ai_prompt
+    language: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 1
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplate
+  pk: 2
+  fields:
+    channel: 1
+    key: lead.cold.b2b
+    kind: ai_prompt
+    language: 1
+    subject: "Cold — B2B"
+    body: "Piszesz w imieniu [SENDER] do firmy B2B. Ton rzeczowy, bez sprzedażowego języka. Max 600 znaków. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nObserwacje: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 2
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplate
+  pk: 3
+  fields:
+    channel: 1
+    key: followup
+    kind: static
+    language: 1
+    subject: "Re: {company_name}"
+    body: "Dzień dobry {first_name},\n\n{body}"
+    json_schema: null
+    model: ""
+    requires_legal_footer: true
+    auto_approve: true
+    is_active: true
+    current_version: 3
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplate
+  pk: 4
+  fields:
+    channel: 1
+    key: reply.thanks
+    kind: static
+    language: 1
+    subject: "Dziękuję, {first_name}"
+    body: "Dzień dobry {first_name},\n\ndziękuję za odpowiedź — wrócę z konkretami."
+    json_schema: null
+    model: ""
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 4
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Template versions ---
+- model: django_communicator.messagetemplateversion
+  pk: 1
+  fields:
+    template: 1
+    number: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 2
+  fields:
+    template: 2
+    number: 1
+    subject: "Cold — B2B"
+    body: "Piszesz w imieniu [SENDER] do firmy B2B. Ton rzeczowy, bez sprzedażowego języka. Max 600 znaków. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nObserwacje: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 3
+  fields:
+    template: 3
+    number: 1
+    subject: "Re: {company_name}"
+    body: "Dzień dobry {first_name},\n\n{body}"
+    json_schema: null
+    model: ""
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 4
+  fields:
+    template: 4
+    number: 1
+    subject: "Dziękuję, {first_name}"
+    body: "Dzień dobry {first_name},\n\ndziękuję za odpowiedź — wrócę z konkretami."
+    json_schema: null
+    model: ""
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+# --- Suppressions ---
+- model: django_communicator.suppression
+  pk: 1
+  fields:
+    channel: 1
+    kind: email
+    value: blocked@example-shop-9.test
+    reason: BDD seed
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.suppression
+  pk: 2
+  fields:
+    channel: 1
+    kind: domain
+    value: example-blocked.test
+    reason: BDD seed
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Send policy ---
+- model: django_communicator.sendpolicy
+  pk: 1
+  fields:
+    channel: 1
+    business_days_only: true
+    daily_cap: 10
+    spread: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.sendwindow
+  pk: 1
+  fields:
+    policy: 1
+    order: 0
+    start_time: "08:00:00"
+    end_time: "17:00:00"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Follow-up sequence ---
+- model: django_communicator.sequence
+  pk: 1
+  fields:
+    channel: 1
+    key: followup
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.sequencestep
+  pk: 1
+  fields:
+    sequence: 1
+    number: 1
+    days_after_previous: 3
+    template_key: followup
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.sequencestep
+  pk: 2
+  fields:
+    sequence: 1
+    number: 2
+    days_after_previous: 5
+    template_key: followup
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.sequencestep
+  pk: 3
+  fields:
+    sequence: 1
+    number: 3
+    days_after_previous: 7
+    template_key: followup
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Pool texts (synthetic, never the prototype pool) ---
+- model: django_communicator.textpool
+  pk: 1
+  fields:
+    sequence: 1
+    body: "TEST follow-up 1/6: wracam do mojej wiadomości sprzed kilku dni — czy temat jest dla Państwa aktualny?"
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.textpool
+  pk: 2
+  fields:
+    sequence: 1
+    body: "TEST follow-up 2/6: nie chcę być natarczywy, dlatego zapytam krótko: czy mogę przesłać dwie konkretne propozycje?"
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.textpool
+  pk: 3
+  fields:
+    sequence: 1
+    body: "TEST follow-up 3/6: jeśli to nie jest dobry moment, proszę dać znać — wrócę w innym terminie."
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.textpool
+  pk: 4
+  fields:
+    sequence: 1
+    body: "TEST follow-up 4/6: przygotowałem krótkie podsumowanie obserwacji; wystarczy odpowiedzieć „tak”, a je wyślę."
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.textpool
+  pk: 5
+  fields:
+    sequence: 1
+    body: "TEST follow-up 5/6: czy jest ktoś inny w firmie, do kogo powinienem skierować tę wiadomość?"
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.textpool
+  pk: 6
+  fields:
+    sequence: 1
+    body: "TEST follow-up 6/6: to moja ostatnia wiadomość w tej sprawie — dziękuję za poświęcony czas."
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Inbound mailbox (GreenMail sandbox user; GreenMail runs without authentication) ---
+- model: django_communicator.mailboxconfig
+  pk: 1
+  fields:
+    channel: 1
+    imap_host: greenmail
+    imap_port: 3143
+    imap_use_ssl: false
+    imap_user: sandbox
+    imap_password: sandbox
+    folder: INBOX
+    last_uid: 0
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

@@ -91,8 +91,13 @@ def send_raw(eml: bytes, sender: str, recipients: list[str]) -> None:
 
 def inject(path: Path, *, user: str = SANDBOX_USER, folder: str = "INBOX", message_id: str | None = None) -> None:
     """Place a fixture `.eml` straight into a folder (IMAP APPEND), as if it had been received."""
+    append_raw(render_fixture(path, message_id), user=user, folder=folder)
+
+
+def append_raw(eml: bytes, *, user: str = SANDBOX_USER, folder: str = "INBOX") -> None:
+    """IMAP APPEND raw RFC 5322 bytes to a folder."""
     with imaplib.IMAP4(GREENMAIL_HOST, GREENMAIL_IMAP_PORT, timeout=TIMEOUT_S) as imap:
         imap.login(user, user)
-        status, detail = imap.append(folder, None, None, render_fixture(path, message_id))
+        status, detail = imap.append(folder, None, None, eml)
         if status != "OK":
             raise RuntimeError(f"IMAP APPEND to {user}/{folder} failed: {detail}")

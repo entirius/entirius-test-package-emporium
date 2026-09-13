@@ -12,7 +12,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make install` | sync dependencies (uv, incl. extras) |
 | `make check` | lint + format-check (ruff) |
 | `make fix` | auto-fix lint + format |
-| `make test` | behave dry-run — steps bind to scenarios, no API needed |
+| `make test` | behave dry-run — steps bind to scenarios, no API needed — plus the pytest unit tests in `tests/` |
 | `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`) |
 | `make e2e [E2E_ARGS=…] [E2E_DEVICE=…]` | Playwright e2e; `E2E_ARGS` narrows pytest targets (default `e2e/`), `E2E_DEVICE` emulates a Playwright device (`e2e/conftest.py`) |
 

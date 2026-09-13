@@ -64,9 +64,11 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 ├── images/                 # Product images per SKU
 ├── devtools/               # Bulk data multiplier (stress tests)
 ├── scripts/                # Seed (host) + import (container) + behave.ini generator
-│   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only)
+│   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only);
+│   │                                      # --verify fixtures/siteintel = leak gate only (.gitleaks.toml words, hosts, emails)
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
+├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
 ├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
 └── load/                   # Load tests k6 (planned)
 ```

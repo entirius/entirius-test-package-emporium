@@ -18,6 +18,7 @@ CONTEXT = {
     "website": "example-shop-1.test",
     "hooks": "mobile performance 2/10; 40 third-party scripts",
     "last_name": "Kowalski",
+    "body": "czy moja poprzednia wiadomość dotarła?",
 }
 
 

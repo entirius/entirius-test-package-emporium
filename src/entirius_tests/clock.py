@@ -21,11 +21,15 @@ POLL_NOW_PATH = "poll-now/"
 
 def _post(api: ApiClient, channel_idx: str, path: str, body: dict | None = None) -> requests.Response:
     url = api.url(COMMUNICATOR_TEST_PATH.format(channel_idx=channel_idx) + path)
-    return api.post(url, json=body or {})
+    return api.post(url, json={} if body is None else body)
 
 
 def set_channel_clock(api: ApiClient, channel_idx: str, iso_dt: str) -> requests.Response:
     return _post(api, channel_idx, CLOCK_PATH, {"iso_datetime": iso_dt})
+
+
+def clear_channel_clock(api: ApiClient, channel_idx: str) -> requests.Response:
+    return _post(api, channel_idx, CLOCK_PATH, {"iso_datetime": None})
 
 
 def run_beat_send(api: ApiClient, channel_idx: str) -> requests.Response:

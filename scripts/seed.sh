@@ -181,6 +181,7 @@ FIXTURE_FILES=(
     "django_email.cfg.yaml"
     "django_contact_forms.cfg.yaml"
     "django_enrichment.cfg.yaml"
+    "django_notifications.cfg.yaml"
     "django_siteintel.cfg.yaml"
 )
 

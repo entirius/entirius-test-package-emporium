@@ -153,6 +153,13 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate --noinp
 echo "Clearing Django cache (throttle counters, cached state)..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"from django.core.cache import cache; cache.clear(); print('cache cleared')\"" \
     || echo "WARNING: cache clear failed — stale throttle counters may 429 the BDD apply scenarios"
+# Harnesses with a mail sandbox (zeno: GreenMail) pass its REST URL — scenarios start from an
+# empty mailbox. Standalone runs have no sandbox: warn, never fail.
+if [ -n "${GREENMAIL_API_URL:-}" ]; then
+    curl -fsS --max-time 10 -X POST "$GREENMAIL_API_URL/api/mail/purge" > /dev/null \
+        && echo "GreenMail purged." \
+        || echo "WARNING: GreenMail purge failed at $GREENMAIL_API_URL — mailbox scenarios may see stale mail (zeno: make mail)"
+fi
 
 step "Step 2: Load Fixtures"
 # NOTE: never add *_golden* fixtures here — they are unit-test catalogues reusing real-seed

@@ -180,6 +180,7 @@ FIXTURE_FILES=(
     "django_faq.cfg.yaml"
     "django_email.cfg.yaml"
     "django_contact_forms.cfg.yaml"
+    "django_communicator.cfg.yaml"
     "django_enrichment.cfg.yaml"
     "django_notifications.cfg.yaml"
     "django_siteintel.cfg.yaml"

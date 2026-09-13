@@ -76,6 +76,8 @@ if [ -d "$FIXTURE_DIR" ]; then
             # seed.sh is a load-ordering convenience, not a safety boundary.
             case "$(basename "$fixture")" in
                 *_golden*) echo "  Skipping $(basename "$fixture") (unit-test fixture)"; continue ;;
+                # References the agreements channel that seed.sh Step 6 syncs from PIM — loaded there.
+                django_agreements.cfg.yaml) echo "  Skipping $(basename "$fixture") (loaded after channel sync)"; continue ;;
             esac
             echo "  Loading $(basename "$fixture")..."
             python manage.py loaddata --format=yaml "$fixture" || echo "WARNING: $(basename "$fixture") failed"

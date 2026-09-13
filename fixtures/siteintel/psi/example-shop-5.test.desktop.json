@@ -139,7 +139,7 @@
               "startTime": 3429.5218148348704
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "duration": 233,
               "startTime": 2943.5483299571456
             },
@@ -149,7 +149,7 @@
               "startTime": 3176.5483299571456
             },
             {
-              "url": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+              "url": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
               "duration": 144,
               "startTime": 1009.0131124898694
             },
@@ -174,12 +174,12 @@
               "startTime": 3686.521814834871
             },
             {
-              "url": "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+              "url": "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
               "duration": 95.99999999999955,
               "startTime": 2104.5170289492553
             },
             {
-              "url": "https://third-party-40.test/0.8.59/clarity.js",
+              "url": "https://third-party-44.test/0.8.59/clarity.js",
               "duration": 89,
               "startTime": 4873.627939356771
             },
@@ -194,7 +194,7 @@
               "startTime": 3801.0441739018747
             },
             {
-              "url": "https://third-party-40.test/0.8.59/clarity.js",
+              "url": "https://third-party-44.test/0.8.59/clarity.js",
               "duration": 62,
               "startTime": 4793.627939356771
             }
@@ -225,14 +225,14 @@
             "type": "debugdata",
             "urls": [
               "https://third-party-2.test/gtag/js?id=G-XSTKBQ5BDZ&cx=c&gtm=4e6471",
-              "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "https://third-party-2.test/gtag/js?id=G-0VQFGL34SD&cx=c&gtm=4e6471",
-              "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+              "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
               "https://third-party-2.test/gtm.js?id=GTM-5DTTBQV&gtm_auth=btgrsZjX0ocP522EPkFeFw&gtm_preview=env-2&gtm_cookies_win=x",
               "https://third-party-2.test/gtag/destination?id=AW-985978289&cx=c&gtm=4e6471",
               "https://example-shop-5.test/js/3944.js?id=d472d11e33c8623c",
-              "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
-              "https://third-party-40.test/0.8.59/clarity.js",
+              "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+              "https://third-party-44.test/0.8.59/clarity.js",
               "https://example-shop-5.test/js/vue.js?id=17832c42c7ac5c11cf9ab0b955383df9",
               "https://example-shop-5.test/js/4945.js?id=fb73b5ae5545883d"
             ],
@@ -375,7 +375,7 @@
               "scriptParseCompile": 69.46599999999997
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "total": 252.3900000000001,
               "scripting": 95.52200000000005,
               "scriptParseCompile": 49.308
@@ -399,7 +399,7 @@
               "scriptParseCompile": 16.942
             },
             {
-              "url": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+              "url": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
               "total": 143.928,
               "scripting": 100.39100000000002,
               "scriptParseCompile": 10.595999999999998
@@ -423,7 +423,7 @@
               "scriptParseCompile": 53.342
             },
             {
-              "url": "https://third-party-40.test/0.8.59/clarity.js",
+              "url": "https://third-party-44.test/0.8.59/clarity.js",
               "total": 109.91300000000003,
               "scripting": 65.44500000000005,
               "scriptParseCompile": 8.631
@@ -538,31 +538,31 @@
           "items": [
             {
               "rtt": 11.859075,
-              "origin": "https://third-party-41.test"
+              "origin": "https://third-party-45.test"
             },
             {
               "rtt": 8.20026,
-              "origin": "https://third-party-68.test"
+              "origin": "https://third-party-74.test"
             },
             {
               "rtt": 3.5476200000000007,
-              "origin": "https://third-party-69.test"
+              "origin": "https://third-party-75.test"
             },
             {
               "rtt": 2.79738,
-              "origin": "https://third-party-70.test"
+              "origin": "https://third-party-76.test"
             },
             {
               "rtt": 2.5866,
-              "origin": "https://third-party-65.test"
-            },
-            {
-              "rtt": 1.10754,
               "origin": "https://third-party-71.test"
             },
             {
+              "rtt": 1.10754,
+              "origin": "https://third-party-77.test"
+            },
+            {
               "rtt": 1.058625,
-              "origin": "https://third-party-67.test"
+              "origin": "https://third-party-73.test"
             },
             {
               "rtt": 0.8999999999999999,
@@ -570,19 +570,19 @@
             },
             {
               "rtt": 0.8999999999999999,
-              "origin": "https://third-party-43.test"
+              "origin": "https://third-party-47.test"
             },
             {
               "rtt": 0.8999999999999999,
-              "origin": "https://third-party-72.test"
+              "origin": "https://third-party-78.test"
             },
             {
               "rtt": 0.0023120618813530194,
-              "origin": "https://third-party-40.test"
+              "origin": "https://third-party-44.test"
             },
             {
               "rtt": 0.002022570914721505,
-              "origin": "https://third-party-66.test"
+              "origin": "https://third-party-72.test"
             },
             {
               "rtt": 0.0013590329112278968,
@@ -598,11 +598,11 @@
             },
             {
               "rtt": 0.0007504372191275933,
-              "origin": "https://third-party-73.test"
+              "origin": "https://third-party-79.test"
             },
             {
               "rtt": 0.0006582493424420692,
-              "origin": "https://third-party-74.test"
+              "origin": "https://third-party-80.test"
             }
           ],
           "headings": [
@@ -743,7 +743,7 @@
               "cacheLifetimeMs": 1800000
             },
             {
-              "url": "https://third-party-40.test/0.8.59/clarity.js",
+              "url": "https://third-party-44.test/0.8.59/clarity.js",
               "totalBytes": 26906,
               "wastedBytes": 10762.400000000001,
               "cacheLifetimeMs": 86400000
@@ -755,7 +755,7 @@
               "cacheLifetimeMs": 1800000
             },
             {
-              "url": "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+              "url": "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
               "totalBytes": 11130,
               "wastedBytes": 4452,
               "cacheLifetimeMs": 86400000
@@ -1054,12 +1054,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "1-53-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,0,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Kolczyki Solitaire\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Kolczyki Solitaire\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Kolczyki Solitaire",
                 "boundingRect": {
@@ -1073,12 +1073,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "1-54-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,1,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Pierścionki Eternity\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Pierścionki Eternity\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Pierścionki Eternity",
                 "boundingRect": {
@@ -1092,12 +1092,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "1-55-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,2,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Naszyjniki jednokamieniowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Naszyjniki jednokamieniowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Naszyjniki jednokamieniowe",
                 "boundingRect": {
@@ -1111,12 +1111,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "1-56-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,3,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Bransoletki tenisowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Bransoletki tenisowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Bransoletki tenisowe",
                 "boundingRect": {
@@ -1130,12 +1130,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "1-42-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,0,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" srcset=\"https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" width=\"auto\" height=\"auto\" alt=\"Pierścionki zaręczynowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" srcset=\"https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" width=\"auto\" height=\"auto\" alt=\"Pierścionki zaręczynowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Pierścionki zaręczynowe",
                 "boundingRect": {
@@ -1149,12 +1149,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "1-43-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,1,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" srcset=\"https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" width=\"auto\" height=\"auto\" alt=\"Obrączki ślubne\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" srcset=\"https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" width=\"auto\" height=\"auto\" alt=\"Obrączki ślubne\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Obrączki ślubne",
                 "boundingRect": {
@@ -1168,12 +1168,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "1-44-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,2,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" srcset=\"https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Biżuteria\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" srcset=\"https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Biżuteria\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Biżuteria",
                 "boundingRect": {
@@ -1187,12 +1187,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "1-45-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,3,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q…\" srcset=\"https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Nowości\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q…\" srcset=\"https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Nowości\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Nowości",
                 "boundingRect": {
@@ -1206,12 +1206,12 @@
               }
             },
             {
-              "url": "https://third-party-71.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
+              "url": "https://third-party-77.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
               "node": {
                 "lhId": "1-40-IMG",
                 "path": "1,HTML,1,BODY,11,DIV,0,DIV,0,DIV,1,DIV,0,UL,1,LI,1,DIV,0,DIV,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/promotion/20260406101529-white-45-pl.svg?q=…\" srcset=\"https://third-party-71.test/promotion/20260406101529-white-45-pl.svg?q=…\" width=\"auto\" height=\"120\" alt=\"Grafika baneru promocyjnego\" loading=\"lazy\" decoding=\"async\" class=\"mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/promotion/20260406101529-white-45-pl.svg?q=…\" srcset=\"https://third-party-77.test/promotion/20260406101529-white-45-pl.svg?q=…\" width=\"auto\" height=\"120\" alt=\"Grafika baneru promocyjnego\" loading=\"lazy\" decoding=\"async\" class=\"mb-6\">",
                 "selector": "li#splide02-slide01 > div.container > div.position-absolute > img.mb-6",
                 "nodeLabel": "Grafika baneru promocyjnego",
                 "boundingRect": {
@@ -1440,7 +1440,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+              "url": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
               "entity": "JSDelivr CDN",
               "finished": true,
               "mimeType": "application/javascript",
@@ -1667,8 +1667,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-70.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
-              "entity": "third-party-75.test",
+              "url": "https://third-party-76.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
+              "entity": "third-party-81.test",
               "finished": true,
               "mimeType": "application/javascript",
               "priority": "Low",
@@ -1718,8 +1718,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thumbnail.jpg",
-              "entity": "third-party-76.test",
+              "url": "https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thumbnail.jpg",
+              "entity": "third-party-82.test",
               "finished": true,
               "mimeType": "image/jpeg",
               "priority": "Low",
@@ -1735,8 +1735,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-73.test/f7586678-27fa-4422-aebc-50c997a0dd3e/thumbnail.jpg",
-              "entity": "third-party-76.test",
+              "url": "https://third-party-79.test/f7586678-27fa-4422-aebc-50c997a0dd3e/thumbnail.jpg",
+              "entity": "third-party-82.test",
               "finished": true,
               "mimeType": "image/jpeg",
               "priority": "Low",
@@ -1752,8 +1752,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-74.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
-              "entity": "third-party-76.test",
+              "url": "https://third-party-80.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
+              "entity": "third-party-82.test",
               "finished": true,
               "mimeType": "image/jpeg",
               "priority": "Low",
@@ -1769,8 +1769,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-74.test/16631ad2-2d3c-4e40-93f7-96577e4d884a/thumbnail_05d47cdb.jpg",
-              "entity": "third-party-76.test",
+              "url": "https://third-party-80.test/16631ad2-2d3c-4e40-93f7-96577e4d884a/thumbnail_05d47cdb.jpg",
+              "entity": "third-party-82.test",
               "finished": true,
               "mimeType": "image/jpeg",
               "priority": "Low",
@@ -2024,7 +2024,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+              "url": "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
               "entity": "Cloudflare",
               "finished": true,
               "mimeType": "text/javascript",
@@ -2041,7 +2041,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-66.test/npm/intl-tel-input@24.3.7/build/js/utils.js",
+              "url": "https://third-party-72.test/npm/intl-tel-input@24.3.7/build/js/utils.js",
               "entity": "JSDelivr CDN",
               "finished": true,
               "mimeType": "application/javascript",
@@ -2092,8 +2092,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/svg+xml",
               "priority": "Low",
@@ -2109,8 +2109,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "High",
@@ -2126,8 +2126,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "High",
@@ -2143,8 +2143,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "High",
@@ -2160,8 +2160,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "High",
@@ -2177,8 +2177,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2194,8 +2194,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2211,8 +2211,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2228,8 +2228,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2245,8 +2245,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2262,8 +2262,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2279,8 +2279,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2296,8 +2296,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -2585,8 +2585,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-70.test/api/event",
-              "entity": "third-party-75.test",
+              "url": "https://third-party-76.test/api/event",
+              "entity": "third-party-81.test",
               "finished": true,
               "mimeType": "text/plain",
               "priority": "High",
@@ -2821,10 +2821,10 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/playlist.m3u8",
-              "entity": "third-party-76.test",
+              "url": "https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/playlist.m3u8",
+              "entity": "third-party-82.test",
               "finished": true,
-              "mimeType": "application/vnd.apple.mpegurl",
+              "mimeType": "application/third-party-84.test",
               "priority": "High",
               "protocol": "h2",
               "statusCode": 200,
@@ -2940,7 +2940,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
+              "url": "https://third-party-71.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
               "entity": "TikTok",
               "finished": true,
               "mimeType": "application/javascript",
@@ -3058,7 +3058,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-43.test/g/collect?v=2&tid=G-0VQFGL34SD&gtm=45je6471v9177042724z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&ecid=435253886&_eu=AAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7CNot-A.Brand%3B24.0.0.0%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938469~117266401~117384406&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_nsi=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&up.hit_page_country=PL&tfd=2031",
+              "url": "https://third-party-47.test/g/collect?v=2&tid=G-0VQFGL34SD&gtm=45je6471v9177042724z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&ecid=435253886&_eu=AAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7Cthird-party-29.test%3B192.0.2.2%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938469~117266401~117384406&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_nsi=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&up.hit_page_country=PL&tfd=2031",
               "entity": "Google Analytics",
               "finished": true,
               "mimeType": "text/plain",
@@ -3075,8 +3075,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-72.test/recommendations/v2/recommend/campaigns/lEnYKdrKpPYr?token=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&clientUUID=ee6b900e-fbb4-40f3-849b-d04997b7f2f6",
-              "entity": "third-party-78.test",
+              "url": "https://third-party-78.test/recommendations/v2/recommend/campaigns/lEnYKdrKpPYr?token=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&clientUUID=ee6b900e-fbb4-40f3-849b-d04997b7f2f6",
+              "entity": "third-party-85.test",
               "finished": true,
               "mimeType": "application/json",
               "priority": "High",
@@ -3193,7 +3193,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-43.test/g/collect?v=2&tid=G-XSTKBQ5BDZ&gtm=45je6471v897017779z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&ir=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7CNot-A.Brand%3B24.0.0.0%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938468~117266401&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&tfd=2326",
+              "url": "https://third-party-47.test/g/collect?v=2&tid=G-XSTKBQ5BDZ&gtm=45je6471v897017779z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&ir=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7Cthird-party-29.test%3B192.0.2.2%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938468~117266401&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&tfd=2326",
               "entity": "Google Analytics",
               "finished": true,
               "mimeType": "text/plain",
@@ -3244,7 +3244,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "entity": "TikTok",
               "finished": true,
               "mimeType": "application/javascript",
@@ -3294,7 +3294,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://example-shop-5.test/6ebdd395-0db3-4a87-9b5c-5d956e43f89d/_i.gif?action=recommendation.view&label=&params=%7B%22uuid%22%3A%22ee6b900e-fbb4-40f3-849b-d04997b7f2f6%22%2C%22ssuid%22%3A%223db6d17d-44d2-4e8a-9a53-ef82e2216533%22%2C%22url%22%3A%22https%3A%2F%2Fexample-shop-5.test%2F%22%2C%22host%22%3A%22example-shop-5.test%22%2C%22campaignId%22%3A%22lEnYKdrKpPYr%22%2C%22correlationId%22%3A%22f7c2802c-1713-4101-ae2e-6f6115982ea4%22%2C%22items%22%3A%5B%22236657%22%2C%22235731%22%2C%22397%22%2C%22239604%22%2C%22239628%22%2C%22236943%22%2C%224072%22%2C%22347%22%2C%22235199%22%2C%22235174%22%2C%22239759%22%2C%22239709%22%5D%7D&uuid=ee6b900e-fbb4-40f3-849b-d04997b7f2f6&tracker=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&hash=0y816l",
+              "url": "https://example-shop-5.test/6ebdd395-0db3-4a87-9b5c-5d956e43f89d/_i.gif?action=third-party-86.test&label=&params=%7B%22uuid%22%3A%22ee6b900e-fbb4-40f3-849b-d04997b7f2f6%22%2C%22ssuid%22%3A%223db6d17d-44d2-4e8a-9a53-ef82e2216533%22%2C%22url%22%3A%22https%3A%2F%2Fexample-shop-5.test%2F%22%2C%22host%22%3A%22example-shop-5.test%22%2C%22campaignId%22%3A%22lEnYKdrKpPYr%22%2C%22correlationId%22%3A%22f7c2802c-1713-4101-ae2e-6f6115982ea4%22%2C%22items%22%3A%5B%22236657%22%2C%22235731%22%2C%22397%22%2C%22239604%22%2C%22239628%22%2C%22236943%22%2C%224072%22%2C%22347%22%2C%22235199%22%2C%22235174%22%2C%22239759%22%2C%22239709%22%5D%7D&uuid=ee6b900e-fbb4-40f3-849b-d04997b7f2f6&tracker=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&hash=0y816l",
               "entity": "example-shop-5.test",
               "finished": true,
               "mimeType": "image/gif",
@@ -3311,8 +3311,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/378334-2-pierscionek-zareczynowy-share-your-love-zloty-diament-laboratoryjny.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/378334-2-pierscionek-zareczynowy-share-your-love-zloty-diament-laboratoryjny.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3328,8 +3328,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/373019-2-pierscionek-zareczynowy-example-shop-5-zloty-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/373019-2-pierscionek-zareczynowy-example-shop-5-zloty-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3345,8 +3345,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/390475-2-obraczki-slubne-zlote-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/390475-2-obraczki-slubne-zlote-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3362,8 +3362,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/393791-2-naszyjnik-example-shop-5-dwukolorowe-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/393791-2-naszyjnik-example-shop-5-dwukolorowe-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3379,8 +3379,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/392468-2-naszyjnik-luminy-3-8mm-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/392468-2-naszyjnik-luminy-3-8mm-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3396,8 +3396,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/379851-2-kolczyki-example-shop-5-zlote-cyrkonie.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/379851-2-kolczyki-example-shop-5-zlote-cyrkonie.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3413,8 +3413,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/695358-4-kolczyki-example-shop-5-zlote-diamenty.jpg?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/695358-4-kolczyki-example-shop-5-zlote-diamenty.jpg?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3430,8 +3430,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/29871-2-obraczki-slubne-biale-zloto-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/29871-2-obraczki-slubne-biale-zloto-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3447,8 +3447,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/371425-2-obraczki-partnerskie-beloved-zlote-plaskie-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/371425-2-obraczki-partnerskie-beloved-zlote-plaskie-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3464,8 +3464,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/371420-2-obraczka-partnerska-beloved-zlota-plaska-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/371420-2-obraczka-partnerska-beloved-zlota-plaska-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3481,8 +3481,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-71.test/media-products/392552-2-bransoletka-luminy-2-3mm-biale-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
-              "entity": "third-party-77.test",
+              "url": "https://third-party-77.test/media-products/392552-2-bransoletka-luminy-2-3mm-biale-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+              "entity": "third-party-83.test",
               "finished": true,
               "mimeType": "image/avif",
               "priority": "Low",
@@ -3498,7 +3498,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/identify_5cff1caf.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/identify_5cff1caf.js",
               "entity": "TikTok",
               "finished": true,
               "mimeType": "application/javascript",
@@ -3515,8 +3515,8 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-79.test/ipv6/enrich_ipv6",
-              "entity": "third-party-80.test",
+              "url": "https://third-party-87.test/ipv6/enrich_ipv6",
+              "entity": "third-party-88.test",
               "finished": true,
               "priority": "VeryLow",
               "statusCode": -1,
@@ -3530,7 +3530,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/api/v2/pixel",
+              "url": "https://third-party-71.test/api/v2/pixel",
               "entity": "TikTok",
               "finished": true,
               "priority": "VeryLow",
@@ -3545,7 +3545,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/api/v2/pixel",
+              "url": "https://third-party-71.test/api/v2/pixel",
               "entity": "TikTok",
               "finished": true,
               "priority": "VeryLow",
@@ -3577,7 +3577,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-41.test/tag/ltb4t5yyiq",
+              "url": "https://third-party-45.test/tag/ltb4t5yyiq",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "application/x-javascript",
@@ -3594,7 +3594,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-65.test/api/v2/pixel/act",
+              "url": "https://third-party-71.test/api/v2/pixel/act",
               "entity": "TikTok",
               "finished": true,
               "priority": "VeryLow",
@@ -3609,7 +3609,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-40.test/0.8.59/clarity.js",
+              "url": "https://third-party-44.test/0.8.59/clarity.js",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "application/javascript",
@@ -3626,7 +3626,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-68.test/c.gif",
+              "url": "https://third-party-74.test/c.gif",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "text/plain",
@@ -3642,7 +3642,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-81.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&RedC=third-party-68.test&MXFR=3206F682DC556D2302E1E1B4D85563C4",
+              "url": "https://third-party-89.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&RedC=third-party-74.test&MXFR=3206F682DC556D2302E1E1B4D85563C4",
               "entity": "Bing Ads",
               "finished": true,
               "mimeType": "text/plain",
@@ -3658,7 +3658,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-68.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&MUID=1519C1C6EDC869D92C06D6F0ECCE6880",
+              "url": "https://third-party-74.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&MUID=1519C1C6EDC869D92C06D6F0ECCE6880",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "image/gif",
@@ -3675,7 +3675,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-69.test/collect",
+              "url": "https://third-party-75.test/collect",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "text/plain",
@@ -3692,7 +3692,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-69.test/collect",
+              "url": "https://third-party-75.test/collect",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "text/plain",
@@ -3709,7 +3709,7 @@
               "experimentalFromMainFrame": true
             },
             {
-              "url": "https://third-party-69.test/collect",
+              "url": "https://third-party-75.test/collect",
               "entity": "Clarity",
               "finished": true,
               "mimeType": "text/plain",
@@ -4833,7 +4833,7 @@
               "totalBytes": 144239
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "totalBytes": 127079
             },
             {
@@ -4841,7 +4841,7 @@
               "totalBytes": 119648
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "totalBytes": 112443
             },
             {
@@ -4955,7 +4955,7 @@
               "wastedPercent": 35.663377924339365
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "totalBytes": 111410,
               "wastedBytes": 57285,
               "wastedPercent": 51.4180936203438
@@ -5397,7 +5397,7 @@
               "resourceBytes": 27759
             },
             {
-              "name": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+              "name": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
               "children": [
                 {
                   "name": "../src",
@@ -7460,7 +7460,7 @@
               "resourceBytes": 501951
             },
             {
-              "name": "https://third-party-70.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
+              "name": "https://third-party-76.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
               "unusedBytes": 2115,
               "encodedBytes": 1517,
               "resourceBytes": 3646
@@ -8190,7 +8190,7 @@
               "resourceBytes": 271
             },
             {
-              "name": "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+              "name": "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
               "unusedBytes": 17261,
               "encodedBytes": 10698,
               "resourceBytes": 31169
@@ -9489,7 +9489,7 @@
               "resourceBytes": 547732
             },
             {
-              "name": "https://third-party-65.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
+              "name": "https://third-party-71.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
               "unusedBytes": 0,
               "encodedBytes": 2302,
               "resourceBytes": 8885
@@ -9501,25 +9501,25 @@
               "resourceBytes": 420877
             },
             {
-              "name": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "name": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "unusedBytes": 247610,
               "encodedBytes": 111419,
               "resourceBytes": 481562
             },
             {
-              "name": "https://third-party-65.test/i18n/pixel/static/identify_5cff1caf.js",
+              "name": "https://third-party-71.test/i18n/pixel/static/identify_5cff1caf.js",
               "unusedBytes": 48249,
               "encodedBytes": 39752,
               "resourceBytes": 155541
             },
             {
-              "name": "https://third-party-41.test/tag/ltb4t5yyiq",
+              "name": "https://third-party-45.test/tag/ltb4t5yyiq",
               "unusedBytes": 0,
               "encodedBytes": 675,
               "resourceBytes": 707
             },
             {
-              "name": "https://third-party-40.test/0.8.59/clarity.js",
+              "name": "https://third-party-44.test/0.8.59/clarity.js",
               "unusedBytes": 24879,
               "encodedBytes": 26334,
               "resourceBytes": 81659
@@ -9792,7 +9792,7 @@
                 },
                 {
                   "source": {
-                    "url": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+                    "url": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
                     "line": 7,
                     "type": "source-location",
                     "column": 96524,
@@ -9895,7 +9895,7 @@
               "lhId": "page-17-VIDEO",
               "path": "1,HTML,1,BODY,11,DIV,0,DIV,0,DIV,1,DIV,0,UL,1,LI,0,VIDEO",
               "type": "node",
-              "snippet": "<video class=\"position-absolute top-0 start-0 w-100 h-100 object-fit-cover js-lozad-video\" autoplay=\"\" loop=\"\" muted=\"\" playsinline=\"\" poster=\"https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thu…\" data-hls=\"https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/pla…\" data-loaded=\"true\" data-lozad_video_initialized=\"true\" src=\"blob:https://example-shop-5.test/820c5d04-6766-40bd-9247-a185056b4fc4\">",
+              "snippet": "<video class=\"position-absolute top-0 start-0 w-100 h-100 object-fit-cover js-lozad-video\" autoplay=\"\" loop=\"\" muted=\"\" playsinline=\"\" poster=\"https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thu…\" data-hls=\"https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/pla…\" data-loaded=\"true\" data-lozad_video_initialized=\"true\" src=\"blob:https://example-shop-5.test/820c5d04-6766-40bd-9247-a185056b4fc4\">",
               "selector": "div#splide02-track > ul#splide02-list > li#splide02-slide01 > video.position-absolute",
               "nodeLabel": "div#splide02-track > ul#splide02-list > li#splide02-slide01 > video.position-absolute",
               "boundingRect": {
@@ -9943,7 +9943,7 @@
               "lhId": "page-17-VIDEO",
               "path": "1,HTML,1,BODY,11,DIV,0,DIV,0,DIV,1,DIV,0,UL,1,LI,0,VIDEO",
               "type": "node",
-              "snippet": "<video class=\"position-absolute top-0 start-0 w-100 h-100 object-fit-cover js-lozad-video\" autoplay=\"\" loop=\"\" muted=\"\" playsinline=\"\" poster=\"https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thu…\" data-hls=\"https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/pla…\" data-loaded=\"true\" data-lozad_video_initialized=\"true\" src=\"blob:https://example-shop-5.test/820c5d04-6766-40bd-9247-a185056b4fc4\">",
+              "snippet": "<video class=\"position-absolute top-0 start-0 w-100 h-100 object-fit-cover js-lozad-video\" autoplay=\"\" loop=\"\" muted=\"\" playsinline=\"\" poster=\"https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thu…\" data-hls=\"https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/pla…\" data-loaded=\"true\" data-lozad_video_initialized=\"true\" src=\"blob:https://example-shop-5.test/820c5d04-6766-40bd-9247-a185056b4fc4\">",
               "selector": "div#splide02-track > ul#splide02-list > li#splide02-slide01 > video.position-absolute",
               "nodeLabel": "div#splide02-track > ul#splide02-list > li#splide02-slide01 > video.position-absolute",
               "boundingRect": {
@@ -10006,17 +10006,17 @@
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+                    "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
                     "transferSize": 112443,
                     "mainThreadTime": 119.63499999046326
                   },
                   {
-                    "url": "https://third-party-65.test/i18n/pixel/static/identify_5cff1caf.js",
+                    "url": "https://third-party-71.test/i18n/pixel/static/identify_5cff1caf.js",
                     "transferSize": 40775,
                     "mainThreadTime": 18.250999927520752
                   },
                   {
-                    "url": "https://third-party-65.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
+                    "url": "https://third-party-71.test/i18n/pixel/events.js?sdkid=CNLEJMBC77U6D6GPD5NG&lib=ttq",
                     "transferSize": 3744,
                     "mainThreadTime": 2.38700008392334
                   }
@@ -10031,22 +10031,22 @@
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-40.test/0.8.59/clarity.js",
+                    "url": "https://third-party-44.test/0.8.59/clarity.js",
                     "transferSize": 26906,
                     "mainThreadTime": 95.04600167274475
                   },
                   {
-                    "url": "https://third-party-41.test/tag/ltb4t5yyiq",
+                    "url": "https://third-party-45.test/tag/ltb4t5yyiq",
                     "transferSize": 1128,
                     "mainThreadTime": 1.130000352859497
                   },
                   {
-                    "url": "https://third-party-69.test/collect",
+                    "url": "https://third-party-75.test/collect",
                     "transferSize": 822,
                     "mainThreadTime": 0.2850000858306885
                   },
                   {
-                    "url": "https://third-party-68.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&MUID=1519C1C6EDC869D92C06D6F0ECCE6880",
+                    "url": "https://third-party-74.test/c.gif?ctsa=mr&CtsSyncId=7FB98E8BEC6548B9AE4AA590E454F863&MUID=1519C1C6EDC869D92C06D6F0ECCE6880",
                     "transferSize": 949,
                     "mainThreadTime": 0
                   }
@@ -10061,7 +10061,7 @@
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-67.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
+                    "url": "https://third-party-73.test/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516",
                     "transferSize": 11130,
                     "mainThreadTime": 16.002000093460083
                   }
@@ -10076,12 +10076,12 @@
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-66.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
+                    "url": "https://third-party-72.test/npm/sienna-accessibility@2.0.1/dist/sienna-accessibility.umd.js",
                     "transferSize": 32631,
                     "mainThreadTime": 12.406000137329102
                   },
                   {
-                    "url": "https://third-party-66.test/npm/intl-tel-input@24.3.7/build/js/utils.js",
+                    "url": "https://third-party-72.test/npm/intl-tel-input@24.3.7/build/js/utils.js",
                     "transferSize": 57597,
                     "mainThreadTime": 0
                   }
@@ -10091,17 +10091,17 @@
               "mainThreadTime": 12.406000137329102
             },
             {
-              "entity": "third-party-75.test",
+              "entity": "third-party-81.test",
               "subItems": {
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-70.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
+                    "url": "https://third-party-76.test/js/script.tagged-events.revenue.pageview-props.outbound-links.js",
                     "transferSize": 2387,
                     "mainThreadTime": 2.6490001678466797
                   },
                   {
-                    "url": "https://third-party-70.test/api/event",
+                    "url": "https://third-party-76.test/api/event",
                     "transferSize": 835,
                     "mainThreadTime": 0.12199997901916504
                   }
@@ -10111,32 +10111,32 @@
               "mainThreadTime": 2.7710001468658447
             },
             {
-              "entity": "third-party-76.test",
+              "entity": "third-party-82.test",
               "subItems": {
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/playlist.m3u8",
+                    "url": "https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/playlist.m3u8",
                     "transferSize": 1103,
                     "mainThreadTime": 0.15799999237060547
                   },
                   {
-                    "url": "https://third-party-73.test/f7586678-27fa-4422-aebc-50c997a0dd3e/thumbnail.jpg",
+                    "url": "https://third-party-79.test/f7586678-27fa-4422-aebc-50c997a0dd3e/thumbnail.jpg",
                     "transferSize": 82893,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-74.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
+                    "url": "https://third-party-80.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
                     "transferSize": 69568,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-74.test/16631ad2-2d3c-4e40-93f7-96577e4d884a/thumbnail_05d47cdb.jpg",
+                    "url": "https://third-party-80.test/16631ad2-2d3c-4e40-93f7-96577e4d884a/thumbnail_05d47cdb.jpg",
                     "transferSize": 60097,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-73.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thumbnail.jpg",
+                    "url": "https://third-party-79.test/f4d26dbd-1a26-47f8-bdb4-39dfca54de7c/thumbnail.jpg",
                     "transferSize": 43432,
                     "mainThreadTime": 0
                   }
@@ -10146,127 +10146,127 @@
               "mainThreadTime": 0.15799999237060547
             },
             {
-              "entity": "third-party-77.test",
+              "entity": "third-party-83.test",
               "subItems": {
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 127079,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+                    "url": "https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
                     "transferSize": 89472,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 87466,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 86706,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 86466,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+                    "url": "https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
                     "transferSize": 68588,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 67683,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 65647,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+                    "url": "https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
                     "transferSize": 54645,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 50957,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+                    "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
                     "transferSize": 45188,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+                    "url": "https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
                     "transferSize": 23318,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/379851-2-kolczyki-example-shop-5-zlote-cyrkonie.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/379851-2-kolczyki-example-shop-5-zlote-cyrkonie.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 9015,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/392468-2-naszyjnik-luminy-3-8mm-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/392468-2-naszyjnik-luminy-3-8mm-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 8725,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/373019-2-pierscionek-zareczynowy-example-shop-5-zloty-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/373019-2-pierscionek-zareczynowy-example-shop-5-zloty-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 7732,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/378334-2-pierscionek-zareczynowy-share-your-love-zloty-diament-laboratoryjny.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/378334-2-pierscionek-zareczynowy-share-your-love-zloty-diament-laboratoryjny.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 7066,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/695358-4-kolczyki-example-shop-5-zlote-diamenty.jpg?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/695358-4-kolczyki-example-shop-5-zlote-diamenty.jpg?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 6495,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/392552-2-bransoletka-luminy-2-3mm-biale-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/392552-2-bransoletka-luminy-2-3mm-biale-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 5726,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/390475-2-obraczki-slubne-zlote-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/390475-2-obraczki-slubne-zlote-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 4560,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/371425-2-obraczki-partnerskie-beloved-zlote-plaskie-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/371425-2-obraczki-partnerskie-beloved-zlote-plaskie-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 4482,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/29871-2-obraczki-slubne-biale-zloto-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/29871-2-obraczki-slubne-biale-zloto-polokragle-5-mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 4210,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/371420-2-obraczka-partnerska-beloved-zlota-plaska-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/371420-2-obraczka-partnerska-beloved-zlota-plaska-1-9mm.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 4003,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/media-products/393791-2-naszyjnik-example-shop-5-dwukolorowe-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
+                    "url": "https://third-party-77.test/media-products/393791-2-naszyjnik-example-shop-5-dwukolorowe-zloto-diamenty.png?q=85&auto=compress%2Cformat&blend-color=F8F8F8&blend-mode=multiply&w=300&h=300",
                     "transferSize": 3968,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-71.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
+                    "url": "https://third-party-77.test/promotion/20260406101529-white-45-pl.svg?q=85&auto=compress%2Cformat&w=auto&h=120",
                     "transferSize": 2612,
                     "mainThreadTime": 0
                   }
@@ -10306,12 +10306,12 @@
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-43.test/g/collect?v=2&tid=G-0VQFGL34SD&gtm=45je6471v9177042724z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&ecid=435253886&_eu=AAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7CNot-A.Brand%3B24.0.0.0%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938469~117266401~117384406&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_nsi=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&up.hit_page_country=PL&tfd=2031",
+                    "url": "https://third-party-47.test/g/collect?v=2&tid=G-0VQFGL34SD&gtm=45je6471v9177042724z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&ecid=435253886&_eu=AAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7Cthird-party-29.test%3B192.0.2.2%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938469~117266401~117384406&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_nsi=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&up.hit_page_country=PL&tfd=2031",
                     "transferSize": 794,
                     "mainThreadTime": 0
                   },
                   {
-                    "url": "https://third-party-43.test/g/collect?v=2&tid=G-XSTKBQ5BDZ&gtm=45je6471v897017779z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&ir=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7CNot-A.Brand%3B24.0.0.0%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938468~117266401&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&tfd=2326",
+                    "url": "https://third-party-47.test/g/collect?v=2&tid=G-XSTKBQ5BDZ&gtm=45je6471v897017779z878737192za20gzb78737192zd78737192&_p=1775732040444&gcs=G100&gcd=13q3q3q3q5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGA&are=1&cid=303931097.1775732042&frm=0&gtm_up=1&ir=1&pscdl=denied&sr=800x600&uaa=x86&uab=64&uafvl=Chromium%3B146.0.7680.153%7Cthird-party-29.test%3B192.0.2.2%7CHeadlessChrome%3B146.0.7680.153&uam=&uamb=0&uap=macOS&uapv=10.15.7&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938468~117266401&uid=&sid=1775732042&sct=1&seg=0&dl=https%3A%2F%2Fexample-shop-5.test%2F&dt=example-shop-5%20Jubiler%20od%201976%20r.%20%7C%20Sprzeda%C5%BC%20Bi%C5%BCuterii%20Online&_tu=CA&en=page_view&_fv=1&_ss=1&ep.content_group=home&ep.site_currency=PLN&ep.site_language=pl&up.login_status=logged_out&up.user_is_customer=false&up.user_is_lead=false&tfd=2326",
                     "transferSize": 794,
                     "mainThreadTime": 0
                   }
@@ -10321,12 +10321,12 @@
               "mainThreadTime": 0
             },
             {
-              "entity": "third-party-78.test",
+              "entity": "third-party-85.test",
               "subItems": {
                 "type": "subitems",
                 "items": [
                   {
-                    "url": "https://third-party-72.test/recommendations/v2/recommend/campaigns/lEnYKdrKpPYr?token=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&clientUUID=ee6b900e-fbb4-40f3-849b-d04997b7f2f6",
+                    "url": "https://third-party-78.test/recommendations/v2/recommend/campaigns/lEnYKdrKpPYr?token=6ebdd395-0db3-4a87-9b5c-5d956e43f89d&clientUUID=ee6b900e-fbb4-40f3-849b-d04997b7f2f6",
                     "transferSize": 3725,
                     "mainThreadTime": 0
                   }
@@ -10419,12 +10419,12 @@
           "type": "table",
           "items": [
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---til-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-0-IMG",
                 "path": "1,HTML,1,BODY,15,DIV,1,DIV,0,DIV,0,DIV,2,A,1,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"This is Love®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"This is Love®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
                 "selector": "div#collection-1 > div.gallery > a.gallery-item > img.img-fluid",
                 "nodeLabel": "This is Love®",
                 "boundingRect": {
@@ -10517,12 +10517,12 @@
               "wastedBytes": 71332
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "page-3-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,2,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" srcset=\"https://third-party-71.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Biżuteria\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" srcset=\"https://third-party-77.test/box/20250523121842-bizuteria-ogolnie.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Biżuteria\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Biżuteria",
                 "boundingRect": {
@@ -10581,12 +10581,12 @@
               "wastedBytes": 52355
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---eternity-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-5-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,1,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Pierścionki Eternity\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Pierścionki Eternity\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Pierścionki Eternity",
                 "boundingRect": {
@@ -10615,12 +10615,12 @@
               "wastedBytes": 49978
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "page-6-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,3,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q…\" srcset=\"https://third-party-71.test/box/20250523121842-bizuteria-nowosci.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Nowości\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q…\" srcset=\"https://third-party-77.test/box/20250523121842-bizuteria-nowosci.webp?q…\" width=\"auto\" height=\"auto\" alt=\"Nowości\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Nowości",
                 "boundingRect": {
@@ -10649,12 +10649,12 @@
               "wastedBytes": 48730
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---syl-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-7-IMG",
                 "path": "1,HTML,1,BODY,15,DIV,1,DIV,0,DIV,0,DIV,1,A,1,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"Share Your Love®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"Share Your Love®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
                 "selector": "div#collection-1 > div.gallery > a.gallery-item > img.img-fluid",
                 "nodeLabel": "Share Your Love®",
                 "boundingRect": {
@@ -10679,12 +10679,12 @@
               "wastedBytes": 43976
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "page-8-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,1,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" srcset=\"https://third-party-71.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" width=\"auto\" height=\"auto\" alt=\"Obrączki ślubne\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" srcset=\"https://third-party-77.test/box/20250523121842-obraczki.webp?q=85&amp;auto=…\" width=\"auto\" height=\"auto\" alt=\"Obrączki ślubne\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Obrączki ślubne",
                 "boundingRect": {
@@ -10709,12 +10709,12 @@
               "wastedBytes": 36424
             },
             {
-              "url": "https://third-party-74.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
+              "url": "https://third-party-80.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thumbnail.jpg",
               "node": {
                 "lhId": "page-9-VIDEO",
                 "path": "1,HTML,1,BODY,26,DIV,1,DIV,0,VIDEO",
                 "type": "node",
-                "snippet": "<video class=\"js-lozad-video w-100\" data-hls=\"https://third-party-74.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/pla…\" poster=\"https://third-party-74.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thu…\" muted=\"\" playsinline=\"\" loop=\"\" autoplay=\"\" height=\"750\">",
+                "snippet": "<video class=\"js-lozad-video w-100\" data-hls=\"https://third-party-80.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/pla…\" poster=\"https://third-party-80.test/cae31341-d646-4af2-a3e1-d3b840bdecd4/thu…\" muted=\"\" playsinline=\"\" loop=\"\" autoplay=\"\" height=\"750\">",
                 "selector": "body.layout-main > div.container-fluid > div.ratio > video.js-lozad-video",
                 "nodeLabel": "body.layout-main > div.container-fluid > div.ratio > video.js-lozad-video",
                 "boundingRect": {
@@ -10739,12 +10739,12 @@
               "wastedBytes": 35470
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---tenisy-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-10-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,3,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Bransoletki tenisowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Bransoletki tenisowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Bransoletki tenisowe",
                 "boundingRect": {
@@ -10769,12 +10769,12 @@
               "wastedBytes": 34649
             },
             {
-              "url": "https://third-party-71.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114025-g-o-wna---nasze-kolekcje-desktop-mobile---the-light-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-11-IMG",
                 "path": "1,HTML,1,BODY,15,DIV,1,DIV,0,DIV,0,DIV,0,A,1,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114025-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-71.test/box/20260307114025-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"The Light®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114025-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-77.test/box/20260307114025-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"The Light®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
                 "selector": "div#collection-1 > div.gallery > a.gallery-item > img.img-fluid",
                 "nodeLabel": "The Light®",
                 "boundingRect": {
@@ -10829,12 +10829,12 @@
               "wastedBytes": 30596
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---kolczyki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-13-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,0,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Kolczyki Solitaire\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Kolczyki Solitaire\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Kolczyki Solitaire",
                 "boundingRect": {
@@ -10859,12 +10859,12 @@
               "wastedBytes": 26010
             },
             {
-              "url": "https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje-desktop-mobile---pure-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-14-IMG",
                 "path": "1,HTML,1,BODY,15,DIV,1,DIV,0,DIV,0,DIV,3,A,1,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-71.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"Pure®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" srcset=\"https://third-party-77.test/box/20260307114026-g-o-wna---nasze-kolekcje…\" width=\"960\" height=\"auto\" alt=\"Pure®\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid\">",
                 "selector": "div#collection-1 > div.gallery > a.gallery-item > img.img-fluid",
                 "nodeLabel": "Pure®",
                 "boundingRect": {
@@ -10889,12 +10889,12 @@
               "wastedBytes": 23158
             },
             {
-              "url": "https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
+              "url": "https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-desktop-mobile---naszyjniki-kopia.webp?q=85&auto=compress%2Cformat&w=960&h=auto",
               "node": {
                 "lhId": "page-15-IMG",
                 "path": "1,HTML,1,BODY,17,DIV,1,DIV,2,A,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-71.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Naszyjniki jednokamieniowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" srcset=\"https://third-party-77.test/box/20260307114115-g-o-wna---nowos-ci-deskt…\" width=\"960\" height=\"auto\" alt=\"Naszyjniki jednokamieniowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100 mb-6\">",
                 "selector": "div.mb-6 > div.grid > a.g-col-12 > img.img-fluid",
                 "nodeLabel": "Naszyjniki jednokamieniowe",
                 "boundingRect": {
@@ -10919,12 +10919,12 @@
               "wastedBytes": 23029
             },
             {
-              "url": "https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
+              "url": "https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&auto=compress%2Cformat&w=auto&h=auto",
               "node": {
                 "lhId": "page-16-IMG",
                 "path": "1,HTML,1,BODY,13,DIV,1,DIV,0,DIV,0,A,0,SPAN,0,IMG",
                 "type": "node",
-                "snippet": "<img src=\"https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" srcset=\"https://third-party-71.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" width=\"auto\" height=\"auto\" alt=\"Pierścionki zaręczynowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
+                "snippet": "<img src=\"https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" srcset=\"https://third-party-77.test/box/20250523121842-pierscionki.webp?q=85&amp;au…\" width=\"auto\" height=\"auto\" alt=\"Pierścionki zaręczynowe\" loading=\"lazy\" decoding=\"async\" class=\"img-fluid w-100\">",
                 "selector": "div.g-col-6 > a.d-block > span.category-img > img.img-fluid",
                 "nodeLabel": "Pierścionki zaręczynowe",
                 "boundingRect": {
@@ -10999,11 +10999,11 @@
           "type": "table",
           "items": [
             {
-              "origin": "https://third-party-74.test",
+              "origin": "https://third-party-80.test",
               "serverResponseTime": 15
             },
             {
-              "origin": "https://third-party-73.test",
+              "origin": "https://third-party-79.test",
               "serverResponseTime": 14
             },
             {
@@ -11011,15 +11011,15 @@
               "serverResponseTime": 5.5
             },
             {
-              "origin": "https://third-party-65.test",
+              "origin": "https://third-party-71.test",
               "serverResponseTime": 3
             },
             {
-              "origin": "https://third-party-40.test",
+              "origin": "https://third-party-44.test",
               "serverResponseTime": 3
             },
             {
-              "origin": "https://third-party-66.test",
+              "origin": "https://third-party-72.test",
               "serverResponseTime": 2.5
             },
             {
@@ -11027,11 +11027,11 @@
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-67.test",
+              "origin": "https://third-party-73.test",
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-71.test",
+              "origin": "https://third-party-77.test",
               "serverResponseTime": 1
             },
             {
@@ -11043,27 +11043,27 @@
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-72.test",
+              "origin": "https://third-party-78.test",
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-68.test",
+              "origin": "https://third-party-74.test",
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-69.test",
+              "origin": "https://third-party-75.test",
               "serverResponseTime": 1
             },
             {
-              "origin": "https://third-party-70.test",
+              "origin": "https://third-party-76.test",
               "serverResponseTime": 0.5
             },
             {
-              "origin": "https://third-party-43.test",
+              "origin": "https://third-party-47.test",
               "serverResponseTime": 0.5
             },
             {
-              "origin": "https://third-party-41.test",
+              "origin": "https://third-party-45.test",
               "serverResponseTime": 0
             }
           ],
@@ -11574,14 +11574,14 @@
               "wastedBytes": 20286
             },
             {
-              "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+              "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
               "subItems": {
                 "type": "subitems",
                 "items": [
                   {
                     "signal": "@babel/plugin-transform-regenerator",
                     "location": {
-                      "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+                      "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
                       "line": 0,
                       "type": "source-location",
                       "column": 1789,
@@ -11591,7 +11591,7 @@
                   {
                     "signal": "Promise.allSettled",
                     "location": {
-                      "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+                      "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
                       "line": 0,
                       "type": "source-location",
                       "column": 479890,
@@ -11601,7 +11601,7 @@
                   {
                     "signal": "Promise.any",
                     "location": {
-                      "url": "https://third-party-65.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
+                      "url": "https://third-party-71.test/i18n/pixel/static/main.MWE0ZWQ3ZWQwMQ.js",
                       "line": 0,
                       "type": "source-location",
                       "column": 479933,
@@ -11938,12 +11938,12 @@
                 "type": "table",
                 "items": [
                   {
-                    "origin": "https://third-party-71.test/",
+                    "origin": "https://third-party-77.test/",
                     "source": {
                       "lhId": "page-29-LINK",
                       "path": "1,HTML,0,HEAD,15,LINK",
                       "type": "node",
-                      "snippet": "<link rel=\"preconnect\" href=\"https://third-party-71.test\" crossorigin=\"\">",
+                      "snippet": "<link rel=\"preconnect\" href=\"https://third-party-77.test\" crossorigin=\"\">",
                       "selector": "head > link",
                       "nodeLabel": "head > link",
                       "boundingRect": {
@@ -11961,12 +11961,12 @@
                     }
                   },
                   {
-                    "origin": "https://third-party-82.test/",
+                    "origin": "https://third-party-90.test/",
                     "source": {
                       "lhId": "page-30-LINK",
                       "path": "1,HTML,0,HEAD,16,LINK",
                       "type": "node",
-                      "snippet": "<link rel=\"preconnect\" href=\"https://third-party-82.test\" crossorigin=\"\">",
+                      "snippet": "<link rel=\"preconnect\" href=\"https://third-party-90.test\" crossorigin=\"\">",
                       "selector": "head > link",
                       "nodeLabel": "head > link",
                       "boundingRect": {
@@ -12013,7 +12013,7 @@
                 "type": "table",
                 "items": [
                   {
-                    "origin": "https://third-party-70.test",
+                    "origin": "https://third-party-76.test",
                     "wastedMs": 94
                   }
                 ],
@@ -12057,33 +12057,33 @@
       {
         "name": "JSDelivr CDN",
         "origins": [
-          "https://third-party-66.test"
+          "https://third-party-72.test"
         ],
         "category": "cdn",
-        "homepage": "https://third-party-83.test/"
+        "homepage": "https://third-party-91.test/"
       },
       {
-        "name": "third-party-75.test",
+        "name": "third-party-81.test",
         "origins": [
-          "https://third-party-70.test"
+          "https://third-party-76.test"
         ],
         "isUnrecognized": true
       },
       {
-        "name": "third-party-76.test",
+        "name": "third-party-82.test",
         "origins": [
-          "https://third-party-73.test",
-          "https://third-party-74.test"
+          "https://third-party-79.test",
+          "https://third-party-80.test"
         ],
         "isUnrecognized": true
       },
       {
         "name": "Cloudflare",
         "origins": [
-          "https://third-party-67.test"
+          "https://third-party-73.test"
         ],
         "category": "utility",
-        "homepage": "https://third-party-84.test/website-optimization/"
+        "homepage": "https://third-party-92.test/website-optimization/"
       },
       {
         "name": "Google Tag Manager",
@@ -12094,19 +12094,19 @@
         "homepage": "https://marketingplatform.google.com/about/tag-manager/"
       },
       {
-        "name": "third-party-77.test",
+        "name": "third-party-83.test",
         "origins": [
-          "https://third-party-71.test"
+          "https://third-party-77.test"
         ],
         "isUnrecognized": true
       },
       {
         "name": "TikTok",
         "origins": [
-          "https://third-party-65.test"
+          "https://third-party-71.test"
         ],
         "category": "social",
-        "homepage": "https://third-party-85.test/en/"
+        "homepage": "https://third-party-93.test/en/"
       },
       {
         "name": "Google/Doubleclick Ads",
@@ -12119,43 +12119,43 @@
       {
         "name": "Google Analytics",
         "origins": [
-          "https://third-party-43.test"
+          "https://third-party-47.test"
         ],
         "category": "analytics",
         "homepage": "https://marketingplatform.google.com/about/analytics/"
       },
       {
-        "name": "third-party-78.test",
+        "name": "third-party-85.test",
         "origins": [
-          "https://third-party-72.test"
+          "https://third-party-78.test"
         ],
         "isUnrecognized": true
       },
       {
-        "name": "third-party-80.test",
+        "name": "third-party-88.test",
         "origins": [
-          "https://third-party-79.test"
+          "https://third-party-87.test"
         ],
         "isUnrecognized": true
       },
       {
         "name": "Clarity",
         "origins": [
-          "https://third-party-41.test",
-          "https://third-party-40.test",
-          "https://third-party-68.test",
-          "https://third-party-69.test"
+          "https://third-party-45.test",
+          "https://third-party-44.test",
+          "https://third-party-74.test",
+          "https://third-party-75.test"
         ],
         "category": "utility",
-        "homepage": "https://third-party-44.test/"
+        "homepage": "https://third-party-49.test/"
       },
       {
         "name": "Bing Ads",
         "origins": [
-          "https://third-party-81.test"
+          "https://third-party-89.test"
         ],
         "category": "ad",
-        "homepage": "https://third-party-35.test"
+        "homepage": "https://third-party-39.test"
       }
     ],
     "finalUrl": "https://example-shop-5.test/",
@@ -12414,7 +12414,7 @@
     "environment": {
       "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/146.0.7680.153 Safari/537.36",
       "benchmarkIndex": 802,
-      "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+      "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/192.0.2.1 Safari/537.36"
     },
     "runWarnings": [],
     "requestedUrl": "https://example-shop-5.test/",

@@ -14,14 +14,18 @@ off the allowlist `third-party-N.test`, every IP `192.0.2.N` / `2001:db8::N`, ev
 `contact@example-shop-N.test`; base64 screenshots, thumbnails and cookie headers are dropped. The domain mapping
 goes to stdout only — never into a file, never into a commit.
 
-The leak gate then scans the output (and `--verify` scans an existing directory): any forbidden word of the repo's
-`.gitleaks.toml` (rules `forbidden-names`, `entirius-parent-brand`), any host off the allowlist, any other email →
-redacted report on stderr, exit 1, output removed. Forbidden words are never printed.
+The leak gate then scans every text file under the output (and `--verify` under an existing directory, which must
+hold `psi/*.desktop.json` and `urlscan/*.{submit,result}.json`): any forbidden word of the repo's `.gitleaks.toml`
+(rules `forbidden-names`, `entirius-parent-brand`) as a plain substring, any host off the allowlist whatever its TLD,
+any other email, any IP outside the documentation/loopback ranges → redacted report on stderr, exit 1, output removed.
+Forbidden words are never printed.
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import ipaddress
 import json
 import re
@@ -36,13 +40,17 @@ DOMAIN_COUNT = 7
 GITLEAKS = Path(__file__).resolve().parent.parent / ".gitleaks.toml"
 REVIEW_RULES = ("forbidden-names", "entirius-parent-brand")
 # base64 images, plus the scanner's session cookies (a shop's CSRF `form_key` reads as a secret to gitleaks)
-DROPPED_KEY = re.compile(r"screenshot|thumbnail|^(?:set-)?cookie$", re.IGNORECASE)
-# not after `<letter>/`: `HeadlessChrome/131.0.0.0` is a version, `http://203.0.113.9` is an address
-IPV4 = re.compile(r"(?<![\w.])(?<![A-Za-z]/)(?:\d{1,3}\.){3}\d{1,3}(?![\w.])")
+# and per-request random tokens (CDN request ids, NEL signatures) that can spell a forbidden word by chance
+DROPPED_KEY = re.compile(r"screenshot|thumbnail|^(?:set-)?cookie$|^x-amz-cf-id$|^report-to$", re.IGNORECASE)
+# wherever it sits (`host/203.0.113.9`, `ip=…`): a version string (`Chrome/119.0.0.0`) is replaced too
+IPV4 = re.compile(r"(?<!\d)(?<!\d\.)(?:\d{1,3}\.){3}\d{1,3}(?!\.?\d)")
 # at least one hex digit: a bare `::` (`::-webkit-scrollbar`) is CSS, not an address
-IPV6 = re.compile(r"(?<![\w:])(?=[:0-9a-f]*[0-9a-f])[0-9a-f]{0,4}(?::[0-9a-f]{0,4}){2,7}(?![\w:])", re.IGNORECASE)
-# one pass for both families — a second pass would re-map the 192.0.2.N the first one wrote
+IPV6 = re.compile(r"(?<![0-9a-f:])(?=[:0-9a-f]*[0-9a-f])[0-9a-f]{0,4}(?::[0-9a-f]{0,4}){2,7}(?![\w:])", re.IGNORECASE)
+# one pass for both families; replacement and the leak gate share it, so they cannot drift
 IP = re.compile(f"{IPV4.pattern}|{IPV6.pattern}", re.IGNORECASE)
+ALLOWED_NETWORKS = tuple(
+    ipaddress.ip_network(n) for n in ("192.0.2.0/24", "127.0.0.0/8", "0.0.0.0/32", "::1/128", "2001:db8::/32")
+)
 MAX_IPS = 254
 # `%40` is a URL-encoded `@` — analytics query strings in urlscan request logs carry those
 EMAIL = re.compile(r"[\w.+-]+(?:@|%40)((?:[\w-]+\.)+[a-z]{2,})", re.IGNORECASE)
@@ -52,13 +60,45 @@ DOMAIN_PREFIX = r"(?:(?<=%[0-9A-Fa-f]{2})|(?<![\w.%-])|(?<=[^\w.%-]\.))"
 URL_ENCODED_OR_NOT_LETTER = r"(?:(?<=%[0-9A-Fa-f]{2})|(?<![a-z]))"
 # a label this short is likely a common word (`unit` in `United`) — replaced as a word only
 SHORT_LABEL = 4
-# TLDs the recordings actually carry; `main.js` or `window.location` must not read as hosts
-TLDS = "com|net|org|io|eu|pl|de|cz|sk|hu|ro|bg|gr|hr|uk|ua|us|me|co|ms|dev|app|cloud|tech|one|google|info|shop|test"
-HOST = re.compile(rf"{DOMAIN_PREFIX}(?:[\w-]+\.)+(?:{TLDS})(?![\w-])", re.IGNORECASE)
-ALLOWED_HOSTS = ("localhost", "googleapis.com", "urlscan.io", "w3.org", "schema.org", "gstatic.com", "google.com")
+# a host by structure, any TLD: `label(.label)+`, last label alphabetic 2–24 chars
+HOST = re.compile(rf"{DOMAIN_PREFIX}(?:[a-z0-9-]+\.)+[a-z]{{2,24}}(?![\w-])", re.IGNORECASE)
+# `main.js`, `logo.png` are files — none of these is a TLD
+FILE_EXTENSIONS = set(
+    "js mjs cjs ts vue css scss less jpg jpeg png gif webp avif svg ico html htm json xml php pdf ttf woff otf eot txt".split()
+)
+# `window.config`, `Array.prototype.map`, `div.item` are code — unless right after `//`
+CODE_OBJECTS = set(
+    "window document array object string promise reflect math json jquery lodash navigator location parent require"
+    " domwindow xmlhttprequest gtm div span img ul li a p header footer strong section nav".split()
+)
+ALLOWED_HOSTS = (
+    "localhost",
+    "googleapis.com",  # Google APIs, fonts
+    "urlscan.io",  # urlscan.io scanner
+    "w3.org",  # W3C namespaces
+    "schema.org",  # Schema.org vocabulary
+    "gstatic.com",  # Google static CDN
+    "google.com",  # Google
+    "goo.gl",  # Google URL shortener
+    "mail.ru",  # Mail.ru ad network
+    "yandex.ru",  # Yandex ads and analytics
+    "rambler.ru",  # Rambler SSP
+    "teads.tv",  # Teads video ads
+    "microad.jp",  # MicroAd ad network
+)
 SHOP_HOST = re.compile(r"(?:[\w-]+\.)*example-shop-\d+\.test|(?:[\w-]+\.)*third-party-\d+\.test", re.IGNORECASE)
 SHOP_EMAIL = re.compile(r"contact(?:@|%40)example-shop-\d+\.test", re.IGNORECASE)
 SECOND_LEVEL = {"com", "net", "org", "co", "waw"}
+BASE64_STRING = re.compile(r'(?<=")[A-Za-z0-9+/=]{201,}(?=")')
+BASE64_MIN_BYTES = 150
+# decoded text with this share of control/high bytes is a binary payload, not an encoded token
+BINARY_SHARE = 0.3
+PRINTABLE = set(range(0x20, 0x7F)) | {0x09, 0x0A, 0x0D}
+# a rule's leading flags and its `(?:^|[^…])` / `(?:[^…]|$)` boundary groups — a glued label is a hit too
+RULE_BOUNDARIES = re.compile(
+    r"(?:\(\?[a-z]+\))?(?:\(\?:\^\|\[\^[^\]]*\]\))?(?P<body>.*?)(?:\(\?:\[\^[^\]]*\]\|\$\))?", re.DOTALL
+)
+REQUIRED_GLOBS = ("psi/*.desktop.json", "urlscan/*.submit.json", "urlscan/*.result.json")
 
 
 def domain_of(path: Path) -> str:
@@ -95,6 +135,33 @@ def is_image(value: object) -> bool:
     return isinstance(value, str) and value.startswith("data:image/")
 
 
+def is_host(text: str, match: re.Match) -> bool:
+    """A HOST match that is not a file name, a query-string key (`&sst.adr=`) or a code expression."""
+    if match.group(0).lower().rsplit(".", 1)[-1] in FILE_EXTENSIONS:
+        return False
+    is_query_key = text.startswith("=", match.end()) and text[match.start() - 1 : match.start()] in ("?", "&")
+    return not is_query_key and not is_code(text, match)
+
+
+def is_code(text: str, match: re.Match) -> bool:
+    """A code object's member (`div.item`, `window.open(`, `Array.prototype.map`) — unless right after `//`;
+    a whole lowercase host behind a code-object label (`p.shop.pl`, `nav.shop.com`) is a host."""
+    code = match.group(0)
+    labels = code.split(".")
+    if labels[0].lower() not in CODE_OBJECTS or text[match.start() - 2 : match.start()] == "//":
+        return False
+    return text.startswith("(", match.end()) or len(labels) == 2 or code != code.lower()
+
+
+def foreign_ip(literal: str) -> ipaddress.IPv4Address | ipaddress.IPv6Address | None:
+    """The parsed address unless it is not one or sits in a documentation/loopback range."""
+    try:
+        address = ipaddress.ip_address(literal)
+    except ValueError:
+        return None
+    return None if any(address in network for network in ALLOWED_NETWORKS) else address
+
+
 def is_allowed_host(host: str) -> bool:
     host = host.lower().rstrip(".")
     return bool(SHOP_HOST.fullmatch(host)) or any(host == a or host.endswith("." + a) for a in ALLOWED_HOSTS)
@@ -117,14 +184,13 @@ class Anonymiser:
         raw = EMAIL.sub(f"contact@{fake}", raw)
         raw = self.domain_re.sub(lambda m: self.domains[m.group(1).lower()], raw)
         raw = IP.sub(self._ip, raw)
-        raw = HOST.sub(self._host, raw)
+        raw = HOST.sub(lambda m: self._host(raw, m), raw)
         return replace_label(raw, own_domain, fake)
 
     def _ip(self, match: re.Match) -> str:
         """IPv4 → `192.0.2.N` (TEST-NET-1), IPv6 → `2001:db8::N` (documentation prefix); anything else stays."""
-        try:
-            address = ipaddress.ip_address(match.group(0))
-        except ValueError:
+        address = foreign_ip(match.group(0))
+        if address is None:
             return match.group(0)
         aliases = self.ips if address.version == 4 else self.ips6
         if str(address) not in aliases and len(aliases) >= MAX_IPS:
@@ -132,9 +198,9 @@ class Anonymiser:
         alias = f"192.0.2.{len(aliases) + 1}" if address.version == 4 else f"2001:db8::{len(aliases) + 1:x}"
         return aliases.setdefault(str(address), alias)
 
-    def _host(self, match: re.Match) -> str:
+    def _host(self, raw: str, match: re.Match) -> str:
         host = match.group(0)
-        if is_allowed_host(host):
+        if not is_host(raw, match) or is_allowed_host(host):
             return host
         return self.hosts.setdefault(host.lower(), f"third-party-{len(self.hosts) + 1}.test")
 
@@ -172,7 +238,8 @@ def convert(path: Path, src: Path, dst: Path, anonymiser: Anonymiser) -> None:
 
 
 def load_review_words(words_file: Path | None) -> re.Pattern:
-    """Forbidden words from the canonical blocklist; `--review-words-file` (one word per line) is the test hook."""
+    """Forbidden words from the canonical blocklist, matched as plain substrings (a superset of the gitleaks rules,
+    glued labels included); `--review-words-file` (one word per line) is the test hook."""
     if words_file:
         words = [w.strip() for w in words_file.read_text(encoding="utf-8").splitlines() if w.strip()]
         return re.compile("|".join(re.escape(w) for w in words), re.IGNORECASE)
@@ -180,17 +247,45 @@ def load_review_words(words_file: Path | None) -> re.Pattern:
         print("canonical .gitleaks.toml not found — run make check", file=sys.stderr)
         raise SystemExit(2)
     rules = tomllib.loads(GITLEAKS.read_text(encoding="utf-8"))["rules"]
-    bodies = [r["regex"] for r in rules if r["id"] in REVIEW_RULES]
-    # leading inline flags (`(?x)`) are only legal at the very start — lift them into compile flags
-    bodies = [re.sub(r"^(?:\s*\(\?[a-z]+\))+", "", body) for body in bodies]
+    bodies = [rule_body(r) for r in rules if r["id"] in REVIEW_RULES]
     return re.compile("|".join(f"(?:{body})" for body in bodies), re.IGNORECASE | re.VERBOSE)
 
 
+def rule_body(rule: dict) -> str:
+    """The rule's whole regex without its flags and boundary groups; a rule that does not compile exits 2, named by
+    id only."""
+    try:
+        re.compile(rule["regex"])
+        body = RULE_BOUNDARIES.fullmatch(rule["regex"])["body"]
+        re.compile(body, re.IGNORECASE | re.VERBOSE)
+    except re.error:
+        print(f"gitleaks rule {rule['id']} does not compile", file=sys.stderr)
+        raise SystemExit(2) from None
+    return body
+
+
+def mask_base64(text: str) -> str:
+    """Blank long JSON strings holding real binary base64 (same length, offsets kept) — random bytes spell words by
+    chance; a token that does not decode, or decodes to text, is scanned."""
+    return BASE64_STRING.sub(lambda m: " " * len(m.group(0)) if is_binary_base64(m.group(0)) else m.group(0), text)
+
+
+def is_binary_base64(token: str) -> bool:
+    try:
+        raw = base64.b64decode(token, validate=True)
+    except binascii.Error:
+        return False
+    binary = sum(byte not in PRINTABLE for byte in raw)
+    return len(raw) >= BASE64_MIN_BYTES and binary > BINARY_SHARE * len(raw)
+
+
 def leaks(text: str, forbidden: re.Pattern) -> list[re.Match]:
-    """Every forbidden word, host off the allowlist and foreign email in one text."""
+    """Every forbidden word, host off the allowlist, foreign email and foreign IP in one text."""
+    text = mask_base64(text)
     found = list(forbidden.finditer(text))
-    found += [m for m in HOST.finditer(text) if not is_allowed_host(m.group(0))]
+    found += [m for m in HOST.finditer(text) if is_host(text, m) and not is_allowed_host(m.group(0))]
     found += [m for m in EMAIL.finditer(text) if not SHOP_EMAIL.fullmatch(m.group(0))]
+    found += [m for m in IP.finditer(text) if foreign_ip(m.group(0))]
     return found
 
 
@@ -201,13 +296,28 @@ def excerpt(text: str, match: re.Match, forbidden: re.Pattern) -> str:
     return forbidden.sub("***", f"{before}***{after}").replace("\n", " ")
 
 
+def text_files(root: Path) -> list[tuple[Path, str]]:
+    """Every UTF-8 file under `root`, recursively; binaries are skipped."""
+    found = []
+    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+        try:
+            found.append((path, path.read_text(encoding="utf-8")))
+        except UnicodeDecodeError:
+            continue
+    return found
+
+
 def scan(root: Path, forbidden: re.Pattern) -> bool:
-    """Report every leak in the recordings under `root` to stderr (redacted); True when clean."""
+    """Report every leak in the text files under `root` to stderr (redacted); True when clean."""
+    missing = [glob for glob in REQUIRED_GLOBS if not any(root.glob(glob))]
+    if missing:
+        print(f"not a recordings root: {root} lacks {', '.join(missing)}", file=sys.stderr)
+        return False
     clean = True
-    for path in recordings(root):
-        text = path.read_text(encoding="utf-8")
+    for path, text in text_files(root):
         for match in leaks(text, forbidden):
-            print(f"LEAK {path}: {excerpt(text, match, forbidden)}", file=sys.stderr)
+            line = text.count("\n", 0, match.start()) + 1
+            print(f"LEAK {path}:{line}: {excerpt(text, match, forbidden)}", file=sys.stderr)
             clean = False
     return clean
 

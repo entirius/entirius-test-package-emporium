@@ -6,6 +6,8 @@
 # prompts (roadmap extract), [SENDER] kept as a placeholder text. Model `fake-chat`: zeno's toolbox
 # channel only sees fake models; the fake answers `communicator.*` tags with {subject, body_paragraphs}.
 # `followup` is static + auto_approve; its body is the pool text of the sequence step (`{body}`).
+# Inbound: MailboxConfig polls GreenMail IMAP in-compose (greenmail:3143, sandbox/sandbox, no SSL; the password is
+# encrypted on load with the service SECRET_KEY).
 # Sending: policy business days 08:00–17:00 (channel tz), cap 10, spread off so BDD is deterministic;
 # sequence `followup` 3/5/7 days over six synthetic pool texts.
 # language references django_regional.language pk (pl=1, en=2).
@@ -284,6 +286,22 @@
   fields:
     sequence: 1
     body: "TEST follow-up 6/6: to moja ostatnia wiadomość w tej sprawie — dziękuję za poświęcony czas."
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Inbound mailbox (GreenMail sandbox user; GreenMail runs without authentication) ---
+- model: django_communicator.mailboxconfig
+  pk: 1
+  fields:
+    channel: 1
+    imap_host: greenmail
+    imap_port: 3143
+    imap_use_ssl: false
+    imap_user: sandbox
+    imap_password: sandbox
+    folder: INBOX
+    last_uid: 0
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"

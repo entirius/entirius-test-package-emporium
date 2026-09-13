@@ -1,0 +1,13 @@
+company_name,domain,website,company_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone
+Lesna Shop,lesna-shop.pl,,RETAILER,garden,Jan,Nowak,jan@lesna-shop.pl,Owner,pl,legitimate_interest,
+Lesna Shop,www.lesna-shop.pl/pl,,,,Ola,Sowa,ola@lesna-shop.pl,Marketing,pl,legitimate_interest,
+Ogrod,ogrod.pl,,RETAILER,garden,Ewa,Lis,EWA@ogrod.pl,Buyer,pl,legitimate_interest,
+My Ogrod,myogrod.pl,,RETAILER,garden,Piotr,Wilk,piotr@myogrod.pl,Owner,pl,legitimate_interest,
+Ogrod,ogrod.pl,,,,,,  ewa@OGROD.pl ,CEO,,,48600100200
+Nobody,,,,,,,,,,,
+,,,,,Anna,Free,anna@gmail.com,,pl,consent,
+Bad Basis,bad-basis.pl,,,,Adam,Jez,adam@bad-basis.pl,,pl,maybe,
+Rower Serwis,rower-serwis.pl,,WHOLESALE,bikes,Tomasz,Kos,tomasz@rower-serwis.pl,Buyer,pl,legitimate_interest,
+Meble Lipa,meble-lipa.pl,,MANUFACTURER,furniture,Zofia,Lipa,zofia@meble-lipa.pl,Owner,pl,contract,
+Kwiaty Roza,,https://www.kwiaty-roza.pl/sklep,RETAILER,flowers,,,,,,,
+,,,,,Marek,Sad,marek@herbata-sad.pl,Owner,en,legitimate_interest,

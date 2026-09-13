@@ -1,8 +1,9 @@
 # =========================================================================
 # django_agreements seed — legal clause sets for channel default-europe.
-# channel references django_agreements.channel pk 1, created by
+# channel references django_agreements.channel by natural key (idx), created by
 # `sync_agreement_channels` in seed.sh Step 6 (this file loads right after it).
-# language references django_regional.language pk (pl=1, en=2).
+# language references django_regional.language pk (pl=1, en=2) — Language has
+# no natural key; seed.sh asserts the loaded languages right after loading.
 # Every text is a TEST placeholder — the lawyer's texts are pasted in the admin
 # as a new version and published before the staging canary.
 # =========================================================================
@@ -10,7 +11,7 @@
 - model: django_agreements.clauseset
   pk: 1
   fields:
-    channel: 1
+    channel: ["default-europe"]
     legal_basis: consent
     language: 1
     version: 1
@@ -25,7 +26,7 @@
 - model: django_agreements.clauseset
   pk: 2
   fields:
-    channel: 1
+    channel: ["default-europe"]
     legal_basis: consent
     language: 2
     version: 1
@@ -40,7 +41,7 @@
 - model: django_agreements.clauseset
   pk: 3
   fields:
-    channel: 1
+    channel: ["default-europe"]
     legal_basis: legitimate_interest
     language: 1
     version: 1
@@ -55,7 +56,7 @@
 - model: django_agreements.clauseset
   pk: 4
   fields:
-    channel: 1
+    channel: ["default-europe"]
     legal_basis: legitimate_interest
     language: 2
     version: 1

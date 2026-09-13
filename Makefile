@@ -15,8 +15,9 @@ fix:  ## Auto-fix lint + format
 # Excluded by default: @spec-first (scenarios ahead of their module),
 # @blocked-by-module (known module gaps — see the internal debt registry).
 EXCLUDES = --tags=-@spec-first --tags=-@blocked-by-module
-test:  ## Bind steps to scenarios without hitting an API (behave dry-run)
+test:  ## Bind steps to scenarios without hitting an API (behave dry-run) + unit tests in tests/
 	uv run behave --dry-run $(EXCLUDES) --no-summary -f progress
+	uv run --extra dev pytest tests -q -p no:cacheprovider
 bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
 	uv run behave $(EXCLUDES) $(if $(TAGS),--tags=$(TAGS),)
 E2E_BASE_URL ?= http://localhost:3100

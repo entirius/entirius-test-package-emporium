@@ -161,6 +161,7 @@ dev = [
     { name = "holidays" },
     { name = "pillow" },
     { name = "pre-commit" },
+    { name = "pytest" },
     { name = "ruff" },
 ]
 e2e = [
@@ -174,6 +175,7 @@ requires-dist = [
     { name = "holidays", marker = "extra == 'dev'", specifier = ">=0.50" },
     { name = "pillow", marker = "extra == 'dev'", specifier = ">=10" },
     { name = "pre-commit", marker = "extra == 'dev'" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest", marker = "extra == 'e2e'", specifier = ">=8" },
     { name = "pytest-playwright", marker = "extra == 'e2e'", specifier = ">=0.5" },
     { name = "requests", specifier = ">=2.31" },

@@ -3,8 +3,9 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 """Communicator development-only test endpoints: move a channel's clock, run the beat send and the IMAP
-poll on demand instead of waiting for cron, clear the daily send counters. All live under `api/communicator/v2/admin/<channel_idx>/test/`
-and answer 404 outside `ENVIRONMENT=development`. The caller authenticates the client as an admin first.
+poll on demand instead of waiting for cron, clear the daily send counters. All live under
+`api/communicator/v2/admin/<channel_idx>/test/` and answer 404 outside `ENVIRONMENT=development`. The caller
+authenticates the client as an admin first.
 """
 
 from __future__ import annotations

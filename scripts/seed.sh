@@ -255,6 +255,14 @@ echo "Syncing agreement channels..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_agreement_channels 2>/dev/null || true"
 echo "Loading agreement clause sets..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/django_agreements.cfg.yaml"
+# Language has no natural key — fail loudly when language pks 1/2 are not pl/en
+docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py shell -c '
+from django_agreements.models import ClauseSet
+got = {(c.pk, c.channel.idx, c.language.iso2) for c in ClauseSet.objects.filter(pk__lte=4)}
+expected = {(1, "default-europe", "pl"), (2, "default-europe", "en"), (3, "default-europe", "pl"), (4, "default-europe", "en")}
+assert got == expected, f"agreement clause sets attached wrong: {sorted(got)}"
+print("Agreement clause sets OK")
+'
 echo "Auto-publishing agreement versions..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'DJANGO_SETTINGS_MODULE=main.settings python -c "
 import django; django.setup()

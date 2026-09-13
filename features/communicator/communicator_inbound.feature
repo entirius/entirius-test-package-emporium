@@ -7,14 +7,16 @@ Feature: Communicator — inbound replies, autoresponders, opt-outs and bounces
   Data: fixtures/django_communicator.cfg.yaml (channel in sandbox mode, MailboxConfig polling the GreenMail
   sandbox INBOX over IMAP) and fixtures/mail/*.eml. Each scenario sends one sandbox message on a fresh
   thread, injects a fixture mail whose threading headers point at our Message-ID (a fresh inbound Message-ID
-  per run), and runs the poll through test/poll-now/. Our own sandbox copy in the INBOX is ignored by the poll.
+  per run), and runs the poll through test/poll-now/. It sends on tuesday with the cap raised by what the
+  counter already holds (restored afterwards), so re-runs never starve the monday send scenarios. Our own sandbox copy in the INBOX is ignored by the poll.
 
   Background:
     Given I am authenticated as an admin user
     And the channel is the primary channel
-    And the channel clock is monday 10:00
+    And the channel clock is tuesday 10:00
     And the communicator channel is in "sandbox" mode
     And the beat has drained every due message
+    And the daily cap leaves room for 5 more messages today
     And the sandbox mailbox is empty
 
   Scenario: C-20 a reply with In-Reply-To marks the thread replied and notifies once

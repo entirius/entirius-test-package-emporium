@@ -24,6 +24,8 @@ Forbidden words are never printed.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import ipaddress
 import json
 import re
@@ -88,6 +90,14 @@ SHOP_HOST = re.compile(r"(?:[\w-]+\.)*example-shop-\d+\.test|(?:[\w-]+\.)*third-
 SHOP_EMAIL = re.compile(r"contact(?:@|%40)example-shop-\d+\.test", re.IGNORECASE)
 SECOND_LEVEL = {"com", "net", "org", "co", "waw"}
 BASE64_STRING = re.compile(r'(?<=")[A-Za-z0-9+/=]{201,}(?=")')
+BASE64_MIN_BYTES = 150
+# decoded text with this share of control/high bytes is a binary payload, not an encoded token
+BINARY_SHARE = 0.3
+PRINTABLE = set(range(0x20, 0x7F)) | {0x09, 0x0A, 0x0D}
+# a rule's leading flags and its `(?:^|[^…])` / `(?:[^…]|$)` boundary groups — a glued label is a hit too
+RULE_BOUNDARIES = re.compile(
+    r"(?:\(\?[a-z]+\))?(?:\(\?:\^\|\[\^[^\]]*\]\))?(?P<body>.*?)(?:\(\?:\[\^[^\]]*\]\|\$\))?", re.DOTALL
+)
 REQUIRED_GLOBS = ("psi/*.desktop.json", "urlscan/*.submit.json", "urlscan/*.result.json")
 
 
@@ -126,11 +136,21 @@ def is_image(value: object) -> bool:
 
 
 def is_host(text: str, match: re.Match) -> bool:
-    """A HOST match that is not a file name, a query-string key (`sst.adr=`) or a code expression."""
-    labels = match.group(0).lower().split(".")
-    if labels[-1] in FILE_EXTENSIONS or text.startswith("=", match.end()):
+    """A HOST match that is not a file name, a query-string key (`&sst.adr=`) or a code expression."""
+    if match.group(0).lower().rsplit(".", 1)[-1] in FILE_EXTENSIONS:
         return False
-    return labels[0] not in CODE_OBJECTS or text[match.start() - 2 : match.start()] == "//"
+    is_query_key = text.startswith("=", match.end()) and text[match.start() - 1 : match.start()] in ("?", "&")
+    return not is_query_key and not is_code(text, match)
+
+
+def is_code(text: str, match: re.Match) -> bool:
+    """A code object's member (`div.item`, `window.open(`, `Array.prototype.map`) — unless right after `//`;
+    a whole lowercase host behind a code-object label (`p.shop.pl`, `nav.shop.com`) is a host."""
+    code = match.group(0)
+    labels = code.split(".")
+    if labels[0].lower() not in CODE_OBJECTS or text[match.start() - 2 : match.start()] == "//":
+        return False
+    return text.startswith("(", match.end()) or len(labels) == 2 or code != code.lower()
 
 
 def foreign_ip(literal: str) -> ipaddress.IPv4Address | ipaddress.IPv6Address | None:
@@ -227,14 +247,36 @@ def load_review_words(words_file: Path | None) -> re.Pattern:
         print("canonical .gitleaks.toml not found — run make check", file=sys.stderr)
         raise SystemExit(2)
     rules = tomllib.loads(GITLEAKS.read_text(encoding="utf-8"))["rules"]
-    # the words are each rule's first capturing group; its boundary groups are dropped
-    words = [re.search(r"\((?!\?)(.*?)\)", r["regex"]).group(1) for r in rules if r["id"] in REVIEW_RULES]
-    return re.compile("|".join(f"(?:{group})" for group in words), re.IGNORECASE | re.VERBOSE)
+    bodies = [rule_body(r) for r in rules if r["id"] in REVIEW_RULES]
+    return re.compile("|".join(f"(?:{body})" for body in bodies), re.IGNORECASE | re.VERBOSE)
+
+
+def rule_body(rule: dict) -> str:
+    """The rule's whole regex without its flags and boundary groups; a rule that does not compile exits 2, named by
+    id only."""
+    try:
+        re.compile(rule["regex"])
+        body = RULE_BOUNDARIES.fullmatch(rule["regex"])["body"]
+        re.compile(body, re.IGNORECASE | re.VERBOSE)
+    except re.error:
+        print(f"gitleaks rule {rule['id']} does not compile", file=sys.stderr)
+        raise SystemExit(2) from None
+    return body
 
 
 def mask_base64(text: str) -> str:
-    """Blank long pure-base64 JSON strings (same length, offsets kept) — random bytes spell words by chance."""
-    return BASE64_STRING.sub(lambda m: " " * len(m.group(0)), text)
+    """Blank long JSON strings holding real binary base64 (same length, offsets kept) — random bytes spell words by
+    chance; a token that does not decode, or decodes to text, is scanned."""
+    return BASE64_STRING.sub(lambda m: " " * len(m.group(0)) if is_binary_base64(m.group(0)) else m.group(0), text)
+
+
+def is_binary_base64(token: str) -> bool:
+    try:
+        raw = base64.b64decode(token, validate=True)
+    except binascii.Error:
+        return False
+    binary = sum(byte not in PRINTABLE for byte in raw)
+    return len(raw) >= BASE64_MIN_BYTES and binary > BINARY_SHARE * len(raw)
 
 
 def leaks(text: str, forbidden: re.Pattern) -> list[re.Match]:

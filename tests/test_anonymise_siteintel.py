@@ -88,6 +88,61 @@ def test_verify_fails_on_glued_label(tmp_path):
     assert "zyxfoobrand" not in result.stderr.lower()
 
 
+def test_verify_flags_code_object_prefixed_host_in_json_value(tmp_path):
+    result = verify(tmp_path, '{"host": "p.acme-probe-shop.pl", "nav": "nav.acme-probe-shop.com"}')
+    assert result.returncode == 1
+    assert result.stderr.count("LEAK") == 2
+
+
+def test_verify_flags_code_object_prefixed_host_in_html(tmp_path):
+    root = recording(tmp_path / "out", "{}")
+    page = root / "sites" / "good" / "index.html"
+    page.parent.mkdir(parents=True)
+    page.write_text('<p>see nav.acme-probe-shop.com</p><a href="/">a.acme-probe-shop.pl</a>', encoding="utf-8")
+    result = verify_dir(tmp_path, root)
+    assert result.returncode == 1
+    assert result.stderr.count("LEAK") == 2
+
+
+def test_verify_flags_host_followed_by_equals(tmp_path):
+    result = verify(tmp_path, '{"q": "acme-probe-shop.pl=1"}')
+    assert result.returncode == 1
+    assert "acme-probe-shop" not in result.stderr
+
+
+def test_verify_finds_word_inside_long_alphanumeric_token(tmp_path):
+    token = "Q7" * 70 + "zyxfoobrand" + "k3" * 49
+    result = verify(tmp_path, f'{{"token": "{token}"}}')
+    assert result.returncode == 1
+    assert "zyxfoobrand" not in result.stderr.lower()
+
+
+def test_rules_with_nested_or_missing_groups_do_not_crash(tmp_path):
+    names = "(?x)(?:^|[^a-z0-9])(zyxfoo(brand|mark)|qwvbar)(?:[^a-z0-9]|$)"
+    body = '{"fb": "/zyxfoobrandfb", "parent": "zyxparentwordx"}'
+    result = run_with_rules(tmp_path, names, "(?x)zyxparentword", body)
+    assert result.returncode == 1, result.stderr
+    assert result.stderr.count("LEAK") == 2
+    assert "zyx" not in result.stderr.lower()
+
+
+def test_uncompilable_rule_exit_2_with_rule_id(tmp_path):
+    result = run_with_rules(tmp_path, "(?x)(zyxfoo(brand", "(?x)zyxparentword", "{}")
+    assert result.returncode == 2
+    assert "gitleaks rule forbidden-names does not compile" in result.stderr
+    assert "zyx" not in result.stderr.lower()
+
+
+def run_with_rules(tmp_path: Path, names: str, parent: str, body: str) -> subprocess.CompletedProcess:
+    script = tmp_path / "scripts" / SCRIPT.name
+    script.parent.mkdir()
+    shutil.copy(SCRIPT, script)
+    rules = f"[[rules]]\nid = 'forbidden-names'\nregex = '''{names}'''\n"
+    rules += f"[[rules]]\nid = 'entirius-parent-brand'\nregex = '''{parent}'''\n"
+    (tmp_path / ".gitleaks.toml").write_text(rules, encoding="utf-8")
+    return run(script, "--verify", str(recording(tmp_path / "out", body)))
+
+
 def test_verify_wrong_level_fails(tmp_path):
     recording(tmp_path / "fixtures" / "siteintel", "{}")
     result = verify_dir(tmp_path, tmp_path / "fixtures")
@@ -111,10 +166,11 @@ def test_verify_scans_sites_html(tmp_path):
 
 
 def test_verify_passes_on_clean_output(tmp_path):
-    blob = "A" * 150 + "zyxfoobrand" + "B" * 100
+    blob = "A" * 150 + "zyxfoobrand" + "B" * 99
     body = (
         '{"url": "https://www.example-shop-1.test/main.js", "mail": "contact@example-shop-1.test", "api": "urlscan.io",'
-        f' "ips": "192.0.2.7 127.0.0.1 2001:db8::1 ::1", "code": "window.config", "blob": "{blob}"}}'
+        ' "ips": "192.0.2.7 127.0.0.1 2001:db8::1 ::1", "code": "window.config", "js": "Array.prototype.map(f)",'
+        f' "css": "div.item > a.thumbnail", "query": "?v=1&sst.adr=2", "blob": "{blob}"}}'
     )
     result = verify(tmp_path, body)
     assert result.returncode == 0, result.stderr

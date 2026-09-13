@@ -85,6 +85,7 @@ def step_edit(context, alias):
 
 @when('I append a unique sentence to the body of template "{alias}"')
 def step_edit_template(context, alias):
+    """The original body is put back when the scenario ends, so re-runs on one seed do not accumulate."""
     url = context.api.url(f"{COMMUNICATOR_ADMIN}templates/{context.saved[alias]}/")
     template = context.api.get(url).json()
     fields = (
@@ -100,6 +101,7 @@ def step_edit_template(context, alias):
         "is_active",
     )
     body = {name: template[name] for name in fields}
+    context.add_cleanup(context.api.put, url, json=dict(body))
     body["body"] = f"{template['body']}\nBDD C-29 revision {time.time_ns()}."
     _store(context, context.api.put(url, json=body))
 

@@ -261,6 +261,8 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata defaul
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata legal_pages 2>/dev/null || true"
 echo "Syncing agreement channels..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_agreement_channels 2>/dev/null || true"
+echo "Loading agreement clause sets..."
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/django_agreements.cfg.yaml"
 echo "Auto-publishing agreement versions..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'DJANGO_SETTINGS_MODULE=main.settings python -c "
 import django; django.setup()

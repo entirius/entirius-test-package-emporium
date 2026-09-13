@@ -15,7 +15,7 @@ MUNIN_REGISTRY_PATH = "api/munin/v2/"
 # Feature/module tags that map 1:1 onto munin module keys. A feature carrying one
 # of these tags is skipped when the backend does not report the module — the
 # suite stays green against environments that adopted fewer modules.
-MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers"})
+MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers", "leads", "communicator", "siteintel", "notifications"})
 
 
 def parse_modules(payload: dict) -> set[str] | None:

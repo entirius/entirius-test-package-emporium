@@ -9,13 +9,16 @@ Feature: Communicator — beat delivery under the channel send policy
   3/5/7 days over six pool texts). The channel clock and both beat tasks run through the development
   endpoints test/clock/ and test/send-due/. The Background drains every due message in dry_run, so mail
   from earlier scenarios never lands here; every scenario writes to its own fresh thread and counts only
-  the sandbox mail addressed to its own recipient (X-Original-To). The cap scenario raises the cap by what
-  the counter already holds for its day, so it also passes on a re-run; the policy is restored afterwards.
+  the sandbox mail addressed to its own recipient (X-Original-To). Channel clock days are a fixed holiday-free
+  reference week (2026-09-21), and the Background clears that week's send counters, so the feature passes on
+  any calendar date and on re-runs. The cap scenario raises the cap by what the counter already holds for its
+  day; the policy is restored afterwards.
 
   Background:
     Given I am authenticated as an admin user
     And the channel is the primary channel
     And the channel clock is monday 10:00
+    And the send counters of the reference week are cleared
     And the communicator channel is in "dry_run" mode
     And the beat has drained every due message
     And the sandbox mailbox is empty

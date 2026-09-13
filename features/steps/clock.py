@@ -7,20 +7,18 @@ Need `the channel is the primary channel` and an authenticated admin earlier in 
 
 from __future__ import annotations
 
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, time, timedelta
 
 from behave import given, when
 
 from entirius_tests import clock
 
-WEEKDAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
 
+def _reference_weekday_at(weekday: str, hhmm: str) -> str:
+    """ISO datetime of `weekday` of the holiday-free reference week at `hhmm`, naive — the channel timezone applies.
 
-def _next_weekday_at(weekday: str, hhmm: str, today: date | None = None) -> str:
-    """ISO datetime of the next `weekday` (today included) at `hhmm`, naive — the channel's timezone applies."""
-    start = today or date.today()
-    offset = (WEEKDAYS.index(weekday.lower()) - start.weekday()) % 7
-    return datetime.combine(start + timedelta(days=offset), time.fromisoformat(hhmm.zfill(5))).isoformat()
+    Never counted from today: a real week with a PL holiday would close the channel and fail the scenarios."""
+    return datetime.combine(clock.reference_day(weekday), time.fromisoformat(hhmm.zfill(5))).isoformat()
 
 
 def _assert_ok(response) -> None:
@@ -37,13 +35,19 @@ def _set_clock(context, iso_dt: str) -> None:
 
 @given("the channel clock is {weekday} {hhmm}")
 def step_channel_clock(context, weekday, hhmm):
-    _set_clock(context, _next_weekday_at(weekday, hhmm))
+    _set_clock(context, _reference_weekday_at(weekday, hhmm))
 
 
 @when("the channel clock moves {days:d} days forward")
 def step_channel_clock_forward(context, days):
     assert getattr(context, "channel_clock", None), "set the channel clock first"
     _set_clock(context, (context.channel_clock + timedelta(days=days)).isoformat())
+
+
+@given("the send counters of the reference week are cleared")
+def step_reset_counters(context):
+    """The Redis day counters survive `make seed`; clearing them keeps the cap scenarios green on every re-run."""
+    _assert_ok(clock.reset_send_counters(context.api, context.channel, clock.reference_week()))
 
 
 @when("the beat send task has run")

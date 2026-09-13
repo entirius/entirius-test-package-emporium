@@ -20,7 +20,7 @@ def _next_weekday_at(weekday: str, hhmm: str, today: date | None = None) -> str:
     """ISO datetime of the next `weekday` (today included) at `hhmm`, naive — the channel's timezone applies."""
     start = today or date.today()
     offset = (WEEKDAYS.index(weekday.lower()) - start.weekday()) % 7
-    return datetime.combine(start + timedelta(days=offset), time.fromisoformat(hhmm)).isoformat()
+    return datetime.combine(start + timedelta(days=offset), time.fromisoformat(hhmm.zfill(5))).isoformat()
 
 
 def _assert_ok(response) -> None:

@@ -156,7 +156,7 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"from
 # Harnesses with a mail sandbox (zeno: GreenMail) pass its REST URL — scenarios start from an
 # empty mailbox. Standalone runs have no sandbox: warn, never fail.
 if [ -n "${GREENMAIL_API_URL:-}" ]; then
-    curl -fsS -X POST "$GREENMAIL_API_URL/api/mail/purge" > /dev/null \
+    curl -fsS --max-time 10 -X POST "$GREENMAIL_API_URL/api/mail/purge" > /dev/null \
         && echo "GreenMail purged." \
         || echo "WARNING: GreenMail purge failed at $GREENMAIL_API_URL — mailbox scenarios may see stale mail (zeno: make mail)"
 fi

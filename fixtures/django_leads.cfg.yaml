@@ -458,3 +458,87 @@
     anonymised_at: null
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Stage rules (plan 10): new → audit, intel ready → AI-picked cold mail, contacted → cold B2B mail ---
+# The contacted rule needs no hooks, so L-08/L-10 reach the recipient and cooldown checks.
+
+- model: django_leads.stagerule
+  pk: 100
+  fields:
+    channel: 100
+    trigger: stage_entered
+    stage: 100
+    action: request_audit
+    template_key: ""
+    contact_strategy: primary
+    require_hooks: false
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 0
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stagerule
+  pk: 101
+  fields:
+    channel: 100
+    trigger: intel_ready
+    stage: null
+    action: communicate
+    template_key: lead.cold.shop
+    contact_strategy: ai_pick
+    require_hooks: true
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 10
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stagerule
+  pk: 102
+  fields:
+    channel: 100
+    trigger: stage_entered
+    stage: 102
+    action: communicate
+    template_key: lead.cold.b2b
+    contact_strategy: primary
+    require_hooks: false
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 20
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Prompt profiles (model fake-chat: the fake provider answers the leads.* tags deterministically) ---
+
+- model: django_leads.analysisprofile
+  pk: 100
+  fields:
+    channel: 100
+    key: leads.analysis
+    prompt_text: "You analyse the website of an online shop for a software house that builds e-commerce systems.\nFind concrete business problems visible in the data below, grouped into performance, mobile experience, SEO, checkout, catalogue, integrations and trust signals. For each problem name the challenge and what it costs the business. Detect the shop platform from the technologies. Guess the company type: MANUFACTURER, WHOLESALE or RETAILER. Use only facts from the data — never invent numbers. Answer with JSON only.\n\nCompany: {company_name}\nWebsite: {website}\nLighthouse: {lighthouse_summary}\nurlscan: {urlscan_summary}\nHeuristics: {heuristic_summary}"
+    json_schema: {"type": "object", "properties": {"hooks": {"type": "array", "items": {"type": "object", "properties": {"challenge": {"type": "string"}, "business_cost": {"type": "string"}}, "required": ["challenge", "business_cost"]}}, "platform": {"type": "string"}, "company_type_guess": {"type": "string"}}, "required": ["hooks", "platform"]}
+    model: fake-chat
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.recipientpickprofile
+  pk: 100
+  fields:
+    channel: 100
+    key: leads.pick_recipient
+    prompt_text: "Company: {company_name}\nObserved problems: {hooks}\nWhich of these people most likely owns the decision about the company's e-commerce? Answer with one contact_id from the list and one sentence why. JSON only.\n{contacts_json}"
+    json_schema: {"type": "object", "properties": {"contact_id": {"type": "integer"}, "reason": {"type": "string"}}, "required": ["contact_id", "reason"]}
+    model: fake-chat
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

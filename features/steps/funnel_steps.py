@@ -16,13 +16,25 @@ from behave import given, then
 from entirius_tests import mail
 
 COMMUNICATOR_ADMIN = "api/communicator/v2/admin/{channel}/"
-NOTIFICATIONS_ADMIN = "api/notifications/v2/admin/{channel}/"
+LEADS_ADMIN = "api/leads/v2/admin/{channel}/"
+MAIL_TIMEOUT_S = 20
 
 
 def _get(context, path: str) -> dict:
     response = context.api.get(context.api.url(path.format(channel=context.channel)))
     assert response.status_code == 200, f"GET {path}: {response.status_code} {response.text[:300]}"
     return response.json()
+
+
+def _all_results(context, path: str) -> list[dict]:
+    """Every page of a list endpoint — for filters the API does not offer server-side."""
+    rows, page, separator = [], 1, "&" if "?" in path else "?"
+    while True:
+        data = _get(context, f"{path}{separator}page_size=100&page={page}")
+        rows.extend(data["results"])
+        if not data.get("next"):
+            return rows
+        page += 1
 
 
 @then('the munin registry lists the modules "{names}"')
@@ -34,13 +46,13 @@ def step_registry_lists(context, names):
 
 def _threads(context, alias: str) -> list[dict]:
     ref = f"leads.Company:{context.saved[alias]}"
-    return _get(context, f"{COMMUNICATOR_ADMIN}threads/?subject_ref={ref}&page_size=100")["results"]
+    return _all_results(context, f"{COMMUNICATOR_ADMIN}threads/?subject_ref={ref}")
 
 
 @given('the review draft about the company "{alias}" is saved as "{message_alias}"')
 def step_save_review_draft(context, alias, message_alias):
     ref = f"leads.Company:{context.saved[alias]}"
-    rows = _get(context, f"{COMMUNICATOR_ADMIN}review/?page_size=100")["results"]
+    rows = _all_results(context, f"{COMMUNICATOR_ADMIN}review/")
     drafts = [row for row in rows if row["thread"]["subject_ref"] == ref]
     assert len(drafts) == 1, f"expected one review draft about {ref}, found {len(drafts)}"
     context.saved[message_alias] = drafts[0]["id"]
@@ -50,7 +62,7 @@ def step_save_review_draft(context, alias, message_alias):
 def step_save_sent_message(context, alias, message_alias):
     """Saves what the communicator inbound steps expect: id, thread, subject_ref, Message-ID and sent_at."""
     thread_ids = {thread["id"] for thread in _threads(context, alias)}
-    rows = _get(context, f"{COMMUNICATOR_ADMIN}messages/?status=sent&page_size=100")["results"]
+    rows = _all_results(context, f"{COMMUNICATOR_ADMIN}messages/?status=sent")
     sent = [row for row in rows if row["thread"]["id"] in thread_ids]
     assert len(sent) == 1, f"expected one sent message about company {context.saved[alias]}, found {len(sent)}"
     context.saved.update(
@@ -83,10 +95,24 @@ def step_mail_parts_contain(context, recipient, text):
     assert not missing, f"{text!r} missing from {missing}"
 
 
-@then("the notifications unread count is at least {n:d}")
-def step_unread_at_least(context, n):
-    unread = _get(context, f"{NOTIFICATIONS_ADMIN}notifications/unread-count/")["unread"]
-    assert unread >= n, f"unread notifications: {unread}"
+@then('the company "{alias}" has one "recipient picked" activity with a contact_id')
+def step_recipient_picked(context, alias):
+    """T-07: the pick runs only between two or more eligible contacts; its activity names the chosen contact."""
+    rows = _all_results(context, f"{LEADS_ADMIN}activities/?company={context.saved[alias]}")
+    picked = [row for row in rows if row["kind"] == "rule" and row["message"] == "recipient picked"]
+    assert len(picked) == 1, f"expected one recipient picked activity, found {len(picked)}"
+    contact_id = picked[0]["contact_id"]
+    assert contact_id is not None and picked[0]["data"].get("contact_id") == contact_id, f"activity: {picked[0]}"
+
+
+@then("the sandbox mailbox count is the remembered count plus {n:d}")
+def step_mailbox_count_plus(context, n):
+    """Delivery may finish in the worker after the request returns, so the count is awaited, then compared."""
+    expected = context.saved["mailbox_count"] + n
+    deadline = time.monotonic() + MAIL_TIMEOUT_S
+    while (actual := mail.count()) < expected and time.monotonic() < deadline:
+        time.sleep(0.5)
+    assert actual == expected, f"sandbox mailbox count {actual}, expected {expected}"
 
 
 @then('the company "{alias}" has {count:d} hooks and a platform')
@@ -100,7 +126,7 @@ def step_company_hooks(context, alias, count):
 @then('the sandbox mailbox receives a message with the subject "{subject}"')
 def step_mailbox_receives_subject(context, subject):
     """Escalation mail is sent by the worker; other unread alerts of the same seed may escalate too, so no count."""
-    deadline = time.monotonic() + 20
+    deadline = time.monotonic() + MAIL_TIMEOUT_S
     while subject not in (subjects := [m["subject"] for m in mail.list_messages()]) and time.monotonic() < deadline:
         time.sleep(0.5)
     assert subject in subjects, f"no sandbox message {subject!r}; subjects: {subjects}"

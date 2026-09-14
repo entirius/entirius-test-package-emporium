@@ -7,14 +7,18 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
   Reference scenario of the leads platform (mode A of guides/leads-end-to-end-testing in entirius-docs), one
   scenario per step so a failure names the step. Scenarios run in order and each finds its state again through
   the admin API. Company example-shop-1.test is reserved for this feature (package/leads--funnel.csv).
-  One-shot: the import, audit, draft and reply are consumed — re-run after `make seed`. Mailbox checks never
-  count the whole mailbox: send-due also delivers what earlier features left due, so they filter by recipient
-  or subject, and step 8 compares with the count saved in the Background. The import goes through `test/import-now/` (the queued import
-  needs a temp dir shared by service and worker). A company created by the import starts in `new` without a
-  `stage_entered` signal, so step 2 runs the stage rules through `test/evaluate/`. Recordings of example-shop-1.test cover
-  lighthouse and urlscan; it has no synthetic site, so the heuristic source fails and the audit ends
-  `partially_completed`. No notification is raised for a new draft (the review queue is the signal). A reply raises two `high` notifications (communicator and leads), both escalate by
-  email. T-07 is covered by step 3 (hooks and draft from the fake model; one contact, so no recipient pick); the tracker entries are not asserted here — the toolbox runs outside zeno.
+  One-shot: the import, audit, draft and reply are consumed — re-run after `make seed`. Mailbox counts are relative
+  to the count remembered in the Background of the same scenario; send-due also delivers what earlier features
+  left due, so the exact deltas of steps 5 and 7 hold for a `TAGS=@funnel` run on a fresh seed. The import goes
+  through `test/import-now/` (the queued import needs a temp dir shared by service and worker). A company created
+  by the import starts in `new` without a `stage_entered` signal, so step 2 runs the stage rules through
+  `test/evaluate/`. Recordings of example-shop-1.test cover lighthouse (PageSpeed Insights) and urlscan; the
+  heuristic source fetches the live site, and the funnel domain has no synthetic site, so it fails by design and
+  the audit ends `partially_completed`. No notification is raised for a new draft (the review queue is the
+  signal). T-07: the CSV gives the company two eligible contacts, so the `ai_pick` rule asks the fake model, which
+  picks the first candidate (anna). A reply raises two `high` notifications (communicator and leads), both
+  escalate by email. Step 8 expects 409 because the outreach gate refuses manual outreach to a `do_not_contact`
+  company. The tracker entries are not asserted here — the toolbox runs outside zeno.
 
   Background:
     Given the channel is the primary channel
@@ -24,11 +28,16 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
 
   Scenario: Funnel 0 the four modules are registered and the communicator channel is in sandbox
     Then the munin registry lists the modules "leads, communicator, siteintel, notifications"
+    When I PATCH the v2 admin endpoint "communicator/admin/{channel_idx}/channel/" with body
+      """
+      {"mode": "sandbox"}
+      """
+    Then the response status should be 200
     When I GET the v2 admin endpoint "communicator/admin/{channel_idx}/channel/"
     Then the response status should be 200
     And the response field "mode" should equal "sandbox"
 
-  Scenario: Funnel 1 a CSV row becomes a new company
+  Scenario: Funnel 1 a CSV with two contacts becomes one new company
     When I upload the package file "leads--funnel.csv" to the v2 admin endpoint "leads/admin/{channel_idx}/test/import-now/"
     Then the response status should be 200
     And I save the response field "id" as "batch_id"
@@ -53,6 +62,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     Then I save the first result field "id" as "audit_id"
     When the audit test run of "audit_id" has completed
     Then I wait up to 60 seconds until the v2 admin endpoint "siteintel/admin/{channel_idx}/audits/{audit_id}/" field "status" equals "partially_completed"
+    And the report for source "lighthouse" should have status "completed"
     And the report for source "lighthouse" should have processed field "strategies" set
     And the report for source "urlscan" should have status "completed"
     And the report for source "heuristic" should have status "failed"
@@ -63,6 +73,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the company "company_id" has an activity "intel" containing "intel analysed"
     And the company "company_id" has 3 hooks and a platform
     And the company "company_id" has an activity "draft" containing "draft review_required"
+    And the company "company_id" has one "recipient picked" activity with a contact_id
     And the review queue holds a draft about the company "company_id"
 
   Scenario: Funnel 4 the reviewer accepts the draft
@@ -74,11 +85,12 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the response field "status" should equal "approved"
     And the response field "scheduled_at" should not be null
 
-  Scenario: Funnel 5 the beat sends the message into the sandbox with footer and both parts
+  Scenario: Funnel 5 send-due delivers the message into the sandbox with footer and both parts
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
     When the beat send task has run
-    Then the sandbox mailbox holds 1 messages to "anna@example-shop-1.test"
+    Then the sandbox mailbox count is the remembered count plus 1
+    And the sandbox mailbox holds 1 messages to "anna@example-shop-1.test"
     And the sandbox message to "anna@example-shop-1.test" has a subject starting with "[SANDBOX]"
     And the sandbox message to "anna@example-shop-1.test" is multipart/alternative with our Message-ID
     And the sandbox message to "anna@example-shop-1.test" has a text and an html part containing "placeholder for legitimate interest, PL"
@@ -102,6 +114,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     When I run the notifications escalation 2 minutes from now
     Then the response status should be 200
     And the sandbox mailbox receives a message with the subject "Reply from Example Shop 1"
+    And the sandbox mailbox count is the remembered count plus 2
 
   Scenario: Funnel 8 a blocked contact gets no draft and no mail
     Given the leads contact "blocked@example-shop-9.test" of the company "example-shop-7.test" is saved as "blocked"

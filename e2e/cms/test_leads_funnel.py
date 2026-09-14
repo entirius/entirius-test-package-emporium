@@ -2,15 +2,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads funnel in the CMS (mode B of guides/leads-end-to-end-testing): steps 3-7 clicked on phone and desktop.
+"""Leads funnel in the CMS (mode B of guides/leads-end-to-end-testing): steps 1-7 clicked on desktop, 3-7 on a phone.
 
 `make e2e-funnel` runs this file twice on the same seed (E2E_DEVICE="iPhone 14", then desktop), so every test
 builds its own state by API: a fresh thread per run (unique recipient on a seeded company) and an Inbox holding
-only its own draft (every other `review_required` draft is skipped first). Steps 1-2 (import, audit) are
-consumed by `@funnel` on a seed — the draft of step 3 comes from the communicator test endpoint instead, with
-the company's hooks as its render context. The send policy is opened to the whole day for each test (restored
-after), so drafts are due now: no channel clock in the future, replies land after the sent mail, and nothing
-the tests leave behind is sent later by the beat. The reply comes from the mailed recipient.
+only its own draft (every other `review_required` draft is skipped first). Step 1 uploads a CSV with a unique
+domain through the CMS import screen; step 2 opens the Intel tab of a seeded company with PSI recordings. The
+draft of step 3 comes from the communicator test endpoint, with the company's hooks as its render context
+(`@funnel` consumes the CSV-to-draft path on a seed). The send policy is opened to the whole day for each test
+(restored after), so drafts are due now: no channel clock in the future, replies land after the sent mail, and
+nothing the tests leave behind is sent later by the beat. The reply comes from the mailed recipient. Tests marked
+`desktop_only` (board, company card, settings, stages) are skipped under E2E_DEVICE.
 """
 
 from __future__ import annotations
@@ -27,14 +29,26 @@ from playwright.sync_api import Page, expect
 from entirius_tests import clock, mail
 from entirius_tests.api_client import ApiClient
 from entirius_tests.auth import obtain_jwt_token
-from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, API_BASE_URL, require_module
-from entirius_tests.cms_pages import InboxPage, NotificationBar, ThreadPage
+from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, API_BASE_URL, module_installed, require_module
+from entirius_tests.cms_pages import (
+    BoardPage,
+    CompanyPage,
+    InboxPage,
+    LeadsImportPage,
+    NotificationBar,
+    SettingsPage,
+    StagesPage,
+    ThreadPage,
+)
 
 pytestmark = require_module("leads")
 
 CHANNEL = "default-europe"
 COMMUNICATOR = f"api/communicator/v2/admin/{CHANNEL}/"
 LEADS = f"api/leads/v2/admin/{CHANNEL}/"
+SITEINTEL = f"api/siteintel/v2/admin/{CHANNEL}/"
+LEADS_CSV = Path(__file__).resolve().parents[2] / "package" / "leads--default-europe.csv"
+INTEL_DOMAIN = "example-shop-5.test"  # PSI recordings (desktop strategy) in fixtures/siteintel
 MAIL_FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "mail"
 LEGAL_FOOTER = "Administrator danych: Example Seller sp. z o.o., ul. Testowa 1, Warszawa."
 MAX_TAPS_TO_ACCEPT = 3
@@ -149,26 +163,133 @@ def test_C07_accept_from_inbox_schedules(admin_page: Page, api: ApiClient):
     inbox.expect_empty_with_scheduled()
 
 
-def test_funnel_steps_3_to_7(admin_page: Page, api: ApiClient):
+def _steps_3_to_7(page: Page, api: ApiClient, company: dict) -> None:
     _clear_review_queue(api)
-    company = _company(api, "example-shop-5.test")
     draft = _communicate(api, company, requires_review=True)  # step 3
-    inbox = _accept_in_inbox(admin_page, draft)  # step 4
+    inbox = _accept_in_inbox(page, draft)  # step 4
     assert inbox.taps <= MAX_TAPS_TO_ACCEPT, f"accepting a draft took {inbox.taps} taps"
     approved = _ok(api.get(api.url(f"{COMMUNICATOR}review/?status=approved&page_size=100")))["results"]
     sent = _send(api, next(m for m in approved if m["id"] == draft["id"]))  # step 5
-    thread = ThreadPage(admin_page)
+    thread = ThreadPage(page)
     thread.open(company["id"])
     thread.expect_outbound(draft["subject"], "sent")
-    assert admin_page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
     _reply(api, sent, "reply_plain.eml")  # step 6
-    admin_page.reload()
+    page.reload()
     thread.expect_reply("can we talk on Thursday")
-    bar = NotificationBar(admin_page)  # step 7
+    bar = NotificationBar(page)  # step 7
     bar.expect_unread()
     bar.open()
     bar.open_row(f"Reply from {company['name']}")
     thread.expect_reply("can we talk on Thursday")
+
+
+def test_funnel_steps_3_to_7(admin_page: Page, api: ApiClient):
+    _steps_3_to_7(admin_page, api, _company(api, "example-shop-5.test"))
+
+
+def _unique_csv(tmp_path: Path) -> tuple[Path, str]:
+    """The first row of the package CSV under a unique domain: every run creates its own company in `new`."""
+    header, row = LEADS_CSV.read_text().splitlines()[:2]
+    domain = f"e2e-{time.time_ns()}.test"
+    fields = row.split(",")
+    fields[1], fields[7] = domain, f"jan@{domain}"
+    path = tmp_path / "leads.csv"
+    path.write_text(f"{header}\n{','.join(fields)}\n")
+    return path, domain
+
+
+def _imported_company(api: ApiClient, tmp_path: Path) -> dict:
+    path, domain = _unique_csv(tmp_path)
+    files = {"file": (path.name, path.read_bytes(), "text/csv")}
+    _ok(api.post(api.url(f"{LEADS}test/import-now/"), files=files))
+    return _company(api, domain)
+
+
+def _route_import_to_import_now(page: Page) -> None:
+    """Zeno shares no import temp dir between service and worker, so a queued `POST imports/` fails
+    `missing_file`; the CMS upload is redirected to the development `test/import-now/` (same multipart body)."""
+
+    def redirect(route):
+        if route.request.method != "POST":
+            return route.continue_()
+        return route.continue_(url=route.request.url.replace("/imports/", "/test/import-now/"))
+
+    page.route("**/imports/", redirect)
+
+
+def _audited(api: ApiClient, company: dict) -> None:
+    audit = _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/request-audit/")), 202)
+    if audit["status"] in ("pending", "running"):
+        run = api.post(api.url(f"{SITEINTEL}test/run-now/{audit['audit_id']}/"))
+        assert run.ok, f"run-now {audit['audit_id']}: {run.status_code} {run.text}"
+
+
+@pytest.mark.desktop_only
+def test_funnel_steps_1_to_7(admin_page: Page, api: ApiClient, tmp_path: Path):
+    csv_path, domain = _unique_csv(tmp_path)
+    _route_import_to_import_now(admin_page)
+    LeadsImportPage(admin_page).upload(csv_path)  # step 1
+    board = BoardPage(admin_page)
+    board.open()
+    board.search(domain)
+    expect(board.card("new", domain)).to_be_visible(timeout=15000)
+    company = _company(api, INTEL_DOMAIN)  # step 2
+    _audited(api, company)
+    card = CompanyPage(admin_page)
+    card.open(company["id"])
+    card.open_tab("intel")
+    expect(admin_page.get_by_test_id("intel-score-desktop")).to_contain_text("/ 100", timeout=15000)
+    _steps_3_to_7(admin_page, api, company)
+
+
+@pytest.mark.desktop_only
+def test_L15_create_customer_action_only_with_accounts(admin_page: Page, api: ApiClient, tmp_path: Path):
+    company = _imported_company(api, tmp_path)
+    card = CompanyPage(admin_page)
+    card.open(company["id"])
+    expect(card.create_customer_button()).to_have_count(0)
+    stages = _ok(api.get(api.url(f"{LEADS}stages/")))["results"]
+    won = next(stage for stage in stages if stage["kind"] == "won")
+    _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/transition/"), json={"stage_key": won["key"]}))
+    card.open(company["id"])
+    if module_installed("accounts"):
+        expect(card.create_customer_button()).to_be_visible()
+    else:
+        expect(card.create_customer_button()).to_have_count(0)
+
+
+@pytest.mark.desktop_only
+def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
+    message = _communicate(api, _company(api, "example-shop-6.test"), requires_review=False)
+    mailbox = mail.count()
+    settings = SettingsPage(admin_page)
+    settings.open()
+    settings.send_now(message["id"])
+    waiting = [m for m in _waiting_messages(api) if m["id"] == message["id"]]
+    assert waiting and waiting[0]["scheduled_at"], "Send now must leave the message waiting with a scheduled_at"
+    assert mail.count() == mailbox, "Send now must not send — the beat does"
+    _send(api, waiting[0])
+    assert mail.wait_for_count(mailbox + 1) >= mailbox + 1
+
+
+def _waiting_messages(api: ApiClient) -> list[dict]:
+    statuses = ("approved", "scheduled")
+    pages = [_ok(api.get(api.url(f"{COMMUNICATOR}messages/?status={s}&page_size=100"))) for s in statuses]
+    return [message for page in pages for message in page["results"]]
+
+
+@pytest.mark.desktop_only
+def test_L18_stage_delete_refused_inline(admin_page: Page, api: ApiClient, tmp_path: Path):
+    key = f"e2e-hold-{time.time_ns()}"
+    _ok(api.post(api.url(f"{LEADS}stages/"), json={"key": key, "label": "E2E hold", "order": 900}), 201)
+    company = _imported_company(api, tmp_path)
+    _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/transition/"), json={"stage_key": key}))
+    stages = StagesPage(admin_page)
+    stages.open()
+    stages.delete(key)
+    expect(stages.row(key).get_by_test_id("stage-error")).to_be_visible(timeout=15000)
+    assert any(stage["key"] == key for stage in _ok(api.get(api.url(f"{LEADS}stages/")))["results"])
 
 
 def test_C23_optout_confirm_from_thread(admin_page: Page, api: ApiClient):

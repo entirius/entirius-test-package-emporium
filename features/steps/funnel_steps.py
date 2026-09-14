@@ -105,14 +105,28 @@ def step_recipient_picked(context, alias):
     assert contact_id is not None and picked[0]["data"].get("contact_id") == contact_id, f"activity: {picked[0]}"
 
 
-@then("the sandbox mailbox count is the remembered count plus {n:d}")
-def step_mailbox_count_plus(context, n):
+def _scoped_count(markers: list[str]) -> int:
+    """Sandbox messages whose original recipient or subject names one of the markers."""
+    parsed = [email.message_from_string(m["mimeMessage"]) for m in mail.list_messages()]
+    fields = [f"{m['X-Original-To'] or ''} {m['Subject'] or ''}" for m in parsed]
+    return sum(any(marker in field for marker in markers) for field in fields)
+
+
+@given('the sandbox mailbox count about "{markers}" is remembered')
+def step_scoped_count_remember(context, markers):
+    """Scoped to the feature's own mail, so mail of earlier features arriving meanwhile does not shift the delta."""
+    context.saved["mailbox_markers"] = [marker.strip() for marker in markers.split(",")]
+    context.saved["scoped_mailbox_count"] = _scoped_count(context.saved["mailbox_markers"])
+
+
+@then("the scoped sandbox mailbox count is the remembered count plus {n:d}")
+def step_scoped_count_plus(context, n):
     """Delivery may finish in the worker after the request returns, so the count is awaited, then compared."""
-    expected = context.saved["mailbox_count"] + n
+    markers, expected = context.saved["mailbox_markers"], context.saved["scoped_mailbox_count"] + n
     deadline = time.monotonic() + MAIL_TIMEOUT_S
-    while (actual := mail.count()) < expected and time.monotonic() < deadline:
+    while (actual := _scoped_count(markers)) < expected and time.monotonic() < deadline:
         time.sleep(0.5)
-    assert actual == expected, f"sandbox mailbox count {actual}, expected {expected}"
+    assert actual == expected, f"sandbox mailbox count about {markers}: {actual}, expected {expected}"
 
 
 @then('the company "{alias}" has {count:d} hooks and a platform')
@@ -125,7 +139,7 @@ def step_company_hooks(context, alias, count):
 
 @then('the sandbox mailbox receives a message with the subject "{subject}"')
 def step_mailbox_receives_subject(context, subject):
-    """Escalation mail is sent by the worker; other unread alerts of the same seed may escalate too, so no count."""
+    """Escalation mail is sent by the worker, so the subject is awaited; the scoped count step asserts how many arrived."""
     deadline = time.monotonic() + MAIL_TIMEOUT_S
     while subject not in (subjects := [m["subject"] for m in mail.list_messages()]) and time.monotonic() < deadline:
         time.sleep(0.5)

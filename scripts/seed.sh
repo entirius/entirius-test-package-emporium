@@ -186,6 +186,7 @@ FIXTURE_FILES=(
     "django_contact_forms.cfg.yaml"
     "django_communicator.cfg.yaml"
     "django_leads.cfg.yaml"
+    "django_leads_retention.cfg.yaml"
     "django_enrichment.cfg.yaml"
     "django_notifications.cfg.yaml"
     "django_siteintel.cfg.yaml"

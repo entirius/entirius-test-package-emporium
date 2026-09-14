@@ -1,0 +1,139 @@
+# =========================================================================
+# django_leads retention + GDPR seed (plan 11) — channel default-europe (pk 100), leads pk range 100–199.
+# Loaded right after django_leads.cfg.yaml (stages: contacted = 102, won = 105).
+#
+# L-16: example-stale.test (company 150) sits in `contacted`, idle since 2025-01-01 (> 180 days before any
+#   run) — its contact stale@example-stale.test (contact 150) is anonymised by `test/anonymise-now/`.
+#   example-stale-won.test (company 151) is as old but `won` — its contact (151) must survive.
+# L-17: example-gdpr.test (company 152, `last_activity_at` null, so retention never picks it) — contact
+#   erase@example-gdpr.test (152) is exported and erased; a dedicated company keeps plan 10's example-shop-4
+#   contacts intact (this feature sorts before leads_pipeline.feature).
+# Cross-references: django_communicator.cfg.yaml threads 10 (subject_ref leads.Company:150) and
+#   11 (leads.Company:152) with one sent message each (10, 11). Keep these pks stable.
+# =========================================================================
+
+- model: django_leads.company
+  pk: 150
+  fields:
+    channel: 100
+    name: Example Stale
+    domain: example-stale.test
+    website: https://www.example-stale.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 102
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: "2025-01-01T00:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 151
+  fields:
+    channel: 100
+    name: Example Stale Won
+    domain: example-stale-won.test
+    website: https://www.example-stale-won.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 105
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: "2025-01-01T00:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 152
+  fields:
+    channel: 100
+    name: Example GDPR
+    domain: example-gdpr.test
+    website: https://www.example-gdpr.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 102
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 150
+  fields:
+    company: 150
+    email: "stale@example-stale.test"
+    first_name: Stefan
+    last_name: Stary
+    job_title: Owner
+    phone: "+48 500 000 150"
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: consent
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 151
+  fields:
+    company: 151
+    email: "won@example-stale-won.test"
+    first_name: Wanda
+    last_name: Wygrana
+    job_title: Owner
+    phone: ""
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 152
+  fields:
+    company: 152
+    email: "erase@example-gdpr.test"
+    first_name: Ewelina
+    last_name: Erazm
+    job_title: Owner
+    phone: ""
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

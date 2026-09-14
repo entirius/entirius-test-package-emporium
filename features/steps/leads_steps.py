@@ -10,14 +10,14 @@ from __future__ import annotations
 
 import json
 import time
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from datetime import time as dt_time
 from pathlib import Path
 
 import requests
 from behave import given, then, when
 
-from entirius_tests import clock
+from entirius_tests import clock, mail
 
 # X-API-KEY values of fixtures/django_contact_forms.cfg.yaml (apikey pk 1 and 2).
 CONTACT_FORM_API_KEYS = {"default-europe": "1" * 64, "default-local": "2" * 64}
@@ -244,3 +244,110 @@ def _threads(context, alias: str) -> list[dict]:
 
 def _thread(context, alias: str, email: str) -> dict | None:
     return next((row for row in _threads(context, alias) if row["recipient_email"] == email), None)
+
+
+# --- Retention and GDPR (plan 11) ---
+
+
+def _resolve(context, text: str) -> str:
+    for key, value in (context.saved or {}).items():
+        text = text.replace(f"{{{key}}}", str(value))
+    return text
+
+
+def _relative_iso(value: str) -> str:
+    """`+N day(s)` → ISO timestamp N days from now (UTC); anything else is passed through as ISO."""
+    if not value.startswith("+"):
+        return value
+    days = int(value[1:].split()[0])
+    return (datetime.now(UTC) + timedelta(days=days)).isoformat()
+
+
+@given('the leads contact "{email}" of the company "{domain}" is saved as "{alias}"')
+def step_contact_saved(context, email, domain, alias):
+    """Saves the contact id as `alias`, its company id as `alias.company` and its email as `alias.email`."""
+    companies = _get_json(context, _v2_url(context, f"leads/admin/{{channel_idx}}/companies/?search={domain}"))
+    assert companies["results"], f"company {domain} not seeded"
+    company_id = companies["results"][0]["id"]
+    detail = _get_json(context, _v2_url(context, f"leads/admin/{{channel_idx}}/companies/{company_id}/"))
+    contact = next((row for row in detail["contacts"] if row["email"] == email), None)
+    assert contact, f"contact {email} not in company {domain}"
+    context.saved.update({alias: contact["id"], f"{alias}.company": company_id, f"{alias}.email": email})
+
+
+@given('the communicator thread to "{email}" about the company "{alias}" is saved as "{thread_alias}"')
+def step_thread_saved(context, email, alias, thread_alias):
+    thread = _thread(context, alias, email)
+    assert thread, f"no thread to {email} about company {context.saved[alias]}"
+    context.saved[thread_alias] = thread["id"]
+
+
+@when('I run the leads test action "anonymise-now" as of "{when}"')
+def step_anonymise_now(context, when):
+    url = _v2_url(context, "leads/admin/{channel_idx}/test/anonymise-now/")
+    context.response = context.api.post(url, json={"as_of": _relative_iso(when)})
+    context.response_data = context.response.json()
+    assert context.response.status_code == 200, f"anonymise-now: {context.response.status_code} {context.response.text}"
+
+
+def _contact(context, alias: str) -> dict:
+    return _get_json(context, _v2_url(context, f"leads/admin/{{channel_idx}}/contacts/{context.saved[alias]}/"))
+
+
+@then('the contact "{alias}" is anonymised')
+def step_contact_anonymised(context, alias):
+    """Also replaces `alias.email` with the stored token for later steps."""
+    contact = _contact(context, alias)
+    assert contact["email"].startswith("anon-") and contact["anonymised_at"], f"contact not anonymised: {contact}"
+    assert (contact["first_name"], contact["last_name"], contact["phone"]) == ("", "", ""), contact
+    context.saved[f"{alias}.email"] = contact["email"]
+
+
+@then('the contact "{alias}" is not anonymised')
+def step_contact_not_anonymised(context, alias):
+    contact = _contact(context, alias)
+    assert contact["email"] == context.saved[f"{alias}.email"] and contact["anonymised_at"] is None, contact
+
+
+@then('the communicator thread "{alias}" has recipient "{email}"')
+def step_thread_recipient(context, alias, email):
+    thread = _get_json(context, _comm_url(context, f"threads/{context.saved[alias]}/"))
+    expected = _resolve(context, email)
+    assert (thread["recipient_email"], thread["recipient_name"]) == (expected, ""), thread
+
+
+@then('the GDPR response lists the modules "{names}"')
+def step_gdpr_modules(context, names):
+    modules = context.response_data["modules"]
+    missing = [name.strip() for name in names.split(",") if name.strip() not in modules]
+    assert not missing, f"modules missing from the export: {missing} (got {sorted(modules)})"
+
+
+@then('the GDPR erasure touched rows in "{names}"')
+def step_gdpr_erased(context, names):
+    modules = context.response_data["modules"]
+    for name in (part.strip() for part in names.split(",")):
+        assert sum(modules.get(name, {}).values()) > 0, f"{name} erased nothing: {modules}"
+
+
+@then('the communicator suppressions list the email "{email}"')
+def step_suppression_listed(context, email):
+    rows = _get_json(context, _comm_url(context, "suppressions/"))["results"]
+    assert [row for row in rows if row["kind"] == "email" and row["value"] == email], f"{email} not suppressed"
+
+
+@given("the sandbox mailbox count is remembered")
+def step_mailbox_remember(context):
+    context.saved["mailbox_count"] = mail.count()
+
+
+@when("the communicator beat sends due messages")
+def step_beat_send(context):
+    response = clock.run_beat_send(context.api, context.channel)
+    assert response.status_code == 200, f"send-due: {response.status_code} {response.text[:300]}"
+
+
+@then("the sandbox mailbox count is unchanged")
+def step_mailbox_unchanged(context):
+    time.sleep(2)
+    assert mail.count() == context.saved["mailbox_count"], "a message reached the sandbox mailbox"

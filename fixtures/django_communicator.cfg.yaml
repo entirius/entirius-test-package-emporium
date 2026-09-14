@@ -305,3 +305,59 @@
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
+
+# --- Threads of plan 11 (leads fixture django_leads_retention.cfg.yaml): subject_ref = leads company pk ---
+# Thread 10 → leads.Company:150 (stale@example-stale.test, anonymised by retention, L-16);
+# thread 11 → leads.Company:152 (erase@example-gdpr.test, erased by GDPR, L-17). One sent message each.
+- model: django_communicator.thread
+  pk: 10
+  fields:
+    channel: 1
+    subject_ref: "leads.Company:150"
+    recipient_email: stale@example-stale.test
+    recipient_name: Stefan Stary
+    recipient_language: 1
+    status: open
+    last_message_at: "2025-01-01T09:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.thread
+  pk: 11
+  fields:
+    channel: 1
+    subject_ref: "leads.Company:152"
+    recipient_email: erase@example-gdpr.test
+    recipient_name: Ewelina Erazm
+    recipient_language: 1
+    status: open
+    last_message_at: "2025-01-01T09:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.message
+  pk: 10
+  fields:
+    thread: 10
+    direction: out
+    status: sent
+    subject: "TEST — pytanie o sklep"
+    body_text: "Dzień dobry Stefan, TEST wiadomość sprzed okresu retencji."
+    requires_review: true
+    sent_at: "2025-01-01T09:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.message
+  pk: 11
+  fields:
+    thread: 11
+    direction: out
+    status: sent
+    subject: "TEST — pytanie o sklep"
+    body_text: "Dzień dobry Ewelina, TEST wiadomość do usunięcia na żądanie RODO."
+    legal_footer: "Administrator danych: Example Seller sp. z o.o. Adres odbiorcy: erase@example-gdpr.test"
+    requires_review: true
+    sent_at: "2025-01-01T09:00:00Z"
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

@@ -197,10 +197,21 @@ def step_review_empty(context, alias):
 
 @when('the follow-up sequence to "{email}" about the company "{alias}" has finished')
 def step_sequence_finished(context, email, alias):
-    """Accept the thread's draft on the reference Monday, send it, start `followup`, then move the channel clock a
-    day at a time with a beat run each day until the sequence stops `finished`."""
     thread = _poll(lambda: _thread(context, alias, email))
     assert thread, f"no thread to {email} about company {context.saved[alias]}"
+    _finish_sequence(context, alias, thread)
+
+
+@when('the latest follow-up sequence about the company "{alias}" has finished')
+def step_latest_sequence_finished(context, alias):
+    threads = _threads(context, alias)
+    assert threads, f"no thread about company {context.saved[alias]}"
+    _finish_sequence(context, alias, max(threads, key=lambda row: row["id"]))
+
+
+def _finish_sequence(context, alias: str, thread: dict) -> None:
+    """Accept the thread's draft on the reference Monday, send it, start `followup`, then move the channel clock a
+    day at a time with a beat run each day until the sequence stops `finished`."""
     start = datetime.combine(clock.reference_day("monday"), dt_time(10, 0))
     days = [start.date() + timedelta(days=offset) for offset in range(SEQUENCE_MAX_DAYS)]
     clock.reset_send_counters(context.api, context.channel, days)
@@ -226,7 +237,10 @@ def step_sequence_finished(context, email, alias):
     raise AssertionError(f"sequence of thread {thread['id']} not finished after {SEQUENCE_MAX_DAYS} days")
 
 
-def _thread(context, alias: str, email: str) -> dict | None:
+def _threads(context, alias: str) -> list[dict]:
     ref = f"leads.Company:{context.saved[alias]}"
-    rows = _get_json(context, _comm_url(context, f"threads/?subject_ref={ref}&page_size=100"))["results"]
-    return next((row for row in rows if row["recipient_email"] == email), None)
+    return _get_json(context, _comm_url(context, f"threads/?subject_ref={ref}&page_size=100"))["results"]
+
+
+def _thread(context, alias: str, email: str) -> dict | None:
+    return next((row for row in _threads(context, alias) if row["recipient_email"] == email), None)

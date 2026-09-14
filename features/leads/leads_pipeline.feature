@@ -8,7 +8,7 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
   required), contacted → lead.cold.b2b (primary). Stage changes are evaluated by the worker, `test/evaluate/`
   runs the same rules synchronously; timeline checks poll. The fake toolbox answers `leads.analysis` with three
   hooks and `leads.pick_recipient` with the first candidate that has an email. Edge cases: L-08…L-12, L-14.
-  L-14 is one-shot (it walks the example-shop-4 sequences and parks the company) — re-run after `make seed`.
+  L-14 is one-shot (it walks three example-shop-4 sequences and parks the company) — re-run after `make seed`.
 
   Background:
     Given the channel is the primary channel
@@ -77,8 +77,14 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
 
   @leads-oneshot
   Scenario: L-14 silence after the sequence rotates to the next contact, then parks the company
+    The extra contact guarantees a second rotation whether or not leads_import added its form contact first.
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-4.test"
     Then I save the first result field "id" as "company_id"
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/contacts/" with body
+      """
+      {"company_id": {company_id}, "email": "bdd-zofia@example.com", "first_name": "Zofia", "legal_basis": "legitimate_interest"}
+      """
+    Then the response status should be 201
     When the follow-up sequence to "piotr@example-shop-4.test" about the company "company_id" has finished
     And I run the leads test action "rotate-now" with body
       """
@@ -86,7 +92,13 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
       """
     Then the company "company_id" has an activity "rotation" containing "rotated to the next contact"
     And the company "company_id" has rotation count 1
-    When the follow-up sequence to "ola@example-shop-4.test" about the company "company_id" has finished
+    When the latest follow-up sequence about the company "company_id" has finished
+    And I run the leads test action "rotate-now" with body
+      """
+      {}
+      """
+    Then the company "company_id" has rotation count 2
+    When the latest follow-up sequence about the company "company_id" has finished
     And I run the leads test action "rotate-now" with body
       """
       {}

@@ -78,7 +78,7 @@ def step_load_csv_product_positions(context):
 @then('I wait up to {seconds:d} seconds until the v2 admin endpoint "{path}" field "{field}" equals "{value}"')
 def step_wait_for_field(context, seconds, path, field, value):
     """Polls worker-side effects; `path` resolves `{channel_idx}` and saved aliases, `field` may be dotted."""
-    for key, saved in {"channel_idx": context.channel, **context.saved}.items():
+    for key, saved in {"channel_idx": context.channel, **getattr(context, "saved", {})}.items():
         path = path.replace(f"{{{key}}}", str(saved))
     module, _, rest = path.partition("/")
     url = context.api.url(f"api/{module}/v2/{rest}")
@@ -86,6 +86,7 @@ def step_wait_for_field(context, seconds, path, field, value):
     while True:
         context.response = context.api.get(url)
         context.response_data = context.response.json()
+        assert isinstance(context.response_data, dict), f"{path}: expected a JSON object, got {context.response_data!r}"
         actual = context.response_data
         for key in field.split("."):
             actual = actual.get(key) if isinstance(actual, dict) else None

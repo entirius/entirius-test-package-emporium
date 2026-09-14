@@ -34,21 +34,32 @@ Feature: Leads — retention and GDPR export and erasure
       """
     Then the response status should be 200
     And the GDPR response lists the modules "django_leads, django_communicator, django_agreements"
+    And the GDPR export lists "erase@example-gdpr.test" in "django_leads.Contact, django_communicator.Thread, django_agreements.ConsentRecord, django_agreements.ObjectionEvent, django_agreements.OrderAgreementSnapshot"
     When I POST to the v2 admin endpoint "leads/admin/gdpr/erase/" with body
       """
       {"email": "erase@example-gdpr.test"}
       """
     Then the response status should be 200
-    And the GDPR erasure touched rows in "django_leads, django_communicator"
+    And the GDPR erasure touched rows in "django_leads, django_communicator, django_agreements"
     And the contact "subject" is anonymised
+    When I POST to the v2 admin endpoint "leads/admin/gdpr/export/" with body
+      """
+      {"email": "erase@example-gdpr.test"}
+      """
+    Then the response status should be 200
+    And the GDPR export lists "{subject.email}" in "django_agreements.ConsentRecord, django_agreements.ObjectionEvent, django_agreements.OrderAgreementSnapshot"
+    And the GDPR export holds no "erase@example-gdpr.test"
+    And the communicator suppressions list the global token "{subject.email}"
     When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/companies/{subject.company}/communicate/" with body
       """
       {"template_key": "lead.cold.b2b", "contact_id": {subject}}
       """
     Then the response status should be 409
-    And the communicator suppressions list the email "erase@example-gdpr.test"
     Given the sandbox mailbox count is remembered
     When I request the "lead.cold.b2b" message for "erase@example-gdpr.test" about "leads.Company:152"
     Then the nested response field "status" should equal "suppressed"
     When the communicator beat sends due messages
     Then the sandbox mailbox count is unchanged
+    When I import the leads contact "erase@example-gdpr.test" of the company "example-gdpr.test"
+    Then the import report should contain the reason "erased_address"
+    And the company "subject.company" has no contact "erase@example-gdpr.test"

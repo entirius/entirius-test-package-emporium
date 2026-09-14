@@ -6,6 +6,10 @@
 # no natural key; seed.sh asserts the loaded languages right after loading.
 # Every text is a TEST placeholder — the lawyer's texts are pasted in the admin
 # as a new version and published before the staging canary.
+# L-17 (features/leads/leads_gdpr.feature): the GDPR subject erase@example-gdpr.test (leads contact 152 in
+# django_leads_retention.cfg.yaml) holds one consent record, one objection event and one order agreement
+# snapshot (pk 152 each; agreement version 3 = marketing-email from the module's default_agreements) — the
+# export must list all three, the erasure must pseudonymise all three. One-shot: re-run after `make seed`.
 # =========================================================================
 
 - model: django_agreements.clauseset
@@ -67,3 +71,38 @@
     published_at: "2026-01-01T00:00:00Z"
     created_at: "2026-01-01T00:00:00Z"
     modified_at: "2026-01-01T00:00:00Z"
+
+- model: django_agreements.consentrecord
+  pk: 152
+  fields:
+    email: "erase@example-gdpr.test"
+    agreement_version: 3
+    granted: true
+    source: import
+    ip_address: "192.0.2.152"
+    user_agent: "Mozilla/5.0 (L-17 fixture)"
+    channel_idx: default-europe
+    created_at: "2026-01-02T00:00:00Z"
+
+- model: django_agreements.objectionevent
+  pk: 152
+  fields:
+    channel: ["default-europe"]
+    email: "erase@example-gdpr.test"
+    source: manual
+    reason: "L-17 fixture objection"
+    clause_set: 3
+    created_at: "2026-01-03T00:00:00Z"
+
+- model: django_agreements.orderagreementsnapshot
+  pk: 152
+  fields:
+    order_id: "00000000-0000-4000-8000-000000000152"
+    email: "erase@example-gdpr.test"
+    agreement_version: 3
+    body_snapshot: "TEST — marketing email terms accepted with the L-17 fixture order."
+    language: pl
+    granted: true
+    ip_address: "192.0.2.152"
+    user_agent: "Mozilla/5.0 (L-17 fixture)"
+    created_at: "2026-01-04T00:00:00Z"

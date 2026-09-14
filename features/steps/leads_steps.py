@@ -330,10 +330,46 @@ def step_gdpr_erased(context, names):
         assert sum(modules.get(name, {}).values()) > 0, f"{name} erased nothing: {modules}"
 
 
-@then('the communicator suppressions list the email "{email}"')
-def step_suppression_listed(context, email):
-    rows = _get_json(context, _comm_url(context, "suppressions/"))["results"]
-    assert [row for row in rows if row["kind"] == "email" and row["value"] == email], f"{email} not suppressed"
+@then('the communicator suppressions list the global token "{token}"')
+def step_suppression_token_listed(context, token):
+    """Filtered by value on the server (the list is not paged by the client): the erased address's token row."""
+    token = _resolve(context, token)
+    rows = _get_json(context, _comm_url(context, f"suppressions/?value={token}"))["results"]
+    assert [row for row in rows if row["kind"] == "email_token" and row["value"] == token], f"{token} not suppressed"
+
+
+@then('the GDPR export lists "{email}" in "{sections}"')
+def step_gdpr_export_lists(context, email, sections):
+    """Each `module.Model` section holds rows, and every row belongs to the subject (its email or recipient)."""
+    email, modules = _resolve(context, email), context.response_data["modules"]
+    for section in (part.strip() for part in sections.split(",")):
+        module, _, model = section.partition(".")
+        rows = modules.get(module, {}).get(model, [])
+        owners = {row.get("email") or row.get("recipient_email") for row in rows}
+        assert rows and owners == {email}, f"{section}: expected rows of {email}, got {owners or 'none'}"
+
+
+@then('the GDPR export holds no "{email}"')
+def step_gdpr_export_holds_no(context, email):
+    exported = json.dumps(context.response_data["modules"])
+    assert email not in exported, "the plain address is still stored after the erasure"
+
+
+@when('I import the leads contact "{email}" of the company "{domain}"')
+def step_import_contact(context, email, domain):
+    header = "company_name,domain,website,company_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone"
+    content = f"{header}\nReimport,{domain},,,,Re,Import,{email},,,consent,\n"
+    url = _v2_url(context, "leads/admin/{channel_idx}/test/import-now/")
+    context.response = context.api.post(url, files={"file": ("reimport.csv", content.encode(), "text/csv")})
+    context.response_data = context.response.json()
+    assert context.response.status_code == 200, f"import-now: {context.response.status_code} {context.response.text}"
+
+
+@then('the company "{alias}" has no contact "{email}"')
+def step_company_has_no_contact(context, alias, email):
+    detail = _get_json(context, _v2_url(context, f"leads/admin/{{channel_idx}}/companies/{context.saved[alias]}/"))
+    emails = [row["email"] for row in detail["contacts"]]
+    assert email not in emails and len(emails) == 1, f"contacts of the company: {len(emails)}"
 
 
 @given("the sandbox mailbox count is remembered")

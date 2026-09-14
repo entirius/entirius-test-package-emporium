@@ -321,6 +321,17 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_dp_channel
 echo "Discovering modules..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py discover_modules --verbosity 0 2>/dev/null || true"
 
+# Leads platform modules must be registered: a missing one silently skips its BDD features later.
+echo "Checking leads platform modules in the registry..."
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell --no-imports -c \"
+from django_munin.models import Module
+expected = {'leads', 'communicator', 'siteintel', 'notifications'}
+missing = expected - set(Module.objects.filter(key__in=expected).values_list('key', flat=True))
+if missing:
+    raise SystemExit('ERROR: munin registry is missing modules: ' + ', '.join(sorted(missing)))
+print('Registry lists', Module.objects.filter(key__in=expected).count(), 'of', len(expected), 'leads platform modules.')
+\""
+
 # Seed demo enrichment proposals (text + picture) so the CMS review queue has examples to review.
 # Runs after the catalogue import — targets the seeded ENT-S00x products via the registered adapter.
 echo "Seeding demo enrichment proposals..."

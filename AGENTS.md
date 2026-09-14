@@ -36,7 +36,8 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
   `{channel_idx}` and `{saved.alias}` placeholders automatically — the alias name itself carries
   the `saved.` prefix (`I save the response field "id" as "saved.proposal_id"`, then
   `{saved.proposal_id}` in a later path), it is not special templating syntax.
-- **One-shot scenarios** (`@lookup-oneshot` here; also suppliers audit-trail, atlas push/merge):
+- **One-shot scenarios** (`@lookup-oneshot`, `@leads-oneshot` — incl. the `@funnel` feature — and
+  `@communicator-oneshot` here; also suppliers audit-trail, atlas push/merge):
   mutate a specific pre-seeded row once per database — re-running them against an already-consumed
   DB fails on purpose. A BDD re-run needs a fresh `make seed` (zeno `AGENTS.md` §Green baselines).
 

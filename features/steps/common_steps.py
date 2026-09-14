@@ -6,7 +6,9 @@
 
 from __future__ import annotations
 
-from behave import given
+import time
+
+from behave import given, then
 
 from entirius_tests.csv_loader import (
     count_products_by_type,
@@ -71,3 +73,23 @@ def step_load_csv_product_type_counts(context):
 @given("the CSV product positions are loaded for the primary channel")
 def step_load_csv_product_positions(context):
     context.csv_positions = load_product_positions(context.test_package_path, context.primary_channel)
+
+
+@then('I wait up to {seconds:d} seconds until the v2 admin endpoint "{path}" field "{field}" equals "{value}"')
+def step_wait_for_field(context, seconds, path, field, value):
+    """Polls worker-side effects; `path` resolves `{channel_idx}` and saved aliases, `field` may be dotted."""
+    for key, saved in {"channel_idx": context.channel, **context.saved}.items():
+        path = path.replace(f"{{{key}}}", str(saved))
+    module, _, rest = path.partition("/")
+    url = context.api.url(f"api/{module}/v2/{rest}")
+    deadline = time.monotonic() + seconds
+    while True:
+        context.response = context.api.get(url)
+        context.response_data = context.response.json()
+        actual = context.response_data
+        for key in field.split("."):
+            actual = actual.get(key) if isinstance(actual, dict) else None
+        if str(actual) == value or time.monotonic() > deadline:
+            break
+        time.sleep(1)
+    assert str(actual) == value, f"{path} {field}: {actual!r}, expected {value!r}"

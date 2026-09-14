@@ -1,0 +1,544 @@
+# =========================================================================
+# django_leads seed — channel default-europe with its pipeline, 6 companies and 10 contacts.
+# Pk ranges of the leads-platform modules (cross-fixture references stay stable):
+#   communicator 1–99, leads 100–199, notifications 200–299, siteintel 300–399.
+# example-shop-1.test stays free for the plan 12 funnel import; example-shop-4.test holds 3 contacts
+# (plans 10–12); blocked@example-shop-9.test matches the communicator suppression (plan 05).
+# loaddata bypasses save(): languages are listed explicitly (pl=1, en=2) and nothing emits stage_entered.
+# =========================================================================
+
+- model: django_leads.channel
+  pk: 100
+  fields:
+    idx: default-europe
+    name: Default Europe
+    default_language: 1
+    languages: [1, 2]
+    retention_days: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Stages (pipeline order) ---
+
+- model: django_leads.stage
+  pk: 100
+  fields:
+    channel: 100
+    key: new
+    label: New
+    order: 0
+    kind: open
+    is_terminal: false
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 101
+  fields:
+    channel: 100
+    key: intel
+    label: Intel
+    order: 10
+    kind: open
+    is_terminal: false
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 102
+  fields:
+    channel: 100
+    key: contacted
+    label: Contacted
+    order: 20
+    kind: open
+    is_terminal: false
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 103
+  fields:
+    channel: 100
+    key: replied
+    label: Replied
+    order: 30
+    kind: open
+    is_terminal: false
+    on_reply: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 104
+  fields:
+    channel: 100
+    key: qualified
+    label: Qualified
+    order: 40
+    kind: open
+    is_terminal: false
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 105
+  fields:
+    channel: 100
+    key: won
+    label: Won
+    order: 50
+    kind: won
+    is_terminal: true
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 106
+  fields:
+    channel: 100
+    key: lost
+    label: Lost
+    order: 60
+    kind: lost
+    is_terminal: true
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stage
+  pk: 107
+  fields:
+    channel: 100
+    key: unresponsive
+    label: Unresponsive
+    order: 70
+    kind: unresponsive
+    is_terminal: false
+    on_reply: false
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Companies (one per source / type; example-shop-7 is do_not_contact) ---
+
+- model: django_leads.company
+  pk: 100
+  fields:
+    channel: 100
+    name: Example Shop 2
+    domain: example-shop-2.test
+    website: https://www.example-shop-2.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 100
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 101
+  fields:
+    channel: 100
+    name: Example Shop 3
+    domain: example-shop-3.test
+    website: https://www.example-shop-3.test/
+    company_type: WHOLESALE
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 101
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 102
+  fields:
+    channel: 100
+    name: Example Shop 4
+    domain: example-shop-4.test
+    website: https://www.example-shop-4.test/
+    company_type: MANUFACTURER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 102
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: form
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 103
+  fields:
+    channel: 100
+    name: Example Shop 5
+    domain: example-shop-5.test
+    website: https://www.example-shop-5.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 100
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: manual
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 104
+  fields:
+    channel: 100
+    name: Example Shop 6
+    domain: example-shop-6.test
+    website: https://www.example-shop-6.test/
+    company_type: UNKNOWN
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 100
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: connector
+    external_ref: ""
+    do_not_contact: false
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.company
+  pk: 105
+  fields:
+    channel: 100
+    name: Example Shop 7
+    domain: example-shop-7.test
+    website: https://www.example-shop-7.test/
+    company_type: RETAILER
+    industry: garden
+    description: ""
+    platform: ""
+    hooks: []
+    stage: 100
+    stage_entered_at: "2025-01-01T00:00:00Z"
+    source: csv
+    external_ref: ""
+    do_not_contact: true
+    customer_uid: null
+    rotation_count: 0
+    last_activity_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Contacts (one without email, one without legal basis, one suppressed address) ---
+
+- model: django_leads.contact
+  pk: 100
+  fields:
+    company: 100
+    email: "jan@example-shop-2.test"
+    first_name: Jan
+    last_name: Nowak
+    job_title: Owner
+    phone: ""
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 101
+  fields:
+    company: 101
+    email: "anna@example-shop-3.test"
+    first_name: Anna
+    last_name: Lis
+    job_title: Buyer
+    phone: ""
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 102
+  fields:
+    company: 102
+    email: "piotr@example-shop-4.test"
+    first_name: Piotr
+    last_name: Wilk
+    job_title: Owner
+    phone: ""
+    language: 1
+    is_primary: true
+    source: form
+    legal_basis: consent
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 103
+  fields:
+    company: 102
+    email: "ola@example-shop-4.test"
+    first_name: Ola
+    last_name: Sowa
+    job_title: Marketing
+    phone: ""
+    language: 1
+    is_primary: false
+    source: form
+    legal_basis: consent
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 104
+  fields:
+    company: 102
+    email: ""
+    first_name: Marek
+    last_name: Kruk
+    job_title: Warehouse
+    phone: ""
+    language: 1
+    is_primary: false
+    source: manual
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 105
+  fields:
+    company: 103
+    email: "ewa@example-shop-5.test"
+    first_name: Ewa
+    last_name: Dab
+    job_title: Owner
+    phone: ""
+    language: 2
+    is_primary: true
+    source: manual
+    legal_basis: null
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 106
+  fields:
+    company: 104
+    email: "tom@example-shop-6.test"
+    first_name: Tom
+    last_name: Smith
+    job_title: CEO
+    phone: ""
+    language: 2
+    is_primary: true
+    source: connector
+    legal_basis: contract
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 107
+  fields:
+    company: 105
+    email: "kasia@example-shop-7.test"
+    first_name: Kasia
+    last_name: Buk
+    job_title: Owner
+    phone: ""
+    language: 1
+    is_primary: true
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 108
+  fields:
+    company: 105
+    email: "blocked@example-shop-9.test"
+    first_name: Blocked
+    last_name: Recipient
+    job_title: Sales
+    phone: ""
+    language: 1
+    is_primary: false
+    source: csv
+    legal_basis: legitimate_interest
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.contact
+  pk: 109
+  fields:
+    company: 101
+    email: "adam@example-shop-3.test"
+    first_name: Adam
+    last_name: Jez
+    job_title: Sales
+    phone: ""
+    language: 2
+    is_primary: false
+    source: csv
+    legal_basis: consent
+    consent_ref: null
+    opt_out_at: null
+    anonymised_at: null
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Stage rules (plan 10): new → audit, intel ready → AI-picked cold mail, contacted → cold B2B mail ---
+# The contacted rule needs no hooks, so L-08/L-10 reach the recipient and cooldown checks.
+
+- model: django_leads.stagerule
+  pk: 100
+  fields:
+    channel: 100
+    trigger: stage_entered
+    stage: 100
+    action: request_audit
+    template_key: ""
+    contact_strategy: primary
+    require_hooks: false
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 0
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stagerule
+  pk: 101
+  fields:
+    channel: 100
+    trigger: intel_ready
+    stage: null
+    action: communicate
+    template_key: lead.cold.shop
+    contact_strategy: ai_pick
+    require_hooks: true
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 10
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.stagerule
+  pk: 102
+  fields:
+    channel: 100
+    trigger: stage_entered
+    stage: 102
+    action: communicate
+    template_key: lead.cold.b2b
+    contact_strategy: primary
+    require_hooks: false
+    require_email: true
+    require_legal_basis: true
+    cooldown_hours: 24
+    is_active: true
+    order: 20
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
+# --- Prompt profiles (model fake-chat: the fake provider answers the leads.* tags deterministically) ---
+
+- model: django_leads.analysisprofile
+  pk: 100
+  fields:
+    channel: 100
+    key: leads.analysis
+    prompt_text: "You analyse the website of an online shop for a software house that builds e-commerce systems.\nFind concrete business problems visible in the data below, grouped into performance, mobile experience, SEO, checkout, catalogue, integrations and trust signals. For each problem name the challenge and what it costs the business. Detect the shop platform from the technologies. Guess the company type: MANUFACTURER, WHOLESALE or RETAILER. Use only facts from the data — never invent numbers. Answer with JSON only.\n\nCompany: {company_name}\nWebsite: {website}\nLighthouse: {lighthouse_summary}\nurlscan: {urlscan_summary}\nHeuristics: {heuristic_summary}"
+    json_schema: {"type": "object", "properties": {"hooks": {"type": "array", "items": {"type": "object", "properties": {"challenge": {"type": "string"}, "business_cost": {"type": "string"}}, "required": ["challenge", "business_cost"]}}, "platform": {"type": "string"}, "company_type_guess": {"type": "string"}}, "required": ["hooks", "platform"]}
+    model: fake-chat
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.recipientpickprofile
+  pk: 100
+  fields:
+    channel: 100
+    key: leads.pick_recipient
+    prompt_text: "Company: {company_name}\nObserved problems: {hooks}\nWhich of these people most likely owns the decision about the company's e-commerce? Answer with one contact_id from the list and one sentence why. JSON only.\n{contacts_json}"
+    json_schema: {"type": "object", "properties": {"contact_id": {"type": "integer"}, "reason": {"type": "string"}}, "required": ["contact_id", "reason"]}
+    model: fake-chat
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

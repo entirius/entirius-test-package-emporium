@@ -19,7 +19,8 @@ class ThreadPage:
         self.taps = 0
 
     def open(self, company_id: int) -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/companies/{company_id}")
+        # The desktop company card opens on its timeline tab; a phone gets the thread alone either way.
+        self.page.goto(f"{CMS_BASE_URL}/leads/companies/{company_id}?tab=timeline")
         expect(self.page.get_by_test_id("thread-timeline")).to_be_visible(timeout=TIMEOUT_MS)
 
     def expect_outbound(self, subject: str, status: str) -> None:

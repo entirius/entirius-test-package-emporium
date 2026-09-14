@@ -8,7 +8,9 @@
 builds its own state by API: a fresh thread per run (unique recipient on a seeded company) and an Inbox holding
 only its own draft (every other `review_required` draft is skipped first). Steps 1-2 (import, audit) are
 consumed by `@funnel` on a seed — the draft of step 3 comes from the communicator test endpoint instead, with
-the company's hooks as its render context. The reply mail is dated a minute after the channel clock sent it.
+the company's hooks as its render context. The send policy is opened to the whole day for each test (restored
+after), so drafts are due now: no channel clock in the future, replies land after the sent mail, and nothing
+the tests leave behind is sent later by the beat. The reply comes from the mailed recipient.
 """
 
 from __future__ import annotations
@@ -38,6 +40,12 @@ LEGAL_FOOTER = "Administrator danych: Example Seller sp. z o.o., ul. Testowa 1, 
 MAX_TAPS_TO_ACCEPT = 3
 MESSAGE_ID_HEADER = re.compile(rb"^Message-ID: .*$", re.MULTILINE)
 DATE_HEADER = re.compile(rb"^Date: .*$", re.MULTILINE)
+FROM_HEADER = re.compile(rb"^From: .*$", re.MULTILINE)
+OPEN_POLICY = {
+    "business_days_only": False,
+    "daily_cap": 1000,
+    "windows": [{"start_time": "00:00", "end_time": "23:59"}],
+}
 
 
 @pytest.fixture
@@ -45,6 +53,15 @@ def api() -> ApiClient:
     client = ApiClient(base_url=API_BASE_URL)
     client.set_auth_token(obtain_jwt_token(API_BASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD))
     return client
+
+
+@pytest.fixture(autouse=True)
+def open_send_policy(api: ApiClient):
+    policy = _ok(api.get(api.url(f"{COMMUNICATOR}policy/")))
+    original = {key: policy[key] for key in ("business_days_only", "daily_cap", "spread", "windows")}
+    _ok(api.put(api.url(f"{COMMUNICATOR}policy/"), json={**original, **OPEN_POLICY}))
+    yield
+    _ok(api.put(api.url(f"{COMMUNICATOR}policy/"), json=original))
 
 
 def _ok(response, status: int = 200) -> dict:
@@ -88,12 +105,14 @@ def _communicate(api: ApiClient, company: dict, *, requires_review: bool) -> dic
 
 
 def _send(api: ApiClient, message: dict) -> dict:
-    """Moves the channel clock to the message's slot (else the policy's next slot), clears that day's send counter
-    (the phone and desktop runs share the daily cap) and runs the beat; returns the sent message."""
+    """Moves the channel clock to the message's slot (else the policy's next slot — now, under the open policy)
+    for one beat run, then clears it; returns the sent message."""
     slot = message.get("scheduled_at") or _ok(api.get(api.url(f"{COMMUNICATOR}policy/")))["next_slot"]
-    _ok(clock.reset_send_counters(api, CHANNEL, [datetime.fromisoformat(slot).date()]))
     _ok(clock.set_channel_clock(api, CHANNEL, slot))
-    _ok(clock.run_beat_send(api, CHANNEL))
+    try:
+        _ok(clock.run_beat_send(api, CHANNEL))
+    finally:
+        _ok(clock.clear_channel_clock(api, CHANNEL))
     sent = _ok(api.get(api.url(f"{COMMUNICATOR}messages/?status=sent&page_size=100")))["results"]
     found = [m for m in sent if m["id"] == message["id"]]
     assert found, f"message {message['id']} was not sent"
@@ -104,6 +123,7 @@ def _reply(api: ApiClient, sent: dict, fixture: str) -> None:
     eml = mail.render_fixture(MAIL_FIXTURES / fixture, sent["message_id"])
     written = format_datetime(datetime.fromisoformat(sent["sent_at"]) + timedelta(minutes=1))
     eml = DATE_HEADER.sub(lambda _: f"Date: {written}".encode(), eml, count=1)
+    eml = FROM_HEADER.sub(lambda _: f"From: Anna <{sent['thread']['recipient_email']}>".encode(), eml, count=1)
     eml = MESSAGE_ID_HEADER.sub(lambda _: f"Message-ID: <e2e-{time.time_ns()}@inbound.test>".encode(), eml, count=1)
     mail.append_raw(eml)
     _ok(clock.run_imap_poll(api, CHANNEL))

@@ -14,7 +14,7 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
     Given the channel is the primary channel
     And I am authenticated as an admin user
 
-  Scenario: L-08 a company without any contact email is skipped and the rule does not loop
+  Scenario: L-08 a company without any contact email is skipped, never drafted, and a skip starts no cooldown
     Given the leads company "no-email-shop.test" exists as "company_id"
     When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/companies/{company_id}/transition/" with body
       """
@@ -30,7 +30,8 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
       """
     Then the response status should be 200
     And the company "company_id" has an activity "skipped" containing "skipped: no email"
-    And the company "company_id" has an activity "rule" containing "rule cooldown"
+    And the company "company_id" has a rule run "skipped"
+    And the review queue holds no draft about the company "company_id"
 
   Scenario: L-09 a do_not_contact company is blocked before communicator
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-7.test"

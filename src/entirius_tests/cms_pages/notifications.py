@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Locator, Page, expect
 
 TIMEOUT_MS = 15000
 POLL_MS = 35000  # the bar polls every 30 s
@@ -20,6 +20,22 @@ class NotificationBar:
     def expect_unread(self) -> None:
         expect(self.page.get_by_test_id("notif-count")).to_be_visible(timeout=POLL_MS)
 
+    def unread(self) -> int:
+        """The badge number; 0 when the badge is hidden."""
+        badge = self.page.get_by_test_id("notif-count")
+        return int(badge.inner_text()) if badge.is_visible() else 0
+
+    def expect_unread_count(self, count: int) -> None:
+        badge = self.page.get_by_test_id("notif-count")
+        if count:
+            expect(badge).to_have_text(str(count), timeout=TIMEOUT_MS)
+        else:
+            expect(badge).to_be_hidden(timeout=TIMEOUT_MS)
+
+    def row(self, title: str, severity: str = "") -> Locator:
+        rows = self.page.locator(f'[data-testid="notif-row"]{f".notif-row--{severity}" if severity else ""}')
+        return rows.filter(has_text=title).first
+
     def open(self) -> None:
         self.taps += 1
         self.page.get_by_test_id("notif-bell").click()
@@ -27,5 +43,5 @@ class NotificationBar:
 
     def open_row(self, title: str) -> None:
         self.taps += 1
-        self.page.get_by_test_id("notif-row").filter(has_text=title).first.click()
+        self.row(title).click()
         expect(self.page.get_by_test_id("leads-thread")).to_be_visible(timeout=TIMEOUT_MS)

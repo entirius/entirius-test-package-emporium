@@ -194,11 +194,16 @@ def _steps_3_to_7(page: Page, api: ApiClient, company: dict) -> None:
     _reply(api, sent, "reply_plain.eml")  # step 6
     page.reload()
     thread.expect_reply("can we talk on Thursday")
-    bar = NotificationBar(page)  # step 7
+    InboxPage(page).open()  # step 7 starts away from the company thread: the tap itself must jump there
+    bar = NotificationBar(page)
     bar.expect_unread()
+    before = bar.unread()
     bar.open()
     bar.open_row(f"Reply from {company['name']}")
+    expect(page).to_have_url(re.compile(rf"/leads/companies/{company['id']}(\?|$)"))
+    expect(page.get_by_test_id("thread-company")).to_have_text(company["name"], timeout=15000)
     thread.expect_reply("can we talk on Thursday")
+    bar.expect_unread_count(before - 1)
 
 
 def test_funnel_steps_3_to_7(admin_page: Page, api: ApiClient):
@@ -327,8 +332,7 @@ def test_N01_high_notification_in_bar(admin_page: Page, api: ApiClient):
     bar = NotificationBar(admin_page)
     bar.expect_unread()
     bar.open()
-    expect(
-        admin_page.get_by_test_id("notif-row").filter(has_text=f"Reply from {company['name']}").first
-    ).to_be_visible()
+    # The CMS names the company in the communicator's medium "Reply from <address>" row too — N-01 is the high one.
+    expect(bar.row(f"Reply from {company['name']}", severity="high")).to_be_visible()
     bar.open_row(f"Reply from {company['name']}")
     expect(admin_page.get_by_test_id("thread-company")).to_have_text(company["name"])

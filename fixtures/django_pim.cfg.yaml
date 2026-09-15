@@ -576,7 +576,7 @@
 - model: django_pim.feature
   pk: 24
   fields:
-    scope: 3
+    scope: 1
     idx: max_limit_bundle
     magento_idx: max_limit_bundle
     name_t9n:
@@ -598,7 +598,7 @@
 - model: django_pim.feature
   pk: 25
   fields:
-    scope: 3
+    scope: 1
     idx: min_limit_bundle
     magento_idx: min_limit_bundle
     name_t9n:

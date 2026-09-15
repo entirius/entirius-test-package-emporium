@@ -11,13 +11,14 @@ domain through the CMS import screen; step 2 opens the Intel tab of a seeded com
 draft of step 3 comes from the communicator test endpoint, with the company's hooks as its render context
 (`@funnel` consumes the CSV-to-draft path on a seed). The send policy is opened to the whole day for each test
 (restored after), so drafts are due now: no channel clock in the future, replies land after the sent mail, and
-nothing the tests leave behind is sent later by the beat. C07 alone closes the window around now before accepting,
-so its draft waits for a future slot while the Inbox is checked (the fixture restores the policy). The reply comes from the mailed recipient. Tests marked
+nothing the tests leave behind is sent later by the beat. C07 and C-31 close the window around now first, so
+their message waits for a future slot and the beat cannot send it mid-test (the fixture restores the policy). The reply comes from the mailed recipient. Tests marked
 `desktop_only` (board, company card, settings, stages) are skipped under E2E_DEVICE.
 """
 
 from __future__ import annotations
 
+import email
 import re
 import time
 from datetime import datetime, timedelta
@@ -283,16 +284,49 @@ def test_L15_create_customer_action_only_with_accounts(admin_page: Page, api: Ap
 
 @pytest.mark.desktop_only
 def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
-    message = _communicate(api, _company(api, "example-shop-6.test"), requires_review=False)
-    mailbox = mail.count()
+    now = _close_window_around_now(api)  # a closed window: the beat defers the message, it cannot race the asserts
+    draft = _communicate(api, _company(api, "example-shop-6.test"), requires_review=True)
+    _ok(api.post(api.url(f"{COMMUNICATOR}review/{draft['id']}/accept/"), json={}))  # accepting sets the slot
+    before = _waiting_message(api, draft["id"])
+    assert datetime.fromisoformat(before["scheduled_at"]) > now, "the message must wait for a future slot"
+    recipient = before["thread"]["recipient_email"]
+    mailbox = _mails_to(recipient)
     settings = SettingsPage(admin_page)
     settings.open()
-    settings.send_now(message["id"])
-    waiting = [m for m in _waiting_messages(api) if m["id"] == message["id"]]
-    assert waiting and waiting[0]["scheduled_at"], "Send now must leave the message waiting with a scheduled_at"
-    assert mail.count() == mailbox, "Send now must not send — the beat does"
-    _send(api, waiting[0])
-    assert mail.wait_for_count(mailbox + 1) >= mailbox + 1
+    settings.send_now(before["id"])
+    after = _waiting_message(api, before["id"])
+    assert datetime.fromisoformat(after["scheduled_at"]) < datetime.fromisoformat(before["scheduled_at"])
+    unchanged = {key: value for key, value in before.items() if key != "scheduled_at"}
+    assert {key: after[key] for key in unchanged} == unchanged, "Send now must move scheduled_at only"
+    assert _mails_to(recipient) == mailbox, "Send now must not send — the beat does"
+    _open_window(api)  # restore the open policy before the beat run: now the message is sent
+    _send(api, after)
+    assert _wait_for_mails_to(recipient, mailbox + 1) == mailbox + 1
+
+
+def _open_window(api: ApiClient) -> None:
+    policy = _ok(api.get(api.url(f"{COMMUNICATOR}policy/")))
+    body = {key: policy[key] for key in ("business_days_only", "daily_cap", "spread", "windows")} | OPEN_POLICY
+    _ok(api.put(api.url(f"{COMMUNICATOR}policy/"), json=body))
+
+
+def _waiting_message(api: ApiClient, message_id: int) -> dict:
+    found = [m for m in _waiting_messages(api) if m["id"] == message_id]
+    assert found, f"message {message_id} is not waiting (approved or scheduled)"
+    return found[0]
+
+
+def _mails_to(recipient: str) -> int:
+    """Sandbox mails addressed to one recipient (the sandbox keeps the real address in X-Original-To)."""
+    headers = (email.message_from_string(m["mimeMessage"])["X-Original-To"] for m in mail.list_messages())
+    return sum(1 for original in headers if original == recipient)
+
+
+def _wait_for_mails_to(recipient: str, n: int, timeout: float = 20) -> int:
+    deadline = time.monotonic() + timeout
+    while (current := _mails_to(recipient)) < n and time.monotonic() < deadline:
+        time.sleep(0.5)
+    return current
 
 
 def _waiting_messages(api: ApiClient) -> list[dict]:

@@ -71,6 +71,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
 ├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
+│                           # leads funnel (page objects, determinism, zeno commands): docs/e2e-leads-funnel.md
 └── load/                   # Load tests k6 (planned)
 ```
 

@@ -11,7 +11,8 @@ domain through the CMS import screen; step 2 opens the Intel tab of a seeded com
 draft of step 3 comes from the communicator test endpoint, with the company's hooks as its render context
 (`@funnel` consumes the CSV-to-draft path on a seed). The send policy is opened to the whole day for each test
 (restored after), so drafts are due now: no channel clock in the future, replies land after the sent mail, and
-nothing the tests leave behind is sent later by the beat. The reply comes from the mailed recipient. Tests marked
+nothing the tests leave behind is sent later by the beat. C07 alone closes the window around now before accepting,
+so its draft waits for a future slot while the Inbox is checked (the fixture restores the policy). The reply comes from the mailed recipient. Tests marked
 `desktop_only` (board, company card, settings, stages) are skipped under E2E_DEVICE.
 """
 
@@ -60,6 +61,7 @@ OPEN_POLICY = {
     "daily_cap": 1000,
     "windows": [{"start_time": "00:00", "end_time": "23:59"}],
 }
+CLOSED_WINDOW_OFFSET_H = 12
 
 
 @pytest.fixture
@@ -152,14 +154,29 @@ def _accept_in_inbox(page: Page, draft: dict) -> InboxPage:
     return inbox
 
 
+def _close_window_around_now(api: ApiClient) -> datetime:
+    """One window CLOSED_WINDOW_OFFSET_H hours from now in the channel timezone (the open policy's `next_slot` is
+    the channel's now), so an accepted draft is scheduled in the future and the worker cannot send it mid-test."""
+    policy = _ok(api.get(api.url(f"{COMMUNICATOR}policy/")))
+    now = datetime.fromisoformat(policy["next_slot"])
+    hour = (now.hour + CLOSED_WINDOW_OFFSET_H) % 24
+    window = {"start_time": f"{hour:02d}:00", "end_time": f"{hour:02d}:59"}
+    body = {key: policy[key] for key in ("business_days_only", "daily_cap", "spread")} | {"windows": [window]}
+    policy = _ok(api.put(api.url(f"{COMMUNICATOR}policy/"), json=body))
+    assert datetime.fromisoformat(policy["next_slot"]) > now, f"window {window} is open at {now}"
+    return now
+
+
 def test_C07_accept_from_inbox_schedules(admin_page: Page, api: ApiClient):
     _clear_review_queue(api)
     draft = _communicate(api, _company(api, "example-shop-4.test"), requires_review=True)
+    now = _close_window_around_now(api)
     inbox = _accept_in_inbox(admin_page, draft)
     assert inbox.has_no_horizontal_scroll()
     approved = _ok(api.get(api.url(f"{COMMUNICATOR}review/?status=approved&page_size=100")))["results"]
     accepted = [m for m in approved if m["id"] == draft["id"]]
     assert accepted and accepted[0]["scheduled_at"] and accepted[0]["reviewed_by_id"]
+    assert datetime.fromisoformat(accepted[0]["scheduled_at"]) > now, "accepted draft must wait for its slot"
     inbox.expect_empty_with_scheduled()
 
 

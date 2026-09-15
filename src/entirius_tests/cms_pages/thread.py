@@ -31,7 +31,7 @@ class ThreadPage:
         expect(self.page.get_by_test_id("timeline-in").filter(has_text=text).last).to_be_visible(timeout=TIMEOUT_MS)
 
     def confirm_optout(self) -> None:
-        """Confirms the newest unconfirmed opt-out; older threads of the company may show confirmed ones already."""
+        """Confirms the newest unconfirmed opt-out of the newest thread; older threads stay behind "Earlier threads"."""
         self.taps += 1
         buttons = self.page.get_by_test_id("confirm-optout")
         expect(buttons.last).to_be_visible(timeout=TIMEOUT_MS)

@@ -145,7 +145,7 @@
     source: csv
     external_ref: ""
     do_not_contact: false
-    customer_uid: null
+    customer_uid: 91010000-0000-4000-8000-000000000001  # shop customer 9101 (django_accounts) — L-15 card badge
     rotation_count: 0
     last_activity_at: null
     created_at: "2025-01-01T00:00:00Z"

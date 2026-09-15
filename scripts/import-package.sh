@@ -92,15 +92,36 @@ echo "========================================"
 echo "Step 2: PIM Configuration"
 echo "========================================"
 echo ""
-python manage.py config-load-pim-channels "$PACKAGE_DIR/volkanos-config/pim-channels.csv"
-echo "Attempting to load PIM features (may fail — debug on the go)..."
-python manage.py config-load-pim-features "$PACKAGE_DIR/volkanos-config/pim-features.csv" || echo "WARNING: config-load-pim-features failed — features loaded from fixture"
-python manage.py config-load-pim-features-sets "$PACKAGE_DIR/volkanos-config/pim-features-sets.csv"
+PIM_CONFIG="$PACKAGE_DIR/volkanos-config"
+python manage.py config-load-pim-channels "$PIM_CONFIG/pim-channels.csv"
+# The CSVs are the source of truth for features, set memberships and positions:
+# any rejected row fails the seed, --prune drops memberships the CSVs do not list.
+python manage.py config-load-pim-features "$PIM_CONFIG/pim-features.csv"
+python manage.py config-load-pim-features-sets "$PIM_CONFIG/pim-features-sets.csv" --prune
+python manage.py config-load-pim-feature-position-in-features-sets "$PIM_CONFIG/pim-feature-position-in-features-sets.csv" --prune
 
-if [ -f "$PACKAGE_DIR/volkanos-config/pim-feature-position-in-features-sets.csv" ]; then
-    echo "Loading feature positions in feature sets..."
-    python manage.py config-load-pim-feature-position-in-features-sets "$PACKAGE_DIR/volkanos-config/pim-feature-position-in-features-sets.csv" || echo "WARNING: config-load-pim-feature-position-in-features-sets failed — positions may use defaults"
+echo "Checking the PIM config importers reject bad rows (an error below is expected)..."
+out=$(python manage.py config-load-pim-features "$PIM_CONFIG/invalid/pim-features-scope-change.csv" 2>&1 || true)
+if ! grep -q "can not change scope of existing feature series" <<< "$out"; then
+    echo "$out"
+    echo "ERROR: config-load-pim-features did not reject the scope change of an existing feature"
+    exit 1
 fi
+
+echo "Checking the PIM config CSVs match the database..."
+for check in "features-sets pim-features-sets.csv" "feature-position-in-features-sets pim-feature-position-in-features-sets.csv"; do
+    read -r command csv_file <<< "$check"
+    out=$(python manage.py "config-load-pim-$command" "$PIM_CONFIG/$csv_file" --prune --dry-run 2>&1) || {
+        echo "$out"
+        echo "ERROR: dry run of $csv_file failed"
+        exit 1
+    }
+    if ! echo "$out" | grep -q "^Would detach 0 "; then
+        echo "$out"
+        echo "ERROR: a second import of $csv_file would still detach features"
+        exit 1
+    fi
+done
 
 echo ""
 echo "========================================"

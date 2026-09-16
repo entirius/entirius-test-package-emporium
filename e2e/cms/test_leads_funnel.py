@@ -300,8 +300,8 @@ def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
     assert placement["sidebar_open"], f"the sidebar must be open for this check: {placement['box']}"
     assert placement["on_screen"], f"Send now is clipped away at 1280 px: {placement['box']}"
     settings.expect_company(before["id"], company["name"])
-    # The row names the slot the policy will use, not the current minute (FIX-17a items 2-4).
-    settings.expect_goes_out_at(before["id"], datetime.fromisoformat(before["next_slot"]).strftime("%H:%M"))
+    # The window is closed: the row names its hours, not the current minute nor a clock (FIX-17b item 14).
+    settings.expect_waiting_for_window(before["id"], _window_hours(api))
     settings.send_now(before["id"])
     admin_page.reload()  # the state comes from the row's own data, so it survives a reload (FIX-17 item 10)
     settings.expect_queued_asap(before["id"])
@@ -313,6 +313,11 @@ def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
     _open_window(api)  # restore the open policy before the beat run: now the message is sent
     _send(api, after)
     assert _wait_for_mails_to(recipient, mailbox + 1) == mailbox + 1
+
+
+def _window_hours(api: ApiClient) -> str:
+    windows = _ok(api.get(api.url(f"{COMMUNICATOR}policy/")))["windows"]
+    return ", ".join(f"{w['start_time'][:5]}–{w['end_time'][:5]}" for w in windows)
 
 
 def _open_window(api: ApiClient) -> None:

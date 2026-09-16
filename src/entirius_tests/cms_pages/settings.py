@@ -43,10 +43,11 @@ class SettingsPage:
         expect(row.get_by_test_id("scheduled-asap")).to_be_visible(timeout=TIMEOUT_MS)
         expect(row.get_by_test_id("scheduled-send-now")).to_have_count(0)
 
-    def expect_goes_out_at(self, message_id: int, hhmm: str) -> None:
-        """The row names the slot the send policy will actually use — `HH:MM`, with `DD.MM` on another day."""
+    def expect_waiting_for_window(self, message_id: int, hours: str) -> None:
+        """A closed window is a state with its hours (`08:00–17:00`), never a clock that the policy may not keep."""
         state = self.row(message_id).get_by_test_id("scheduled-state")
-        expect(state).to_have_text(re.compile(rf"^goes out at (\d\d\.\d\d )?{re.escape(hhmm)}$"), timeout=TIMEOUT_MS)
+        expected = rf"^waiting for the send window \({re.escape(hours)}\)$"
+        expect(state).to_have_text(re.compile(expected), timeout=TIMEOUT_MS)
 
     def expect_company(self, message_id: int, name: str) -> None:
         expect(self.row(message_id)).to_contain_text(name, timeout=TIMEOUT_MS)

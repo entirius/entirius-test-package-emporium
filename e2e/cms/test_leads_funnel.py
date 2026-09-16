@@ -63,6 +63,7 @@ OPEN_POLICY = {
     "windows": [{"start_time": "00:00", "end_time": "23:59"}],
 }
 CLOSED_WINDOW_OFFSET_H = 12
+LAPTOP_VIEWPORT = {"width": 1280, "height": 800}
 
 
 @pytest.fixture
@@ -110,7 +111,7 @@ def _communicate(api: ApiClient, company: dict, *, requires_review: bool) -> dic
             "legal_footer": LEGAL_FOOTER,
         },
         "context": {
-            "company_name": f"E2E {tag}",
+            "company_name": company["name"],  # the Company column must read as a company, never an internal code
             "body": "E2E funnel draft.",
             "hooks": company["hooks"],
             "platform": company["platform"],
@@ -284,8 +285,10 @@ def test_L15_create_customer_action_only_with_accounts(admin_page: Page, api: Ap
 
 @pytest.mark.desktop_only
 def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
+    admin_page.set_viewport_size(LAPTOP_VIEWPORT)  # the laptop a salesperson works on, sidebar open (FIX-17a item 1)
     now = _close_window_around_now(api)  # a closed window: the beat defers the message, it cannot race the asserts
-    draft = _communicate(api, _company(api, "example-shop-6.test"), requires_review=True)
+    company = _company(api, "example-shop-6.test")
+    draft = _communicate(api, company, requires_review=True)
     _ok(api.post(api.url(f"{COMMUNICATOR}review/{draft['id']}/accept/"), json={}))  # accepting sets the slot
     before = _waiting_message(api, draft["id"])
     assert datetime.fromisoformat(before["scheduled_at"]) > now, "the message must wait for a future slot"
@@ -293,9 +296,15 @@ def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
     mailbox = _mails_to(recipient)
     settings = SettingsPage(admin_page)
     settings.open()
+    placement = settings.send_now_placement(before["id"])
+    assert placement["sidebar_open"], f"the sidebar must be open for this check: {placement['box']}"
+    assert placement["on_screen"], f"Send now is clipped away at 1280 px: {placement['box']}"
+    settings.expect_company(before["id"], company["name"])
+    # The row names the slot the policy will use, not the current minute (FIX-17a items 2-4).
+    settings.expect_goes_out_at(before["id"], datetime.fromisoformat(before["next_slot"]).strftime("%H:%M"))
     settings.send_now(before["id"])
-    admin_page.reload()  # the due marker comes from the row's own slot, so it survives a reload (FIX-17 item 10)
-    settings.expect_due(before["id"])
+    admin_page.reload()  # the state comes from the row's own data, so it survives a reload (FIX-17 item 10)
+    settings.expect_queued_asap(before["id"])
     after = _waiting_message(api, before["id"])
     assert datetime.fromisoformat(after["scheduled_at"]) < datetime.fromisoformat(before["scheduled_at"])
     unchanged = {key: value for key, value in before.items() if key != "scheduled_at"}

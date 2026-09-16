@@ -4,15 +4,19 @@
 
 """Communicator send settings (`/communicator/settings`): waiting messages with Send now.
 
-A sent-now row is marked due from its own data (its slot is now or past), so the marker survives a reload."""
+A mail already sitting at the channel clock cannot be pulled earlier, so its row offers no second Send now;
+the departure column states the slot the send policy will use, never a clock that slides with the minute."""
 
 from __future__ import annotations
+
+import re
 
 from playwright.sync_api import Page, expect
 
 from entirius_tests.cms_e2e import CMS_BASE_URL
 
 TIMEOUT_MS = 15000
+SIDEBAR_OPEN_PX = 200  # the CMS sidebar is 240 px open, 48 px collapsed
 
 
 class SettingsPage:
@@ -24,14 +28,46 @@ class SettingsPage:
         self.page.goto(f"{CMS_BASE_URL}/communicator/settings")
         expect(self.page.get_by_test_id("settings-scheduled")).to_be_visible(timeout=TIMEOUT_MS)
 
+    def row(self, message_id: int):
+        return self.page.locator(f'[data-testid="scheduled-row"][data-message="{message_id}"]')
+
     def send_now(self, message_id: int) -> None:
-        row = self.page.locator(f'[data-testid="scheduled-row"][data-message="{message_id}"]')
+        row = self.row(message_id)
         self.taps += 1
         row.get_by_test_id("scheduled-send-now").click()
-        expect(row.get_by_test_id("scheduled-due")).to_be_visible(timeout=TIMEOUT_MS)
+        expect(row.get_by_test_id("scheduled-asap")).to_be_visible(timeout=TIMEOUT_MS)
 
-    def expect_due(self, message_id: int) -> None:
-        """After a reload the row still shows it is due and offers no second Send now."""
-        row = self.page.locator(f'[data-testid="scheduled-row"][data-message="{message_id}"]')
-        expect(row.get_by_test_id("scheduled-due")).to_be_visible(timeout=TIMEOUT_MS)
+    def expect_queued_asap(self, message_id: int) -> None:
+        """After a reload the row still says the mail is as early as it can be, and offers no second Send now."""
+        row = self.row(message_id)
+        expect(row.get_by_test_id("scheduled-asap")).to_be_visible(timeout=TIMEOUT_MS)
         expect(row.get_by_test_id("scheduled-send-now")).to_have_count(0)
+
+    def expect_goes_out_at(self, message_id: int, hhmm: str) -> None:
+        """The row names the slot the send policy will actually use — `HH:MM`, with `DD.MM` on another day."""
+        state = self.row(message_id).get_by_test_id("scheduled-state")
+        expect(state).to_have_text(re.compile(rf"^goes out at (\d\d\.\d\d )?{re.escape(hhmm)}$"), timeout=TIMEOUT_MS)
+
+    def expect_company(self, message_id: int, name: str) -> None:
+        expect(self.row(message_id)).to_contain_text(name, timeout=TIMEOUT_MS)
+
+    def send_now_placement(self, message_id: int) -> dict:
+        """Where the row's Send now sits, for the caller to assert: the content column clips what runs past its
+        right edge (`overflow: hidden`), so a table wider than it hides the action with no hint at all."""
+        expect(self.row(message_id).get_by_test_id("scheduled-send-now")).to_be_visible(timeout=TIMEOUT_MS)
+        return self.page.evaluate(
+            """({id, open}) => {
+                const button = document.querySelector(
+                    `[data-testid="scheduled-row"][data-message="${id}"] [data-testid="scheduled-send-now"]`
+                );
+                const box = button.getBoundingClientRect();
+                const sidebar = document.querySelector(".app-sidebar-col");
+                const width = sidebar ? sidebar.getBoundingClientRect().width : 0;
+                return {
+                    on_screen: box.left >= 0 && box.right <= window.innerWidth,
+                    sidebar_open: width >= open,
+                    box: {left: box.left, right: box.right, viewport: window.innerWidth, sidebar: width},
+                };
+            }""",
+            {"id": message_id, "open": SIDEBAR_OPEN_PX},
+        )

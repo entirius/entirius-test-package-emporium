@@ -41,7 +41,7 @@ class InboxPage:
     def expect_empty_with_scheduled(self) -> None:
         empty = self.page.get_by_test_id("inbox-empty")
         expect(empty).to_be_visible(timeout=TIMEOUT_MS)
-        expect(empty).to_contain_text("scheduled, next goes out at")
+        expect(empty).to_contain_text("scheduled, goes out at")
 
     def has_no_horizontal_scroll(self) -> bool:
         return self.page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")

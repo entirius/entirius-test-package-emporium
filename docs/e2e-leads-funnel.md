@@ -25,7 +25,7 @@ Page objects:
 | `InboxPage` | Inbox and Review: open a draft, send, scheduled state, horizontal scroll check |
 | `ThreadPage` | company thread: outbound status, reply, opt-out confirm |
 | `NotificationBar` | unread badge, rows by title and severity, open a row |
-| `SettingsPage` | communicator settings: scheduled mails table, Send now |
+| `SettingsPage` | communicator settings: waiting mails table, Send now, its placement at 1280 px, the departure state |
 | `StagesPage` | stage list, delete with inline error |
 
 ## Tests
@@ -35,7 +35,7 @@ Page objects:
 | `test_funnel_steps_1_to_7` | desktop | CSV upload in the CMS lands on the board in `new`; Intel tab shows the desktop score; then steps 3–7 |
 | `test_funnel_steps_3_to_7` | phone, desktop | accept a draft in ≤ 3 taps, sent status in the thread, reply shown, tapping the notification jumps to the company thread and drops the badge by one |
 | `test_C07_accept_from_inbox_schedules` | phone, desktop | an accepted draft is `approved` with a future `scheduled_at`; the Inbox shows the next slot |
-| `test_C31_send_now_moves_scheduled_at` | desktop | Send now in settings moves `scheduled_at` only and sends nothing; the beat sends it |
+| `test_C31_send_now_moves_scheduled_at` | desktop | at 1280 px with the sidebar open Send now is on screen, the row names the company and the slot the policy will use; Send now moves `scheduled_at` only and sends nothing; the beat sends it |
 | `test_C23_optout_confirm_from_thread` | phone, desktop | a suspected opt-out reply is confirmed from the thread |
 | `test_N01_high_notification_in_bar` | phone, desktop | a reply raises a `high` notification that opens the company thread |
 | `test_L15_create_customer_action_only_with_accounts` | desktop | the create-customer action appears in a `won` stage only when accounts is installed |
@@ -62,6 +62,7 @@ The file runs twice on the same seed, so every test builds its own state through
   after `sent_at`, `From` the thread recipient and a fresh `Message-ID`, appends it over IMAP and runs the poll.
 - **Mailbox checks are scoped.** C-31 counts sandbox mails by `X-Original-To` of its own recipient, never the
   whole mailbox.
+- **C-31 sizes its own viewport.** 1280x800 with the sidebar open — the laptop the clipped Send now was found on.
 
 ## One-shot tags
 

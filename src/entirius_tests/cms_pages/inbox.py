@@ -21,7 +21,10 @@ class InboxPage:
     def open(self) -> None:
         """Navigation into the Inbox — not a tap."""
         self.page.goto(f"{CMS_BASE_URL}/leads/inbox")
-        expect(self.page.get_by_test_id("inbox-summary")).to_be_visible(timeout=TIMEOUT_MS)
+        # The summary line only exists while drafts wait; an empty queue shows the empty state instead.
+        expect(self.page.get_by_test_id("inbox-summary").or_(self.page.get_by_test_id("inbox-empty"))).to_be_visible(
+            timeout=TIMEOUT_MS
+        )
 
     def open_draft(self, subject: str) -> None:
         self.taps += 1

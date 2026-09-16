@@ -26,5 +26,10 @@ class StagesPage:
         return self.page.locator(f'[data-testid="stage-row"][data-stage="{key}"]')
 
     def delete(self, key: str) -> None:
+        """Delete asks first — the in-app sheet names the stage and what happens to its companies."""
         self.taps += 1
         self.row(key).get_by_test_id("stage-delete").click()
+        sheet = self.page.get_by_test_id("confirm-sheet")
+        expect(sheet).to_be_visible(timeout=TIMEOUT_MS)
+        self.taps += 1
+        sheet.get_by_test_id("confirm-ok").click()

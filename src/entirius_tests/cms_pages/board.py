@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads stage board (`/leads/board`): one column per stage, company cards."""
+"""Leads stage board (`/leads/board`): one column per stage, company cards named after the company."""
 
 from __future__ import annotations
 
@@ -33,5 +33,5 @@ class BoardPage:
 
     def open_card(self, stage_key: str, domain: str) -> None:
         self.taps += 1
-        self.card(stage_key, domain).get_by_role("link", name=domain).click()
+        self.card(stage_key, domain).get_by_test_id("board-card-name").click()
         expect(self.page.get_by_test_id("company-card")).to_be_visible(timeout=TIMEOUT_MS)

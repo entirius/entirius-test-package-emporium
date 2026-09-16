@@ -294,6 +294,8 @@ def test_C31_send_now_moves_scheduled_at(admin_page: Page, api: ApiClient):
     settings = SettingsPage(admin_page)
     settings.open()
     settings.send_now(before["id"])
+    admin_page.reload()  # the due marker comes from the row's own slot, so it survives a reload (FIX-17 item 10)
+    settings.expect_due(before["id"])
     after = _waiting_message(api, before["id"])
     assert datetime.fromisoformat(after["scheduled_at"]) < datetime.fromisoformat(before["scheduled_at"])
     unchanged = {key: value for key, value in before.items() if key != "scheduled_at"}
@@ -337,15 +339,30 @@ def _waiting_messages(api: ApiClient) -> list[dict]:
 
 @pytest.mark.desktop_only
 def test_L18_stage_delete_refused_inline(admin_page: Page, api: ApiClient, tmp_path: Path):
-    key = f"e2e-hold-{time.time_ns()}"
-    _ok(api.post(api.url(f"{LEADS}stages/"), json={"key": key, "label": "E2E hold", "order": 900}), 201)
+    stage = _ok(
+        api.post(
+            api.url(f"{LEADS}stages/"), json={"key": f"e2e-hold-{time.time_ns()}", "label": "E2E hold", "order": 900}
+        ),
+        201,
+    )
     company = _imported_company(api, tmp_path)
-    _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/transition/"), json={"stage_key": key}))
-    stages = StagesPage(admin_page)
-    stages.open()
-    stages.delete(key)
-    expect(stages.row(key).get_by_test_id("stage-error")).to_be_visible(timeout=15000)
-    assert any(stage["key"] == key for stage in _ok(api.get(api.url(f"{LEADS}stages/")))["results"])
+    try:
+        _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/transition/"), json={"stage_key": stage["key"]}))
+        stages = StagesPage(admin_page)
+        stages.open()
+        stages.delete(stage["key"])
+        expect(stages.row(stage["key"]).get_by_test_id("stage-error")).to_be_visible(timeout=15000)
+        assert any(row["key"] == stage["key"] for row in _ok(api.get(api.url(f"{LEADS}stages/")))["results"])
+    finally:
+        _drop_stage(api, stage, company)
+
+
+def _drop_stage(api: ApiClient, stage: dict, company: dict) -> None:
+    """The hold stage exists for this test only — left behind it is test noise on every later Stages and Board
+    screen (and in the acceptance run). Its company goes back to the first stage, then the stage goes."""
+    first = _ok(api.get(api.url(f"{LEADS}stages/")))["results"][0]
+    _ok(api.post(api.url(f"{LEADS}companies/{company['id']}/transition/"), json={"stage_key": first["key"]}))
+    assert api.delete(api.url(f"{LEADS}stages/{stage['id']}/")).status_code == 204
 
 
 def test_C23_optout_confirm_from_thread(admin_page: Page, api: ApiClient):

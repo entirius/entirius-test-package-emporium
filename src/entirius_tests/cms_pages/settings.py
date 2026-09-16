@@ -2,7 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Communicator send settings (`/communicator/settings`): waiting messages with Send now."""
+"""Communicator send settings (`/communicator/settings`): waiting messages with Send now.
+
+A sent-now row is marked due from its own data (its slot is now or past), so the marker survives a reload."""
 
 from __future__ import annotations
 
@@ -26,4 +28,10 @@ class SettingsPage:
         row = self.page.locator(f'[data-testid="scheduled-row"][data-message="{message_id}"]')
         self.taps += 1
         row.get_by_test_id("scheduled-send-now").click()
-        expect(row.get_by_test_id("scheduled-next-beat")).to_have_text("next beat", timeout=TIMEOUT_MS)
+        expect(row.get_by_test_id("scheduled-due")).to_be_visible(timeout=TIMEOUT_MS)
+
+    def expect_due(self, message_id: int) -> None:
+        """After a reload the row still shows it is due and offers no second Send now."""
+        row = self.page.locator(f'[data-testid="scheduled-row"][data-message="{message_id}"]')
+        expect(row.get_by_test_id("scheduled-due")).to_be_visible(timeout=TIMEOUT_MS)
+        expect(row.get_by_test_id("scheduled-send-now")).to_have_count(0)

@@ -1,6 +1,7 @@
 # =========================================================================
-# django_communicator seed — channel default-europe in sandbox mode, four templates (two AI prompts,
-# two static), one version each, and a suppressed email + domain (pks 1–99, allocation table in plan 09).
+# django_communicator seed — channel default-europe in sandbox mode, seven templates (five AI prompts — three of
+# them the `lead.cold` audience variants — and two static), one version each, and a suppressed email + domain
+# (pks 1–99, allocation table in plan 09).
 #
 # AI prompt bodies: system prompt, a line `=== USER ===`, user prompt — sanitised from the prototype
 # prompts (roadmap extract), [SENDER] kept as a placeholder text. Model `fake-chat`: zeno's toolbox
@@ -102,6 +103,65 @@
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
+# `lead.cold` — one rule key, the lead type picks the variant (audience cascade): RETAILER gets the shop prompt,
+# WHOLESALE the B2B one, any other type (and UNKNOWN) the blank-audience default. The rules still use the old keys.
+- model: django_communicator.messagetemplate
+  pk: 5
+  fields:
+    channel: 1
+    key: lead.cold
+    audience: "RETAILER"
+    kind: ai_prompt
+    language: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 5
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplate
+  pk: 6
+  fields:
+    channel: 1
+    key: lead.cold
+    audience: "WHOLESALE"
+    kind: ai_prompt
+    language: 1
+    subject: "Cold — B2B"
+    body: "Piszesz w imieniu [SENDER] do firmy B2B. Ton rzeczowy, bez sprzedażowego języka. Max 600 znaków. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nObserwacje: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 6
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplate
+  pk: 7
+  fields:
+    channel: 1
+    key: lead.cold
+    audience: ""
+    kind: ai_prompt
+    language: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    requires_legal_footer: true
+    auto_approve: false
+    is_active: true
+    current_version: 7
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
 # --- Template versions ---
 - model: django_communicator.messagetemplateversion
   pk: 1
@@ -148,6 +208,42 @@
     body: "Dzień dobry {first_name},\n\ndziękuję za odpowiedź — wrócę z konkretami."
     json_schema: null
     model: ""
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 5
+  fields:
+    template: 5
+    number: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 6
+  fields:
+    template: 6
+    number: 1
+    subject: "Cold — B2B"
+    body: "Piszesz w imieniu [SENDER] do firmy B2B. Ton rzeczowy, bez sprzedażowego języka. Max 600 znaków. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nObserwacje: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
+    created_by: null
+    created_at: "2025-01-01T00:00:00Z"
+
+- model: django_communicator.messagetemplateversion
+  pk: 7
+  fields:
+    template: 7
+    number: 1
+    subject: "Cold — shop"
+    body: "Piszesz w imieniu [SENDER] - właściciela software house'u z doświadczeniem w e-commerce.\nTon: szczery, bezpośredni, bez udawania, że to nie jest cold mail. Max 600 znaków, 2-3 akapity.\nZacznij od \"Dzień dobry,\". Liczby tylko z danych audytu, nigdy wymyślone. Tylko JSON.\n=== USER ===\nFirma: {company_name}\nStrona: {website}\nOdbiorca: {first_name} {last_name}\nDane z audytu: {hooks}\nNapisz pierwszą wiadomość do tej firmy."
+    json_schema: {"type": "object", "properties": {"subject": {"type": "string"}, "body_paragraphs": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 3}}, "required": ["subject", "body_paragraphs"]}
+    model: "fake-chat"
     created_by: null
     created_at: "2025-01-01T00:00:00Z"
 

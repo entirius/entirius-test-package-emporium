@@ -19,7 +19,7 @@
     name: Example Stale
     domain: example-stale.test
     website: https://www.example-stale.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""
@@ -42,7 +42,7 @@
     name: Example Stale Won
     domain: example-stale-won.test
     website: https://www.example-stale-won.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""
@@ -65,7 +65,7 @@
     name: Example GDPR
     domain: example-gdpr.test
     website: https://www.example-gdpr.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""

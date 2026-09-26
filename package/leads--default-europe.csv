@@ -1,4 +1,4 @@
-company_name,domain,website,company_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone
+company_name,domain,website,lead_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone
 Lesna Shop,lesna-shop.pl,,RETAILER,garden,Jan,Nowak,jan@lesna-shop.pl,Owner,pl,legitimate_interest,
 Lesna Shop,www.lesna-shop.pl/pl,,,,Ola,Sowa,ola@lesna-shop.pl,Marketing,pl,legitimate_interest,
 Ogrod,ogrod.pl,,RETAILER,garden,Ewa,Lis,EWA@ogrod.pl,Buyer,pl,legitimate_interest,

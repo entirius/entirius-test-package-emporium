@@ -126,6 +126,42 @@
     modified_at: "2025-01-01T00:00:00Z"
 
 
+# --- Lead types (configuration of the channel; UNKNOWN is built in, never a row) ---
+
+- model: django_leads.leadtype
+  pk: 100
+  fields:
+    channel: 100
+    code: MANUFACTURER
+    label: Manufacturer
+    order: 0
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.leadtype
+  pk: 101
+  fields:
+    channel: 100
+    code: WHOLESALE
+    label: Wholesale
+    order: 10
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_leads.leadtype
+  pk: 102
+  fields:
+    channel: 100
+    code: RETAILER
+    label: Retailer
+    order: 20
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+
 # --- Companies (one per source / type; example-shop-7 is do_not_contact) ---
 
 - model: django_leads.company
@@ -135,7 +171,7 @@
     name: Example Shop 2
     domain: example-shop-2.test
     website: https://www.example-shop-2.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""
@@ -158,7 +194,7 @@
     name: Example Shop 3
     domain: example-shop-3.test
     website: https://www.example-shop-3.test/
-    company_type: WHOLESALE
+    lead_type: WHOLESALE
     industry: garden
     description: ""
     platform: ""
@@ -181,7 +217,7 @@
     name: Example Shop 4
     domain: example-shop-4.test
     website: https://www.example-shop-4.test/
-    company_type: MANUFACTURER
+    lead_type: MANUFACTURER
     industry: garden
     description: ""
     platform: ""
@@ -204,7 +240,7 @@
     name: Example Shop 5
     domain: example-shop-5.test
     website: https://www.example-shop-5.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""
@@ -227,7 +263,7 @@
     name: Example Shop 6
     domain: example-shop-6.test
     website: https://www.example-shop-6.test/
-    company_type: UNKNOWN
+    lead_type: UNKNOWN
     industry: garden
     description: ""
     platform: ""
@@ -250,7 +286,7 @@
     name: Example Shop 7
     domain: example-shop-7.test
     website: https://www.example-shop-7.test/
-    company_type: RETAILER
+    lead_type: RETAILER
     industry: garden
     description: ""
     platform: ""
@@ -525,8 +561,8 @@
   fields:
     channel: 100
     key: leads.analysis
-    prompt_text: "You analyse the website of an online shop for a software house that builds e-commerce systems.\nFind concrete business problems visible in the data below, grouped into performance, mobile experience, SEO, checkout, catalogue, integrations and trust signals. For each problem name the challenge and what it costs the business. Detect the shop platform from the technologies. Guess the company type: MANUFACTURER, WHOLESALE or RETAILER. Use only facts from the data — never invent numbers. Answer with JSON only.\n\nCompany: {company_name}\nWebsite: {website}\nLighthouse: {lighthouse_summary}\nurlscan: {urlscan_summary}\nHeuristics: {heuristic_summary}"
-    json_schema: {"type": "object", "properties": {"hooks": {"type": "array", "items": {"type": "object", "properties": {"challenge": {"type": "string"}, "business_cost": {"type": "string"}}, "required": ["challenge", "business_cost"]}}, "platform": {"type": "string"}, "company_type_guess": {"type": "string"}}, "required": ["hooks", "platform"]}
+    prompt_text: "You analyse the website of an online shop for a software house that builds e-commerce systems.\nFind concrete business problems visible in the data below, grouped into performance, mobile experience, SEO, checkout, catalogue, integrations and trust signals. For each problem name the challenge and what it costs the business. Detect the shop platform from the technologies. Guess the lead type — one of these codes: {lead_types}. Use only facts from the data — never invent numbers. Answer with JSON only.\n\nCompany: {company_name}\nWebsite: {website}\nLighthouse: {lighthouse_summary}\nurlscan: {urlscan_summary}\nHeuristics: {heuristic_summary}"
+    json_schema: {"type": "object", "properties": {"hooks": {"type": "array", "items": {"type": "object", "properties": {"challenge": {"type": "string"}, "business_cost": {"type": "string"}}, "required": ["challenge", "business_cost"]}}, "platform": {"type": "string"}, "lead_type_guess": {"type": "string"}}, "required": ["hooks", "platform"]}
     model: fake-chat
     is_active: true
     created_at: "2025-01-01T00:00:00Z"

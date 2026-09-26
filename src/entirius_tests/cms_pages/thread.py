@@ -21,7 +21,8 @@ class ThreadPage:
     def open(self, company_id: int) -> None:
         # The desktop company card opens on its timeline tab; a phone gets the thread alone either way.
         self.page.goto(f"{CMS_BASE_URL}/leads/companies/{company_id}?tab=timeline")
-        expect(self.page.get_by_test_id("thread-timeline")).to_be_visible(timeout=TIMEOUT_MS)
+        # `.first` = the newest thread; an older thread with a reply expands "Earlier threads" with its own timeline.
+        expect(self.page.get_by_test_id("thread-timeline").first).to_be_visible(timeout=TIMEOUT_MS)
 
     def expect_outbound(self, subject: str, status: str) -> None:
         bubble = self.page.get_by_test_id("timeline-out").filter(has_text=subject).last

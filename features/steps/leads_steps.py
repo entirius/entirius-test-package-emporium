@@ -357,7 +357,7 @@ def step_gdpr_export_holds_no(context, email):
 
 @when('I import the leads contact "{email}" of the company "{domain}"')
 def step_import_contact(context, email, domain):
-    header = "company_name,domain,website,company_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone"
+    header = "company_name,domain,website,lead_type,industry,first_name,last_name,email,job_title,language,legal_basis,phone"
     content = f"{header}\nReimport,{domain},,,,Re,Import,{email},,,consent,\n"
     url = _v2_url(context, "leads/admin/{channel_idx}/test/import-now/")
     context.response = context.api.post(url, files={"file": ("reimport.csv", content.encode(), "text/csv")})

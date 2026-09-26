@@ -336,7 +336,7 @@
   pk: 1
   fields:
     sequence: 1
-    body: "TEST follow-up 1/6: wracam do mojej wiadomości sprzed kilku dni — czy temat jest dla Państwa aktualny?"
+    body: "TEST follow-up: wracam do mojej wiadomości sprzed kilku dni — czy temat jest dla Państwa aktualny?"
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
@@ -345,7 +345,7 @@
   pk: 2
   fields:
     sequence: 1
-    body: "TEST follow-up 2/6: nie chcę być natarczywy, dlatego zapytam krótko: czy mogę przesłać dwie konkretne propozycje?"
+    body: "TEST follow-up: nie chcę być natarczywy, dlatego zapytam krótko: czy mogę przesłać dwie konkretne propozycje?"
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
@@ -354,7 +354,7 @@
   pk: 3
   fields:
     sequence: 1
-    body: "TEST follow-up 3/6: jeśli to nie jest dobry moment, proszę dać znać — wrócę w innym terminie."
+    body: "TEST follow-up: jeśli to nie jest dobry moment, proszę dać znać — wrócę w innym terminie."
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
@@ -363,7 +363,7 @@
   pk: 4
   fields:
     sequence: 1
-    body: "TEST follow-up 4/6: przygotowałem krótkie podsumowanie obserwacji; wystarczy odpowiedzieć „tak”, a je wyślę."
+    body: "TEST follow-up: przygotowałem krótkie podsumowanie obserwacji; wystarczy odpowiedzieć „tak”, a je wyślę."
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
@@ -372,7 +372,7 @@
   pk: 5
   fields:
     sequence: 1
-    body: "TEST follow-up 5/6: czy jest ktoś inny w firmie, do kogo powinienem skierować tę wiadomość?"
+    body: "TEST follow-up: czy jest ktoś inny w firmie, do kogo powinienem skierować tę wiadomość?"
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
@@ -381,7 +381,7 @@
   pk: 6
   fields:
     sequence: 1
-    body: "TEST follow-up 6/6: to moja ostatnia wiadomość w tej sprawie — dziękuję za poświęcony czas."
+    body: "TEST follow-up: to moja ostatnia wiadomość w tej sprawie — dziękuję za poświęcony czas."
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"

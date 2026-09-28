@@ -16,7 +16,7 @@ from playwright.sync_api import Page, expect
 from entirius_tests.cms_e2e import CMS_BASE_URL
 
 TIMEOUT_MS = 15000
-SIDEBAR_OPEN_PX = 200  # the CMS sidebar is 240 px open, 48 px collapsed
+SIDEBAR_OPEN_PX = 200  # the CMS sidebar is 300 px open, 64 px collapsed
 
 
 class SettingsPage:
@@ -62,7 +62,7 @@ class SettingsPage:
                     `[data-testid="scheduled-row"][data-message="${id}"] [data-testid="scheduled-send-now"]`
                 );
                 const box = button.getBoundingClientRect();
-                const sidebar = document.querySelector(".app-sidebar-col");
+                const sidebar = document.querySelector('[data-testid="app-sidebar"]');
                 const width = sidebar ? sidebar.getBoundingClientRect().width : 0;
                 return {
                     on_screen: box.left >= 0 && box.right <= window.innerWidth,

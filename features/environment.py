@@ -110,6 +110,13 @@ def before_scenario(context, scenario):
     context.api.clear_auth_token()
 
 
+def after_scenario(context, scenario):
+    """A failed `@toolbox-down` step must not leave the toolbox outage switch on for the rest of the run."""
+    if "toolbox-down" in scenario.effective_tags:
+        url = context.api.url("api/communicator/v2/admin/default-europe/test/toolbox-outage/")
+        context.api.post(url, json={"down": False})
+
+
 def after_all(context):
     """Post-run warnings for products missing price or stock data."""
     warnings = []

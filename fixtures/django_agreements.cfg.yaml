@@ -1,0 +1,108 @@
+# =========================================================================
+# django_agreements seed — legal clause sets for channel default-europe.
+# channel references django_agreements.channel by natural key (idx), created by
+# `sync_agreement_channels` in seed.sh Step 6 (this file loads right after it).
+# language references django_regional.language pk (pl=1, en=2) — Language has
+# no natural key; seed.sh asserts the loaded languages right after loading.
+# Every text is a TEST placeholder — the lawyer's texts are pasted in the admin
+# as a new version and published before the staging canary.
+# L-17 (features/leads/leads_gdpr.feature): the GDPR subject erase@example-gdpr.test (leads contact 152 in
+# django_leads_retention.cfg.yaml) holds one consent record, one objection event and one order agreement
+# snapshot (pk 152 each; agreement version 3 = marketing-email from the module's default_agreements) — the
+# export must list all three, the erasure must pseudonymise all three. One-shot: re-run after `make seed`.
+# =========================================================================
+
+- model: django_agreements.clauseset
+  pk: 1
+  fields:
+    channel: ["default-europe"]
+    legal_basis: consent
+    language: 1
+    version: 1
+    info_clause: "TEST — Information clause (art. 13 GDPR) placeholder for consent, PL. We process {recipient_email} because you agreed to receive these messages."
+    optout_clause: "TEST — Opt-out clause placeholder for consent, PL. Withdraw your consent for {recipient_email} at any time by replying STOP."
+    retention_clause: "TEST — Retention clause placeholder for consent, PL. We keep your data until you withdraw consent."
+    is_current: true
+    published_at: "2026-01-01T00:00:00Z"
+    created_at: "2026-01-01T00:00:00Z"
+    modified_at: "2026-01-01T00:00:00Z"
+
+- model: django_agreements.clauseset
+  pk: 2
+  fields:
+    channel: ["default-europe"]
+    legal_basis: consent
+    language: 2
+    version: 1
+    info_clause: "TEST — Information clause (art. 13 GDPR) placeholder for consent, EN. We process {recipient_email} because you agreed to receive these messages."
+    optout_clause: "TEST — Opt-out clause placeholder for consent, EN. Withdraw your consent for {recipient_email} at any time by replying STOP."
+    retention_clause: "TEST — Retention clause placeholder for consent, EN. We keep your data until you withdraw consent."
+    is_current: true
+    published_at: "2026-01-01T00:00:00Z"
+    created_at: "2026-01-01T00:00:00Z"
+    modified_at: "2026-01-01T00:00:00Z"
+
+- model: django_agreements.clauseset
+  pk: 3
+  fields:
+    channel: ["default-europe"]
+    legal_basis: legitimate_interest
+    language: 1
+    version: 1
+    info_clause: "TEST — Information clause (art. 14 GDPR) placeholder for legitimate interest, PL. Your address {recipient_email} was obtained from a public source."
+    optout_clause: "TEST — Opt-out clause placeholder for legitimate interest, PL. Object to processing of {recipient_email} at any time by replying STOP."
+    retention_clause: "TEST — Retention clause placeholder for legitimate interest, PL. We keep your data for at most 12 months or until you object."
+    is_current: true
+    published_at: "2026-01-01T00:00:00Z"
+    created_at: "2026-01-01T00:00:00Z"
+    modified_at: "2026-01-01T00:00:00Z"
+
+- model: django_agreements.clauseset
+  pk: 4
+  fields:
+    channel: ["default-europe"]
+    legal_basis: legitimate_interest
+    language: 2
+    version: 1
+    info_clause: "TEST — Information clause (art. 14 GDPR) placeholder for legitimate interest, EN. Your address {recipient_email} was obtained from a public source."
+    optout_clause: "TEST — Opt-out clause placeholder for legitimate interest, EN. Object to processing of {recipient_email} at any time by replying STOP."
+    retention_clause: "TEST — Retention clause placeholder for legitimate interest, EN. We keep your data for at most 12 months or until you object."
+    is_current: true
+    published_at: "2026-01-01T00:00:00Z"
+    created_at: "2026-01-01T00:00:00Z"
+    modified_at: "2026-01-01T00:00:00Z"
+
+- model: django_agreements.consentrecord
+  pk: 152
+  fields:
+    email: "erase@example-gdpr.test"
+    agreement_version: 3
+    granted: true
+    source: import
+    ip_address: "192.0.2.152"
+    user_agent: "Mozilla/5.0 (L-17 fixture)"
+    channel_idx: default-europe
+    created_at: "2026-01-02T00:00:00Z"
+
+- model: django_agreements.objectionevent
+  pk: 152
+  fields:
+    channel: ["default-europe"]
+    email: "erase@example-gdpr.test"
+    source: manual
+    reason: "L-17 fixture objection"
+    clause_set: 3
+    created_at: "2026-01-03T00:00:00Z"
+
+- model: django_agreements.orderagreementsnapshot
+  pk: 152
+  fields:
+    order_id: "00000000-0000-4000-8000-000000000152"
+    email: "erase@example-gdpr.test"
+    agreement_version: 3
+    body_snapshot: "TEST — marketing email terms accepted with the L-17 fixture order."
+    language: pl
+    granted: true
+    ip_address: "192.0.2.152"
+    user_agent: "Mozilla/5.0 (L-17 fixture)"
+    created_at: "2026-01-04T00:00:00Z"

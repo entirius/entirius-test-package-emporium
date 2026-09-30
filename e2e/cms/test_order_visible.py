@@ -71,5 +71,5 @@ def test_operator_sees_placed_order(page: Page):
     page.get_by_role("textbox", name="Password").fill(ADMIN_PASSWORD)
     page.get_by_role("button", name="Log in").click()
 
-    page.get_by_role("button", name="Orders").click()
+    page.get_by_role("main").get_by_role("button", name="Orders").click()
     expect(page.get_by_role("gridcell", name=pretty_id)).to_be_visible()

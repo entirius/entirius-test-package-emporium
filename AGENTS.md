@@ -12,8 +12,9 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make install` | sync dependencies (uv, incl. extras) |
 | `make check` | lint + format-check (ruff) |
 | `make fix` | auto-fix lint + format |
-| `make test` | behave dry-run — steps bind to scenarios, no API needed |
+| `make test` | behave dry-run — steps bind to scenarios, no API needed — plus the pytest unit tests in `tests/` |
 | `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`) |
+| `make e2e [E2E_ARGS=…] [E2E_DEVICE=…]` | Playwright e2e; `E2E_ARGS` narrows pytest targets (default `e2e/`), `E2E_DEVICE` emulates a Playwright device (`e2e/conftest.py`) |
 
 ## Conventions
 
@@ -35,7 +36,8 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
   `{channel_idx}` and `{saved.alias}` placeholders automatically — the alias name itself carries
   the `saved.` prefix (`I save the response field "id" as "saved.proposal_id"`, then
   `{saved.proposal_id}` in a later path), it is not special templating syntax.
-- **One-shot scenarios** (`@lookup-oneshot` here; also suppliers audit-trail, atlas push/merge):
+- **One-shot scenarios** (`@lookup-oneshot`, `@leads-oneshot` — incl. the `@funnel` feature —,
+  `@communicator-oneshot` and `@toolbox-oneshot` (`@toolbox-down`, simulated toolbox outage) here; also suppliers audit-trail, atlas push/merge):
   mutate a specific pre-seeded row once per database — re-running them against an already-consumed
   DB fails on purpose. A BDD re-run needs a fresh `make seed` (zeno `AGENTS.md` §Green baselines).
 
@@ -46,7 +48,9 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   ├── api_client.py       # HTTP client (GET/POST/PATCH/DELETE + JWT auth)
 │   ├── auth.py             # JWT token acquisition
 │   ├── csv_loader.py       # Parse CSV from package/
-│   └── assertions.py       # Assert helpers + extract_items()
+│   ├── assertions.py       # Assert helpers + extract_items()
+│   ├── mail.py             # GreenMail sandbox: purge/count/read (REST), send (SMTP), inject (IMAP APPEND)
+│   └── clock.py            # communicator dev-only test endpoints: channel clock, send-due, poll-now
 ├── features/               # Behave BDD features
 │   ├── environment.py      # before_all: API client + channels; before_scenario: reset + clear auth
 │   ├── steps/              # Shared step definitions (HTTP verbs, assertions, admin CRUD, domains)
@@ -54,14 +58,20 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   └── contentdb/  pricemanager/  qms/  faq/  deliverypoints/  agreements/  contact_forms/
 ├── package/                # Emporium demo dataset (CSV; see package/README.md)
 ├── fixtures/               # Django YAML fixtures (loaddata)
+│   ├── mail/               # hand-written .eml: replies, autoresponder, opt-outs, DSN hard/soft, duplicate
+│   ├── siteintel/          # anonymised PSI/URLScan recordings (psi/, urlscan/) + synthetic sites/{good,slow,broken}
 │   └── lookup/             # Calibration set (dev-plan 09): pim_products.json, atlas_products.json,
 │                           # labelled_pairs.csv, img/*.png — see scripts/generate-lookup-fixtures.py
 ├── images/                 # Product images per SKU
 ├── devtools/               # Bulk data multiplier (stress tests)
 ├── scripts/                # Seed (host) + import (container) + behave.ini generator
+│   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only);
+│   │                                      # --verify fixtures/siteintel = leak gate only (.gitleaks.toml words, hosts, emails, IPs)
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
-├── e2e/                    # Playwright E2E (planned)
+├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
+├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
+│                           # leads funnel (page objects, determinism, zeno commands): docs/e2e-leads-funnel.md
 └── load/                   # Load tests k6 (planned)
 ```
 
@@ -84,6 +94,23 @@ Key settings table: see `README.md`.
 - Assertions: `the response field "{field}" should equal/be true/be null/be a dict…`,
   `the results should contain an item with "{key}" equal to "{value}"`,
   `I save the response field "{field}" as "{alias}"`.
+- Mail sandbox (`features/steps/mail.py`): `the sandbox mailbox is empty` (purges), `the sandbox mailbox
+  contains {n} messages`, `I inject the fixture mail "{name}" into INBOX [replying to "{saved.alias}"]`,
+  `I send the fixture mail "{name}" over SMTP to the sandbox`, `the last sandbox message has header "{h}"
+  equal to "{v}"` (resolves `{saved.alias}`), `the last sandbox message subject starts with "{prefix}"`,
+  `the value "{value}" is saved as "{alias}"`. Fixture mails use a `{message_id}` placeholder (single braces)
+  in `In-Reply-To`/`References`/`Original-Message-ID`; `duplicate.eml` shares `Message-ID` with `reply_plain.eml`.
+- Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
+  `the beat send task has run`, `the IMAP poll task has run`.
+- `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
+  Scenarios needing an empty mailbox purge in their own `Background` — never rely on order.
+
+## Tags
+
+- `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
+  no API; needs GreenMail (zeno `make mail`).
+- Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,
+  `communicator`, `siteintel`, `notifications` — a feature carrying one is skipped when the backend lacks it.
 
 ## API endpoints under test
 

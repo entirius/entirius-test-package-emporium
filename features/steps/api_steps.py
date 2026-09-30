@@ -46,11 +46,20 @@ def step_response_at_least_count(context, count):
     assert len(items) >= count, f"Expected at least {count} items, got {len(items)}"
 
 
-@then("the response count should match CSV product count")
-def step_count_matches_csv(context):
+@then("the response count should be at least the CSV product count")
+def step_count_at_least_csv(context):
+    """Every CSV product must be exposed; extra products are allowed.
+
+    Exact equality breaks as soon as anything else seeds products into the channel —
+    the @suppliers-e2e preset pushes products into the primary channel, so an `==` here
+    fails on a correct system. The sibling assertion in pim_csv_steps already uses `>=`.
+
+    This is a floor, not a weakening: per-SKU containment is asserted by
+    "every CSV product SKU should exist in the API response" (features/pim_csv/).
+    """
     items = extract_items(context.response)
     csv_data = load_products(context.test_package_path, context.channel)
-    assert len(items) == len(csv_data), f"Expected {len(csv_data)} items (from CSV), got {len(items)}"
+    assert len(items) >= len(csv_data), f"Expected at least {len(csv_data)} items (from CSV), got {len(items)}"
 
 
 @given("for each configured channel the CSV products are verified against the API")

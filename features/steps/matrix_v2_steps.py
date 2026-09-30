@@ -74,10 +74,36 @@ def step_key_is_false(context, key):
     assert val is False, f"Expected '{key}' to be false, got {val}"
 
 
+@then('"{key}" is true')
+def step_key_is_true(context, key):
+    val = _resolve_dotted(context.response_data, key)
+    assert val is True, f"Expected '{key}' to be true, got {val}"
+
+
 @then('"{key}" is at most {n:d}')
 def step_key_at_most(context, key, n):
     val = _resolve_dotted(context.response_data, key)
     assert val <= n, f"Expected '{key}' <= {n}, got {val}"
+
+
+@then('"{key}" is at least {n:d}')
+def step_key_at_least(context, key, n):
+    val = _resolve_dotted(context.response_data, key)
+    assert val >= n, f"Expected '{key}' >= {n}, got {val}"
+
+
+@then('"{key}" has at least {count:d} item')
+@then('"{key}" has at least {count:d} items')
+def step_key_has_at_least(context, key, count):
+    val = _resolve_dotted(context.response_data, key)
+    assert len(val) >= count, f"Expected at least {count} items in '{key}', got {len(val)}"
+
+
+@then('"{key}" is greater than the number of items in "{other}"')
+def step_key_greater_than_len(context, key, other):
+    val = _resolve_dotted(context.response_data, key)
+    items = _resolve_dotted(context.response_data, other)
+    assert val > len(items), f"Expected '{key}' ({val}) > len('{other}') ({len(items)})"
 
 
 @then('"{key}" has key "{subkey}"')
@@ -91,6 +117,12 @@ def step_nested_has_key(context, key, subkey):
 def step_dotted_is_int(context, dotted, value):
     val = _resolve_dotted(context.response_data, dotted)
     assert val == value, f"Expected '{dotted}' = {value}, got {val}"
+
+
+@then('"{dotted}" is "{value}"')
+def step_dotted_is_str(context, dotted, value):
+    val = _resolve_dotted(context.response_data, dotted)
+    assert val == value, f"Expected '{dotted}' = '{value}', got {val}"
 
 
 @then('the response header "{header}" is "{value}"')
@@ -180,6 +212,43 @@ def step_first_result_attributes_count(context, count):
     r = _first_result(context)
     attrs = r.get("attributes", [])
     assert len(attrs) >= count, f"Expected >= {count} attributes, got {len(attrs)}"
+
+
+# ── List / collection assertions (root list or {results: []}) ────────
+
+
+def _items(context):
+    """Return the collection under test: a bare list or the 'results' list."""
+    data = context.response_data
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict) and isinstance(data.get("results"), list):
+        return data["results"]
+    raise AssertionError(f"Response is not a list nor {{results: []}}: {type(data)}")
+
+
+@then('the response collection contains an item with "{field}" equal to "{value}"')
+def step_collection_contains(context, field, value):
+    items = _items(context)
+    found = [i.get(field) for i in items]
+    assert value in [str(v) for v in found], f"No item with {field}={value}. Got: {found}"
+
+
+@then('each response item has key "{key}"')
+def step_each_item_has_key(context, key):
+    items = _items(context)
+    assert items, "Collection is empty"
+    missing = [i for i in items if key not in i]
+    assert not missing, f"{len(missing)} item(s) missing key '{key}'"
+
+
+@then('each response item has an empty "{key}" list')
+def step_each_item_empty_list(context, key):
+    """Truncation assertion: `depth=N` cuts the tree, it does not drop the key."""
+    items = _items(context)
+    assert items, "Collection is empty"
+    non_empty = [i for i in items if i.get(key) != []]
+    assert not non_empty, f"{len(non_empty)} item(s) have a missing or non-empty '{key}'"
 
 
 # ── Helpers ──────────────────────────────────────────────────────────

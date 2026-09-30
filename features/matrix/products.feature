@@ -30,7 +30,7 @@ Feature: Matrix Read Model API
       | param     | value |
       | page_size | 100   |
     Then the response status should be 200
-    And the response count should match CSV product count
+    And the response count should be at least the CSV product count
 
   Scenario: Matrix products have brand information
     Given the channel is the primary channel

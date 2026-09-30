@@ -153,6 +153,17 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate --noinp
 echo "Clearing Django cache (throttle counters, cached state)..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"from django.core.cache import cache; cache.clear(); print('cache cleared')\"" \
     || echo "WARNING: cache clear failed — stale throttle counters may 429 the BDD apply scenarios"
+# The communicator daily send counters live in plain Redis (not the Django cache) — the
+# @communicator-oneshot cap scenario needs them empty on a fresh seed.
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell -c \"import redis; from django_communicator import settings as s; r = redis.Redis.from_url(s.COMMUNICATOR_REDIS_URL); print('communicator counters cleared:', sum(r.delete(k) for k in r.scan_iter('communicator:sent:*')))\"" \
+    || echo "WARNING: communicator counter reset failed — the daily cap scenario may see a used cap"
+# Harnesses with a mail sandbox (zeno: GreenMail) pass its REST URL — scenarios start from an
+# empty mailbox. Standalone runs have no sandbox: warn, never fail.
+if [ -n "${GREENMAIL_API_URL:-}" ]; then
+    curl -fsS --max-time 10 -X POST "$GREENMAIL_API_URL/api/mail/purge" > /dev/null \
+        && echo "GreenMail purged." \
+        || echo "WARNING: GreenMail purge failed at $GREENMAIL_API_URL — mailbox scenarios may see stale mail (zeno: make mail)"
+fi
 
 step "Step 2: Load Fixtures"
 # NOTE: never add *_golden* fixtures here — they are unit-test catalogues reusing real-seed
@@ -173,7 +184,12 @@ FIXTURE_FILES=(
     "django_faq.cfg.yaml"
     "django_email.cfg.yaml"
     "django_contact_forms.cfg.yaml"
+    "django_communicator.cfg.yaml"
+    "django_leads.cfg.yaml"
+    "django_leads_retention.cfg.yaml"
     "django_enrichment.cfg.yaml"
+    "django_notifications.cfg.yaml"
+    "django_siteintel.cfg.yaml"
 )
 
 for fixture in "${FIXTURE_FILES[@]}"; do
@@ -253,6 +269,16 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata defaul
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata legal_pages 2>/dev/null || true"
 echo "Syncing agreement channels..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_agreement_channels 2>/dev/null || true"
+echo "Loading agreement clause sets..."
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata --format=yaml --no-color $FIXTURES_DIR/django_agreements.cfg.yaml"
+# Language has no natural key — fail loudly when language pks 1/2 are not pl/en
+docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py shell -c '
+from django_agreements.models import ClauseSet
+got = {(c.pk, c.channel.idx, c.language.iso2) for c in ClauseSet.objects.filter(pk__lte=4)}
+expected = {(1, "default-europe", "pl"), (2, "default-europe", "en"), (3, "default-europe", "pl"), (4, "default-europe", "en")}
+assert got == expected, f"agreement clause sets attached wrong: {sorted(got)}"
+print("Agreement clause sets OK")
+'
 echo "Auto-publishing agreement versions..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'DJANGO_SETTINGS_MODULE=main.settings python -c "
 import django; django.setup()
@@ -294,6 +320,17 @@ docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_dp_channel
 # Discover Volkanos modules (munin)
 echo "Discovering modules..."
 docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py discover_modules --verbosity 0 2>/dev/null || true"
+
+# Leads platform modules must be registered: a missing one silently skips its BDD features later.
+echo "Checking leads platform modules in the registry..."
+docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py shell --no-imports -c \"
+from django_munin.models import Module
+expected = {'leads', 'communicator', 'siteintel', 'notifications'}
+missing = expected - set(Module.objects.filter(key__in=expected).values_list('key', flat=True))
+if missing:
+    raise SystemExit('ERROR: munin registry is missing modules: ' + ', '.join(sorted(missing)))
+print('Registry lists', Module.objects.filter(key__in=expected).count(), 'of', len(expected), 'leads platform modules.')
+\""
 
 # Seed demo enrichment proposals (text + picture) so the CMS review queue has examples to review.
 # Runs after the catalogue import — targets the seeded ENT-S00x products via the registered adapter.

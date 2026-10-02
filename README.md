@@ -44,6 +44,8 @@ Configuration comes from environment variables, `behave.ini` (gitignored — cop
 | `viewer_username` / `viewer_password` | `VIEWER_USERNAME` / `VIEWER_PASSWORD` | `viewer` / `viewer123` | Access Viewer staff user (`@access`) |
 | `editor_username` / `editor_password` | `EDITOR_USERNAME` / `EDITOR_PASSWORD` | `editor` / `editor123` | Access Editor staff user (`@access`) |
 | `manager_username` / `manager_password` | `MANAGER_USERNAME` / `MANAGER_PASSWORD` | `manager` / `manager123` | Access Manager staff user (`@access`) |
+| `accessadmin_username` / `accessadmin_password` | `ACCESSADMIN_USERNAME` / `ACCESSADMIN_PASSWORD` | `accessadmin` / `accessadmin123` | Access Administrator role, not superuser (`@access-security`) |
+| `norole_username` / `norole_password` | `NOROLE_USERNAME` / `NOROLE_PASSWORD` | `norole` / `norole123` | Staff user without a role (`@access-security`) |
 
 Access staff users (seeded only when `django_access` is installed, `ENVIRONMENT=development` only; dev defaults,
 never real): `viewer`/`viewer123` (Viewer), `editor`/`editor123` (Editor), `manager`/`manager123` (Manager),

@@ -70,6 +70,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   │                                      # --verify fixtures/siteintel = leak gate only (.gitleaks.toml words, hosts, emails, IPs)
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
 │   ├── seed-access.py               # seed.sh Step 3e — role staff users (README § Key settings); Step 4b imports legacy keys
+│   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
 ├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
@@ -111,6 +112,16 @@ Key settings table: see `README.md`.
   Raw token values stay in `context.raw_tokens` — never printed, never in `context.saved` or an assertion message.
   `the admin sends {METHOD} to "{path}" when the scenario ends` registers a cleanup that runs even when the
   scenario fails (resolved at the end; an alias never saved means nothing to clean).
+- Access security (`@access-security`, same file): `the caller is {anonymous|customer|bad-bearer|token-only|norole|
+  viewer|editor|manager|accessadmin|admin}` (a requests session with exactly those headers; token-only = fresh
+  publishable + secret tokens, no JWT), `the caller has a Django admin session as {who}`, `the caller presents the
+  {-|checkout fixture|contact-forms fixture|<scope>} key`, `the caller sends {METHOD} to "{path}"` (POST = `{}`;
+  `with JSON <cell>` / `with body` docstring; `{days_ahead:N}` → an ISO instant), `the answer is {status} with
+  "{gate issue|-|n/a|login redirect}"` (`-` = no gate issue, `n/a` = HEAD). Token abuse: `the tokens "a, b" are sent in
+  "{header}" with {METHOD} to "{path}"` → `every answer is the same {status}`, `no answer carries a token secret`.
+  Tokens of these steps live in the shared, never-deactivated application `bdd-access-security` (revoked per
+  scenario, 30-day expiry); a `raw` in any answer moves to `context.raw_tokens` and its token is revoked at the end.
+  Audit: `the audit log counts {n} "gate.bypass" after "{mark}" for {METHOD} "{route}" [with status {s}]`.
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
 - `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
@@ -118,11 +129,17 @@ Key settings table: see `README.md`.
 
 ## Tags
 
-- `@access` (`features/access/`, 21 scenarios; needs `django_access` and its seeded role users
-  `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
+- `@access` (`features/access/`, 21 scenarios + the 486 of `@access-security`; needs `django_access` and its seeded
+  role users `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
   custom role + grant, audit (`gate.bypass` for superuser writes only), application tokens (scope, channel pin,
   revoke, rotate) and the legacy checkout key. Re-runnable on one database: run-unique names, every created object
   deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay, inactive).
+- `@access-security` (`features/access/security/`, 486 scenarios, also tagged `@access`; needs the seeded role users
+  plus `accessadmin`/`norole`): principal × route class × method matrix (366 rows, incl. Django admin over a session),
+  public/customer/key routes unchanged for shoppers (69), token abuse — one answer for every failure kind, legacy
+  key expiry (11), `access.manage` built-in only, mass assignment, secret-token expiry ≤ 365 days (32), superuser
+  `gate.bypass` audit (3), secret hygiene (5). Re-runnable on one database. The zeno gate pipes service/worker logs and
+  the Redis key list through `scripts/secret_scan.py --fixtures fixtures`.
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
   no API; needs GreenMail (zeno `make mail`).
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,

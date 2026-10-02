@@ -6,18 +6,24 @@
 tokens on the contact-forms routes and cleanup that runs even when a scenario fails.
 
 A raw token value lives only in `context.raw_tokens` — it is never printed, saved in `context.saved` or put in an
-assertion message, and the create/rotate response bodies are stored without it. Shared with plan 17b.
+assertion message, and the create/rotate response bodies are stored without it. Shared with plan 17b, whose
+`@access-security` steps (callers, raw requests that control every header, token abuse, secret hygiene) close the file;
+there a token value may also sit in the scenario's caller session headers, and a stored answer has it redacted.
 """
 
 from __future__ import annotations
 
 import itertools
+import json
+import re
+import secrets
 import uuid
 from datetime import UTC, datetime, timedelta
 
 import requests
 from behave import given, step, then, when
 
+from entirius_tests.api_client import CONTACT_FORM_API_KEYS
 from entirius_tests.auth import obtain_jwt_token
 
 GATE_ISSUES = frozenset({"ACCESS_DENIED", "STAFF_ONLY", "UNMAPPED_ROUTE"})
@@ -87,14 +93,25 @@ def _cleanup(context, method: str, path: str, body: dict | None = None) -> None:
     assert status in CLEANUP_STATUSES, f"cleanup {method} {path}: HTTP {status}"
 
 
-def _application_id(context, name: str) -> int:
-    """Applications are never deleted, so the list grows run by run: walk every page."""
+def _find_id(context, path: str, field: str, value: str) -> int | None:
+    """The id of the row with `field == value`, walking every page (applications are never deleted, so the list
+    grows run by run)."""
     for page in itertools.count(1):
-        params = {"page": page, "page_size": PAGE_SIZE}
-        body = _admin(context, "GET", "access/admin/applications/", params=params).json()
-        if ids := [app["id"] for app in body["results"] if app["name"] == name]:
+        body = _admin(context, "GET", path, params={"page": page, "page_size": PAGE_SIZE}).json()
+        if ids := [row["id"] for row in body["results"] if row[field] == value]:
             return ids[0]
-        assert body.get("next"), f"no application '{name}'"
+        if not body.get("next"):
+            return None
+
+
+def _find_application(context, name: str) -> int | None:
+    return _find_id(context, "access/admin/applications/", "name", name)
+
+
+def _application_id(context, name: str) -> int:
+    application_id = _find_application(context, name)
+    assert application_id is not None, f"no application '{name}'"
+    return application_id
 
 
 def _seed_channel(context, position: str) -> str:
@@ -308,13 +325,440 @@ def step_storefront_call(context, position):
     assert response.status_code == 200, f"storefront call: HTTP {response.status_code}"
 
 
-@then('the application "{name}" holds a legacy "{scope}" token without expiry, used just now')
-def step_legacy_token(context, name, scope):
+def _legacy_token(context, name: str, scope: str) -> dict:
     tokens = _admin(context, "GET", f"access/admin/applications/{_application_id(context, name)}/tokens/").json()[
         "results"
     ]
     legacy = [token for token in tokens if token["legacy"] and scope in token["scopes"]]
     assert legacy, f"no legacy {scope} token in '{name}'"
-    token = legacy[0]
+    return legacy[0]
+
+
+@then('the application "{name}" holds a legacy "{scope}" token without expiry, used just now')
+def step_legacy_token(context, name, scope):
+    token = _legacy_token(context, name, scope)
     assert token["expires_at"] is None, f"legacy token expires at {token['expires_at']} (D28: never by itself)"
     assert is_recent(token["last_used_at"], datetime.now(UTC)), f"last_used_at {token['last_used_at']} is not recent"
+
+
+# --- Security (`@access-security`): callers, raw requests, token abuse, audit counts, secret hygiene ---
+
+SECURITY_APPLICATION = "bdd-access-security"  # shared and never deactivated: its tokens are revoked per scenario
+SECURITY_TOKEN_TTL = timedelta(days=30)  # every token these steps issue expires (secret scopes must)
+GATE_401_ISSUE = "NOT_AUTHENTICATED"
+CREDENTIAL_HEADERS = ("Authorization", "Cookie", "X-API-KEY", "X-API-ADMIN-KEY")
+SECRET_FIELDS = frozenset({"raw", "key_hash"})
+DAYS_AHEAD = re.compile(r"\{days_ahead:(-?\d+)\}")
+EXPIRY_SLACK = timedelta(minutes=10)
+NO_VALUE = "-"
+STATUS_ONLY = "n/a"  # HEAD: no body to read
+LOGIN_REDIRECT = "login redirect"
+_security_application_ids: dict[str, int] = {}
+
+
+def gate_answer_issues(body: object) -> set[str]:
+    """Gate refusal issues plus the gate's own 401 (`NOT_AUTHENTICATED`) — a view's own answers carry neither."""
+    issues = gate_issues(body)
+    if isinstance(body, dict) and body.get("error") == "AUTHENTICATION_REQUIRED":
+        issues |= {detail.get("issue") for detail in body.get("details") or []} & {GATE_401_ISSUE}
+    return issues
+
+
+def comparable(body: object) -> object:
+    """An answer without its per-request `debug_id`."""
+    if isinstance(body, dict):
+        return {key: value for key, value in body.items() if key != "debug_id"}
+    return body
+
+
+def secret_fields(body: object) -> set[str]:
+    """`raw` / `key_hash` keys anywhere in a JSON body."""
+    if isinstance(body, dict):
+        return (SECRET_FIELDS & body.keys()).union(*(secret_fields(value) for value in body.values()))
+    if isinstance(body, list):
+        return set().union(*(secret_fields(value) for value in body))
+    return set()
+
+
+def leaked_aliases(text: str, raw_tokens: dict[str, str]) -> list[str]:
+    """Aliases — never values — of the raw tokens that occur in a text."""
+    return sorted(alias for alias, raw in raw_tokens.items() if raw and raw in text)
+
+
+def with_days_ahead(text: str, now: datetime) -> str:
+    """`{days_ahead:30}` → the ISO instant 30 days after `now` (a negative count lies in the past)."""
+    return DAYS_AHEAD.sub(lambda match: (now + timedelta(days=int(match.group(1)))).isoformat(), text)
+
+
+def _security_application(context) -> int:
+    """Looked up (or created) once per API: the application list grows with every plan-17 run."""
+    base_url = context.api.base_url
+    if base_url not in _security_application_ids:
+        found = _find_application(context, SECURITY_APPLICATION)
+        _security_application_ids[base_url] = found or _create_security_application(context)
+    return _security_application_ids[base_url]
+
+
+def _create_security_application(context) -> int:
+    response = _admin(context, "POST", "access/admin/applications/", {"name": SECURITY_APPLICATION})
+    assert response.status_code == 201, f"application: HTTP {response.status_code} {_json(response)}"
+    return response.json()["id"]
+
+
+def _issue_security_token(context, alias: str, body: dict) -> None:
+    expires_at = (datetime.now(UTC) + SECURITY_TOKEN_TTL).isoformat()
+    path = f"access/admin/applications/{_security_application(context)}/tokens/"
+    request = {"name": f"bdd-security {alias}", "expires_at": expires_at, **body}
+    _keep_token(context, alias, _admin(context, "POST", path, request))
+
+
+def _credentials(context, who: str) -> tuple[str, str]:
+    if who == "admin":
+        return context.admin_username, context.admin_password
+    if who == "customer":
+        return context.test_username, context.test_password
+    assert who in context.staff_users, f"unknown caller '{who}'"
+    return context.staff_users[who]
+
+
+def _token_only_headers(context) -> dict[str, str]:
+    """A fresh publishable and a fresh secret token, no JWT — the gate never reads either (D12)."""
+    _issue_security_token(context, "caller-publishable", {"scopes": ["checkout.storefront"]})
+    _issue_security_token(context, "caller-secret", {"scopes": ["reviews.moderate"]})
+    raw = context.raw_tokens
+    return {"X-API-KEY": raw["caller-publishable"], "X-API-ADMIN-KEY": raw["caller-secret"]}
+
+
+def _caller_headers(context, who: str) -> dict[str, str]:
+    if who == "anonymous":
+        return {}
+    if who == "bad-bearer":
+        return {"Authorization": "Bearer not-a-jwt"}
+    if who == "token-only":
+        return _token_only_headers(context)
+    return {"Authorization": f"Bearer {obtain_jwt_token(context.api.base_url, *_credentials(context, who))}"}
+
+
+def _new_caller(context, who: str, session: requests.Session) -> None:
+    context.caller, context.caller_session, context.anonymous_twin = who, session, None
+
+
+def _redact(response: requests.Response) -> None:
+    """The stored request must not carry a credential."""
+    for header in CREDENTIAL_HEADERS:
+        if header in response.request.headers:
+            response.request.headers[header] = "<redacted>"
+
+
+def _store_answer(context, response: requests.Response) -> None:
+    """Like `_store`; a one-time `raw` moves to `context.raw_tokens` (redacted in the stored body) and its token is
+    revoked at the end."""
+    _store(context, response)
+    body = context.response_data
+    context.answer_had_raw = isinstance(body, dict) and "raw" in body
+    if context.answer_had_raw:
+        context.raw_tokens[f"answer-{body['id']}"] = body["raw"]
+        response._content = response.content.replace(body["raw"].encode(), b"<redacted>")
+        context.response_data = without_raw(body)
+        context.add_cleanup(_cleanup, context, "POST", f"access/admin/tokens/{body['id']}/revoke/")
+    _undo_created(context, response)
+
+
+def _undo_created(context, response: requests.Response) -> None:
+    """A grant or application a request created — on purpose or wrongly admitted — never outlives the scenario."""
+    if response.status_code != 201:
+        return
+    if response.url.endswith("/api/access/v2/admin/grants/"):
+        path = f"access/admin/grants/{context.response_data['id']}/"
+        context.add_cleanup(_cleanup, context, "DELETE", path)
+    if response.url.endswith("/api/access/v2/admin/applications/"):
+        path = f"access/admin/applications/{context.response_data['id']}/"
+        context.add_cleanup(_cleanup, context, "PATCH", path, {"is_active": False})
+
+
+def _request(context, method: str, path: str, body: str | None, session: requests.Session) -> requests.Response:
+    """Exactly the session's headers, `{channel_idx}`/`{saved.*}`/`{days_ahead:N}` resolved, no redirect followed."""
+    url = context.api.url(resolve(path, context))
+    payload = json.loads(with_days_ahead(resolve(body, context), datetime.now(UTC))) if body else None
+    response = session.request(method, url, json=payload, timeout=30, allow_redirects=False)
+    _redact(response)
+    return response
+
+
+def _send(context, method: str, path: str, body: str | None = None) -> None:
+    context.anonymous_twin = None
+    session = getattr(context, "caller_session", None) or requests.Session()
+    _store_answer(context, _request(context, method, path, body, session))
+
+
+def _shown(context) -> str:
+    return str(context.response_data)[:300]
+
+
+def _assert_no_secret(context, response: requests.Response, where: str) -> None:
+    fields = secret_fields(_json(response))
+    leaked = leaked_aliases(response.text, context.raw_tokens)
+    assert not fields and not leaked, f"{where}: secret fields {sorted(fields)}, values of the tokens {leaked}"
+
+
+# Callers and keys
+
+
+@given("the caller is {who}")
+def step_caller(context, who):
+    """anonymous | customer | bad-bearer | token-only | a staff user (norole, viewer, …, accessadmin) | admin."""
+    session = requests.Session()
+    session.headers.update(_caller_headers(context, who))
+    _new_caller(context, who, session)
+
+
+@given("the caller has a Django admin session as {who}")
+def step_django_admin_session(context, who):
+    session, login = requests.Session(), context.api.url("admin/login/")
+    session.get(login, timeout=30)
+    username, password = _credentials(context, who)
+    form = {"username": username, "password": password, "csrfmiddlewaretoken": session.cookies.get("csrftoken")}
+    response = session.post(login, data=form, headers={"Referer": login}, allow_redirects=False, timeout=30)
+    assert response.status_code == 302, f"Django admin login as {who}: HTTP {response.status_code}"
+    _new_caller(context, who, session)
+
+
+def _key_value(context, key: str) -> str:
+    if key == "checkout fixture":
+        return context.api.checkout_api_key
+    if key == "contact-forms fixture":
+        return CONTACT_FORM_API_KEYS[context.channel]
+    _issue_security_token(context, key, {"scopes": [key]})
+    return context.raw_tokens[key]
+
+
+@given("the caller presents the {key} key")
+def step_caller_key(context, key):
+    """`-` (none), `checkout fixture`, `contact-forms fixture` (the scenario's channel) or a fresh token of a scope."""
+    if key != NO_VALUE:
+        context.caller_session.headers["X-API-KEY"] = _key_value(context, key)
+
+
+@given('I save the caller\'s own user id as "{alias}"')
+def step_save_own_id(context, alias):
+    response = _request(context, "GET", "api/access/v2/me/", None, context.caller_session)
+    assert response.status_code == 200, f"me: HTTP {response.status_code}"
+    context.saved[alias] = response.json()["user"]["id"]
+
+
+# Raw requests and their answers
+
+
+@when('the caller sends {method:w} to "{path}"')
+def step_caller_sends(context, method, path):
+    """POST carries an empty JSON object. A token-only caller's request is repeated anonymously to compare (D12)."""
+    body = "{}" if method == "POST" else None
+    _send(context, method, path, body)
+    if context.caller == "token-only":
+        twin = _request(context, method, path, body, requests.Session())
+        context.anonymous_twin = (twin.status_code, comparable(_json(twin)))
+
+
+@when('the caller sends {method:w} to "{path}" with JSON {body}')
+def step_caller_sends_json(context, method, path, body):
+    _send(context, method, path, None if body == NO_VALUE else body)
+
+
+@when('the caller sends {method:w} to "{path}" with body')
+def step_caller_sends_body(context, method, path):
+    _send(context, method, path, context.text)
+
+
+def _check_issue(context, issue: str) -> None:
+    if issue == STATUS_ONLY:
+        return
+    if issue == LOGIN_REDIRECT:
+        location = context.response.headers.get("Location", "")
+        assert location.startswith("/admin/login/"), f"Location {location!r}, want the admin login"
+        return
+    issues = gate_answer_issues(context.response_data)
+    expected = set() if issue == NO_VALUE else {issue}
+    assert issues == expected, f"gate issues {sorted(issues)}, want {sorted(expected)}: {_shown(context)}"
+
+
+@then('the answer is {status:d} with "{issue}"')
+def step_answer(context, status, issue):
+    """`issue`: a gate issue, `-` (no gate issue), `n/a` (status only) or `login redirect`."""
+    got = context.response.status_code
+    assert got == status, f"expected {status}, got {got}: {_shown(context)}"
+    _check_issue(context, issue)
+    if twin := getattr(context, "anonymous_twin", None):
+        mine = (got, comparable(context.response_data))
+        assert mine == twin, f"token-only answer {mine} differs from the anonymous one {twin}"
+
+
+@then('the answer does not contain "{text}"')
+def step_answer_lacks(context, text):
+    assert text == NO_VALUE or text not in context.response.text, f"'{text}' in {_shown(context)}"
+
+
+@then('the answer names the issue "{issue}"')
+def step_answer_issue(context, issue):
+    if issue == NO_VALUE:
+        return
+    issues = [detail.get("issue") for detail in context.response_data.get("details") or []]
+    assert issue in issues, f"issue {issue} not in {issues}"
+
+
+@then("the answer carries no token secret")
+def step_answer_no_secret(context):
+    _assert_no_secret(context, context.response, "answer")
+
+
+@then("the answer was a one-time secret marked no-store")
+def step_answer_one_time(context):
+    assert context.answer_had_raw, f"no raw value in the answer: {_shown(context)}"
+    cache_control = context.response.headers.get("Cache-Control", "")
+    assert "no-store" in cache_control, f"Cache-Control: {cache_control!r}"
+
+
+@then("the answered expiry is {days:d} days ahead")
+def step_answered_expiry(context, days):
+    expires_at = datetime.fromisoformat(context.response_data["expires_at"])
+    offset = expires_at - datetime.now(UTC) - timedelta(days=days)
+    assert abs(offset) < EXPIRY_SLACK, f"expires_at {expires_at} is not {days} days ahead"
+
+
+@then('I keep the answer as "{label}"')
+def step_keep_answer(context, label):
+    context.answers = {**(getattr(context, "answers", None) or {}), label: context.response}
+
+
+# Token abuse
+
+
+@given('an unknown token value "{alias}"')
+def step_unknown_token(context, alias):
+    context.raw_tokens[alias] = f"ent_api_{secrets.token_urlsafe(32)}"
+
+
+@given('an oversized token value "{alias}" of {size:d} characters')
+def step_oversized_token(context, alias, size):
+    context.raw_tokens[alias] = "x" * size
+
+
+@given('the shared security application is saved as "{alias}"')
+def step_security_application(context, alias):
+    """One application for every run: tokens issued in it are revoked per scenario, the application stays."""
+    context.saved[alias] = _security_application(context)
+
+
+@given('a security token "{alias}" with scope "{scope}"')
+def step_security_token(context, alias, scope):
+    _issue_security_token(context, alias, {"scopes": [scope]})
+
+
+@given('a security token "{alias}" with scope "{scope}" pinned to the {position} seed channel')
+def step_pinned_security_token(context, alias, scope, position):
+    _issue_security_token(context, alias, {"scopes": [scope], "channel_idx": _seed_channel(context, position)})
+
+
+@when('the tokens "{aliases}" are sent in "{header}" with {method:w} to "{path}"')
+def step_send_tokens(context, aliases, header, method, path):
+    """One request per token, each alone in `header` (`Authorization` carries it as a Bearer value); body = docstring."""
+    context.answers = {}
+    for alias in (name.strip() for name in aliases.split(",")):
+        raw = context.raw_tokens[alias]
+        session = requests.Session()
+        session.headers[header] = f"Bearer {raw}" if header == "Authorization" else raw
+        context.answers[alias] = _request(context, method, path, context.text, session)
+
+
+@then("every answer is the same {status:d}")
+def step_answers_identical(context, status):
+    statuses = {alias: response.status_code for alias, response in context.answers.items()}
+    assert set(statuses.values()) == {status}, f"statuses {statuses}, want {status}"
+    bodies = {repr(comparable(_json(response)) or response.text) for response in context.answers.values()}
+    assert len(bodies) == 1, f"{len(bodies)} different bodies across {sorted(context.answers)}"
+
+
+@then("every answer is a client error")
+def step_answers_4xx(context):
+    statuses = {alias: response.status_code for alias, response in context.answers.items()}
+    assert all(400 <= status < 500 for status in statuses.values()), f"statuses {statuses}"
+
+
+@then("no answer carries a token secret")
+def step_answers_no_secret(context):
+    for alias, response in context.answers.items():
+        _assert_no_secret(context, response, f"answer to '{alias}'")
+
+
+@given('I save the id of the legacy "{scope}" token of application "{name}" as "{alias}"')
+def step_save_legacy_id(context, scope, name, alias):
+    context.saved[alias] = _legacy_token(context, name, scope)["id"]
+
+
+@given('the expiry of token "{alias}" is cleared when the scenario ends')
+def step_expiry_cleanup(context, alias):
+    path = f"access/admin/tokens/{context.saved[alias]}/expiry/"
+    context.add_cleanup(_cleanup, context, "POST", path, {"expires_at": None})
+
+
+# Roles and the catalogue
+
+
+def _role_id(context, key: str) -> int | None:
+    return _find_id(context, "access/admin/roles/", "key", key)
+
+
+def _delete_role(context, key: str) -> None:
+    if (role_id := _role_id(context, resolve(key, context))) is not None:
+        _cleanup(context, "DELETE", f"access/admin/roles/{role_id}/")
+
+
+@given('the role "{key}" is deleted when the scenario ends')
+def step_role_cleanup(context, key):
+    """Resolved at the end and looked up by key: also removes a role a wrongly accepted request created."""
+    context.add_cleanup(_delete_role, context, key)
+
+
+@then('the role "{key}" does not exist')
+def step_role_absent(context, key):
+    assert _role_id(context, resolve(key, context)) is None, f"role {resolve(key, context)} exists"
+
+
+@then('the role "{alias}" holds exactly the permissions {permissions}')
+def step_role_permissions(context, alias, permissions):
+    held = _admin(context, "GET", f"access/admin/roles/{context.saved[alias]}/").json()["permissions"]
+    assert held == json.loads(permissions), f"permissions {held}"
+
+
+@then('the catalogue area "{key}" is not assignable')
+def step_area_not_assignable(context, key):
+    areas = {area["key"]: area for module in context.response_data["modules"] for area in module["areas"]}
+    assert areas[key]["assignable"] is False, f"{key}: {areas[key]}"
+
+
+# Audit counts
+
+
+def _bypasses(context, mark: str, method: str, route: str) -> list[dict]:
+    entries = _audit_after(context, "gate.bypass", mark)
+    return [
+        entry["detail"] for entry in entries if (entry["detail"]["method"], entry["detail"]["route"]) == (method, route)
+    ]
+
+
+@then('the audit log counts {count:d} "gate.bypass" after "{mark}" for {method:w} "{route}"')
+def step_bypass_count(context, count, mark, method, route):
+    found = _bypasses(context, mark, method, route)
+    assert len(found) == count, f"{len(found)} gate.bypass for {method} {route}, want {count}: {found}"
+
+
+@then('the audit log counts {count:d} "gate.bypass" after "{mark}" for {method:w} "{route}" with status {status:d}')
+def step_bypass_count_status(context, count, mark, method, route, status):
+    found = _bypasses(context, mark, method, route)
+    assert [entry.get("status") for entry in found] == [status] * count, f"gate.bypass for {method} {route}: {found}"
+
+
+@then('the audit log counts {count:d} "{action}" after "{mark}" for target "{target_id}"')
+def step_action_count(context, count, action, mark, target_id):
+    wanted = resolve(target_id, context)
+    found = [entry for entry in _audit_after(context, action, mark) if entry["target_id"] == wanted]
+    assert len(found) == count, f"{len(found)} {action} entries for target {wanted}, want {count}"

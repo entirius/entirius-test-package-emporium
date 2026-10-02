@@ -52,3 +52,38 @@ def test_paths_resolve_saved_aliases_and_the_channel():
     context = SimpleNamespace(channel="default-europe", saved={"saved.run": "ab12"})
     resolved = access_steps.resolve("faq/admin/{channel_idx}/groups/bdd-access-{saved.run}/", context)
     assert access_steps.api_path(resolved) == "api/faq/v2/admin/default-europe/groups/bdd-access-ab12/"
+
+
+def test_gate_answer_issues_adds_only_the_gates_own_401():
+    gate_401 = {"error": "AUTHENTICATION_REQUIRED", "details": [{"location": "header", "issue": "NOT_AUTHENTICATED"}]}
+    view_401 = {"error": "AUTHENTICATION_REQUIRED", "details": []}
+    assert access_steps.gate_answer_issues(gate_401) == {"NOT_AUTHENTICATED"}
+    assert access_steps.gate_answer_issues(view_401) == set()
+    assert access_steps.gate_answer_issues(_refusal("STAFF_ONLY")) == {"STAFF_ONLY"}
+
+
+def test_comparable_drops_only_the_debug_id():
+    assert access_steps.comparable({"error": "X", "debug_id": "ab12cd34", "details": []}) == {
+        "error": "X",
+        "details": [],
+    }
+    assert access_steps.comparable("text") == "text"
+
+
+def test_secret_fields_finds_nested_keys():
+    body = {"results": [{"id": 1, "detail": {"key_hash": "x"}}, {"raw": "y"}], "count": 2}
+    assert access_steps.secret_fields(body) == {"key_hash", "raw"}
+    assert access_steps.secret_fields({"prefix": "ent_api_Ab3d", "last_four": "wxyz"}) == set()
+
+
+def test_leaked_aliases_names_aliases_never_values():
+    raw_tokens = {"kept": "ent_api_secretvalue", "other": "ent_api_unseen", "empty": ""}
+    assert access_steps.leaked_aliases('{"echo": "ent_api_secretvalue"}', raw_tokens) == ["kept"]
+
+
+def test_with_days_ahead_fills_future_and_past_instants():
+    text = '{"a": "{days_ahead:30}", "b": "{days_ahead:-1}"}'
+    filled = access_steps.with_days_ahead(text, NOW)
+    assert (
+        filled == f'{{"a": "{(NOW + timedelta(days=30)).isoformat()}", "b": "{(NOW - timedelta(days=1)).isoformat()}"}}'
+    )

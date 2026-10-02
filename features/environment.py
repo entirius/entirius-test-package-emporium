@@ -77,7 +77,7 @@ def before_all(context):
             os.environ.get(f"{role.upper()}_USERNAME", ud.get(f"{role}_username", role)),
             os.environ.get(f"{role.upper()}_PASSWORD", ud.get(f"{role}_password", f"{role}123")),
         )
-        for role in ("viewer", "editor", "manager")
+        for role in ("viewer", "editor", "manager", "accessadmin", "norole")
     }
 
     # Channels: env var > behave.ini > auto-discover from CSV filenames

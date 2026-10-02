@@ -71,6 +71,15 @@ def before_all(context):
     context.test_username = os.environ.get("TEST_USERNAME", ud.get("test_username", "testuser"))
     context.test_password = os.environ.get("TEST_PASSWORD", ud.get("test_password", "testuser123"))
 
+    # Access role users of scripts/seed-access.py (dev defaults: <role> / <role>123)
+    context.staff_users = {
+        role: (
+            os.environ.get(f"{role.upper()}_USERNAME", ud.get(f"{role}_username", role)),
+            os.environ.get(f"{role.upper()}_PASSWORD", ud.get(f"{role}_password", f"{role}123")),
+        )
+        for role in ("viewer", "editor", "manager")
+    }
+
     # Channels: env var > behave.ini > auto-discover from CSV filenames
     channels_str = os.environ.get("CHANNELS", ud.get("channels", ""))
     if channels_str:
@@ -107,6 +116,7 @@ def before_scenario(context, scenario):
     context.csv_data = None
     context.attr_type = None
     context.saved = {}
+    context.raw_tokens = {}  # access token values: never printed, never in context.saved
     context.api.clear_auth_token()
 
 

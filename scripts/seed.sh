@@ -90,7 +90,8 @@ HAS_SUPPLIERS=$(app_installed django_suppliers && echo 1 || echo 0)
 HAS_ATLAS=$(app_installed django_atlas && echo 1 || echo 0)
 HAS_PRICEFIGHTER=$(app_installed django_pricefighter && echo 1 || echo 0)
 HAS_LOOKUP=$(app_installed django_lookup && echo 1 || echo 0)
-echo "Optional modules: suppliers=$HAS_SUPPLIERS atlas=$HAS_ATLAS pricefighter=$HAS_PRICEFIGHTER lookup=$HAS_LOOKUP"
+HAS_ACCESS=$(app_installed django_access && echo 1 || echo 0)
+echo "Optional modules: suppliers=$HAS_SUPPLIERS atlas=$HAS_ATLAS pricefighter=$HAS_PRICEFIGHTER lookup=$HAS_LOOKUP access=$HAS_ACCESS"
 
 # Omnibus pipeline — extracted as a function so `seed-fresh` and `seed-omnibus`
 # share one implementation. Runs PH backfill → omnibus calc per channel →
@@ -250,8 +251,25 @@ else
     echo "Skipping atlas prep (django_atlas not installed)"
 fi
 
+step "Step 3e: Access Staff Users"
+# viewer/editor/manager/accessadmin (built-in roles) + norole — staff, not superuser; refuses outside development.
+if [ "$HAS_ACCESS" = "1" ]; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-access.py"
+else
+    echo "Skipping access staff users (django_access not installed)"
+fi
+
 step "Step 4: Import Package Data"
 docker exec -e SVC_DIR="$SVC_DIR" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
+
+step "Step 4b: Access Legacy Keys"
+# Every fixture key (loaded above) becomes a legacy token; --check fails the seed on a key the import missed.
+if [ "$HAS_ACCESS" = "1" ]; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py access_import_legacy_keys --report
+    docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py access_import_legacy_keys --check
+else
+    echo "Skipping legacy key import (django_access not installed)"
+fi
 
 step "Step 5: Upload ContentDB Images"
 docker exec "$CONTAINER" bash /entirius/test-package/scripts/upload-contentdb-images.sh || echo "Image upload skipped (optional)"

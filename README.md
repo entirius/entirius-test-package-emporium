@@ -42,6 +42,11 @@ Configuration comes from environment variables, `behave.ini` (gitignored — cop
 | `test_username` | `TEST_USERNAME` | `testuser` | Regular (non-admin) user for auth tests |
 | `test_password` | `TEST_PASSWORD` | `testuser123` | Regular user password |
 
+Access staff users (seeded only when `django_access` is installed, `ENVIRONMENT=development` only; dev defaults,
+never real): `viewer`/`viewer123` (Viewer), `editor`/`editor123` (Editor), `manager`/`manager123` (Manager),
+`accessadmin`/`accessadmin123` (Administrator role, not superuser), `norole`/`norole123` (staff without a role) —
+staff, not superuser, each with a `Customer` row so the CMS login works (`scripts/seed-access.py`).
+
 Channel auto-discovery scans `test_package_path` for `products--{channel}.csv` filenames.
 Point `test_package_path` at any directory with the standard CSV layout to switch datasets.
 

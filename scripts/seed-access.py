@@ -23,6 +23,7 @@ from allauth.account.models import EmailAddress
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django_accounts.models import Customer
 from django_regional.models import Language
 
@@ -36,7 +37,7 @@ ACCESS_USERS = {
 }
 
 
-def upsert_staff_user(username: str):
+def upsert_staff_user(username: str) -> tuple[AbstractUser, bool]:
     user, created = get_user_model().objects.get_or_create(
         username=username, defaults={"email": f"{username}@entirius.com"}
     )
@@ -50,14 +51,15 @@ def upsert_staff_user(username: str):
     return user, created
 
 
-def ensure_grant(user, role_key: str) -> bool:
-    from django_access.models import Grant, Role
+def ensure_grant(user: AbstractUser, role_key: str) -> bool:
+    from django_access.exceptions import AccessConflict
+    from django_access.models import Role
     from django_access.services.access_service import Actor, grant_role
 
-    role = Role.objects.get(key=role_key)
-    if Grant.objects.filter(role=role, user=user).exists():
+    try:
+        grant_role(Role.objects.get(key=role_key), user=user, actor=Actor())
+    except AccessConflict:  # already granted — keep it
         return False
-    grant_role(role, user=user, actor=Actor())
     return True
 
 

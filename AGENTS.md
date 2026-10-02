@@ -14,7 +14,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make fix` | auto-fix lint + format |
 | `make test` | behave dry-run — steps bind to scenarios, no API needed — plus the pytest unit tests in `tests/` |
 | `make unit` | only the pytest unit tests for the assertion step definitions, no API needed |
-| `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`) |
+| `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`); a single tag reads only the feature files carrying it, so the summary's skipped count holds real skips only (tag expressions keep the whole tree) |
 | `make e2e [E2E_ARGS=…] [E2E_DEVICE=…]` | Playwright e2e; `E2E_ARGS` narrows pytest targets (default `e2e/`), `E2E_DEVICE` emulates a Playwright device (`e2e/conftest.py`) |
 
 ## Conventions
@@ -102,6 +102,15 @@ Key settings table: see `README.md`.
   equal to "{v}"` (resolves `{saved.alias}`), `the last sandbox message subject starts with "{prefix}"`,
   `the value "{value}" is saved as "{alias}"`. Fixture mails use a `{message_id}` placeholder (single braces)
   in `In-Reply-To`/`References`/`Original-Message-ID`; `duplicate.eml` shares `Message-ID` with `reply_plain.eml`.
+- Access (`features/steps/access_steps.py`, shared with the security matrix): `I am authenticated as the
+  {viewer|editor|manager} staff user`, `the gate refuses with issue "{ACCESS_DENIED|STAFF_ONLY|UNMAPPED_ROUTE}"`,
+  `the refusal names "{text}"`, `the response is not a gate refusal`, `the permission "{area}" should be
+  "{level}"|absent` (on `access/me/`), audit lookups after `I save the newest audit entry id as "{alias}"`,
+  `an application "{alias}" for this run` + `a token "{alias}" of application … with scope "{scope}" [pinned to the
+  first|second seed channel]`, `I submit a contact form with the token "{alias}" on the first|second seed channel`.
+  Raw token values stay in `context.raw_tokens` — never printed, never in `context.saved` or an assertion message.
+  `the admin sends {METHOD} to "{path}" when the scenario ends` registers a cleanup that runs even when the
+  scenario fails (resolved at the end; an alias never saved means nothing to clean).
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
 - `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
@@ -109,6 +118,11 @@ Key settings table: see `README.md`.
 
 ## Tags
 
+- `@access` (`features/access/`, 21 scenarios; needs `django_access` and its seeded role users
+  `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
+  custom role + grant, audit (`gate.bypass` for superuser writes only), application tokens (scope, channel pin,
+  revoke, rotate) and the legacy checkout key. Re-runnable on one database: run-unique names, every created object
+  deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay, inactive).
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
   no API; needs GreenMail (zeno `make mail`).
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,

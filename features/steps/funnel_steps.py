@@ -129,6 +129,14 @@ def step_scoped_count_plus(context, n):
     assert actual == expected, f"sandbox mailbox count about {markers}: {actual}, expected {expected}"
 
 
+@then("the scoped sandbox mailbox count is unchanged")
+def step_scoped_count_unchanged(context):
+    """No delivery is awaited here, so the worker gets a grace period before the count is compared."""
+    time.sleep(2)
+    markers, actual = context.saved["mailbox_markers"], _scoped_count(context.saved["mailbox_markers"])
+    assert actual == context.saved["scoped_mailbox_count"], f"a message about {markers} reached the sandbox mailbox"
+
+
 @then('the company "{alias}" has {count:d} hooks and a platform')
 def step_company_hooks(context, alias, count):
     company = _get(context, f"api/leads/v2/admin/{{channel}}/companies/{context.saved[alias]}/")

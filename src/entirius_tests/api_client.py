@@ -8,6 +8,9 @@ from dataclasses import dataclass, field
 
 import requests
 
+# X-API-KEY values of fixtures/django_contact_forms.cfg.yaml (apikey pk 1 and 2).
+CONTACT_FORM_API_KEYS = {"default-europe": "1" * 64, "default-local": "2" * 64}
+
 
 @dataclass
 class ApiClient:

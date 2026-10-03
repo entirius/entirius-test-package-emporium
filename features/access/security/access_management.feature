@@ -4,8 +4,9 @@ Feature: Access security — access management stays with the built-in Administr
   I want access.manage out of every custom role and every access write closed to the other roles
   So that nobody below Administrator can grant themselves more, and no request smuggles fields past the API
 
-  Operator Q2: access.manage (read and write) is never part of a custom role. Operator Q5: a token with a secret
-  scope expires within 365 days. Every role, grant and token created here is removed or revoked at the end.
+  Operator Q2: access.manage (read and write) is never part of a custom role. D31 (replaces Q5's 365-day cap): a token
+  with a secret scope needs no expiry and has no maximum lifetime. Every role, grant and token created here is removed
+  or revoked at the end.
 
   Background:
     Given the channel is the primary channel
@@ -128,18 +129,20 @@ Feature: Access security — access management stays with the built-in Administr
       | revoked_at                    | {"name": "x", "scopes": ["checkout.storefront"], "revoked_at": "{days_ahead:1}"}                      |
       | publishable and secret scopes | {"name": "x", "scopes": ["checkout.storefront", "reviews.moderate"], "expires_at": "{days_ahead:30}"} |
 
-  Scenario Outline: AM-08 a secret token expires within 365 days — <expiry>
+  Scenario Outline: AM-08 a secret token needs no expiry — <expiry>
+    # D31: no lifetime cap; a fresh token is 0 days old and not due for rotation. The issued token is revoked at the end.
     Given the shared security application is saved as "saved.app"
     And the caller is accessadmin
     When the caller sends POST to "api/access/v2/admin/applications/{saved.app}/tokens/" with JSON <body>
-    Then the answer is <status> with "-"
-    And the answer names the issue "<issue>"
+    Then the answer is 201 with "-"
+    And the response field "age_days" should equal integer 0
+    And the response field "rotation_due" should be false
 
     Examples: reviews.moderate tokens
-      | expiry   | body                                                                            | status | issue           |
-      | none     | {"name": "x", "scopes": ["reviews.moderate"]}                                   | 400    | EXPIRY_REQUIRED |
-      | 366 days | {"name": "x", "scopes": ["reviews.moderate"], "expires_at": "{days_ahead:366}"} | 400    | EXPIRY_TOO_LONG |
-      | 365 days | {"name": "x", "scopes": ["reviews.moderate"], "expires_at": "{days_ahead:365}"} | 201    | -               |
+      | expiry   | body                                                                            |
+      | none     | {"name": "x", "scopes": ["reviews.moderate"]}                                   |
+      | 365 days | {"name": "x", "scopes": ["reviews.moderate"], "expires_at": "{days_ahead:365}"} |
+      | 366 days | {"name": "x", "scopes": ["reviews.moderate"], "expires_at": "{days_ahead:366}"} |
 
   Scenario: AM-09 a customer id looks exactly like an id that does not exist, and cannot receive a grant
     Given the caller is customer

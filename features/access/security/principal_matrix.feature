@@ -283,59 +283,61 @@ Feature: Access security — principal × route class × method
       | token-only  | POST    | api/access/v2/admin/roles/           | 401    | -             |
       | token-only  | DELETE  | api/access/v2/admin/roles/999999999/ | 401    | -             |
 
-  Scenario Outline: PM-06 Django admin (access.manage, Bearer JWT) — <principal> <method>
-    # The gate admits a Bearer JWT holder of access.manage; the admin site itself wants a session and redirects to its login. Writes without a CSRF token are refused before any view.
+  Scenario Outline: PM-06 Django admin (superusers only, Bearer JWT) — <principal> <method>
+    # D32: the gate admits only a superuser's Bearer JWT; the admin site itself wants a session and redirects to its login. Every role is refused, Administrator included; the login page stays on the staff baseline. Writes without a CSRF token are refused before any view.
     Given the caller is <principal>
     When the caller sends <method> to "<path>"
     Then the answer is <status> with "<issue>"
 
-    Examples: Django admin (access.manage, Bearer JWT)
-      | principal   | method  | path   | status | issue          |
-      | anonymous   | GET     | admin/ | 302    | login redirect |
-      | anonymous   | HEAD    | admin/ | 302    | n/a            |
-      | anonymous   | OPTIONS | admin/ | 302    | login redirect |
-      | anonymous   | POST    | admin/ | 403    | -              |
-      | anonymous   | DELETE  | admin/ | 403    | -              |
-      | customer    | GET     | admin/ | 403    | STAFF_ONLY     |
-      | customer    | HEAD    | admin/ | 403    | n/a            |
-      | customer    | OPTIONS | admin/ | 403    | STAFF_ONLY     |
-      | customer    | POST    | admin/ | 403    | -              |
-      | customer    | DELETE  | admin/ | 403    | -              |
-      | norole      | GET     | admin/ | 403    | ACCESS_DENIED  |
-      | norole      | HEAD    | admin/ | 403    | n/a            |
-      | norole      | OPTIONS | admin/ | 403    | ACCESS_DENIED  |
-      | norole      | POST    | admin/ | 403    | -              |
-      | norole      | DELETE  | admin/ | 403    | -              |
-      | viewer      | GET     | admin/ | 403    | ACCESS_DENIED  |
-      | viewer      | HEAD    | admin/ | 403    | n/a            |
-      | viewer      | OPTIONS | admin/ | 403    | ACCESS_DENIED  |
-      | viewer      | POST    | admin/ | 403    | -              |
-      | viewer      | DELETE  | admin/ | 403    | -              |
-      | editor      | GET     | admin/ | 403    | ACCESS_DENIED  |
-      | editor      | HEAD    | admin/ | 403    | n/a            |
-      | editor      | OPTIONS | admin/ | 403    | ACCESS_DENIED  |
-      | editor      | POST    | admin/ | 403    | -              |
-      | editor      | DELETE  | admin/ | 403    | -              |
-      | manager     | GET     | admin/ | 403    | ACCESS_DENIED  |
-      | manager     | HEAD    | admin/ | 403    | n/a            |
-      | manager     | OPTIONS | admin/ | 403    | ACCESS_DENIED  |
-      | manager     | POST    | admin/ | 403    | -              |
-      | manager     | DELETE  | admin/ | 403    | -              |
-      | accessadmin | GET     | admin/ | 302    | login redirect |
-      | accessadmin | HEAD    | admin/ | 302    | n/a            |
-      | accessadmin | OPTIONS | admin/ | 302    | login redirect |
-      | accessadmin | POST    | admin/ | 403    | -              |
-      | accessadmin | DELETE  | admin/ | 403    | -              |
-      | admin       | GET     | admin/ | 302    | login redirect |
-      | admin       | HEAD    | admin/ | 302    | n/a            |
-      | admin       | OPTIONS | admin/ | 302    | login redirect |
-      | admin       | POST    | admin/ | 403    | -              |
-      | admin       | DELETE  | admin/ | 403    | -              |
-      | token-only  | GET     | admin/ | 302    | login redirect |
-      | token-only  | HEAD    | admin/ | 302    | n/a            |
-      | token-only  | OPTIONS | admin/ | 302    | login redirect |
-      | token-only  | POST    | admin/ | 403    | -              |
-      | token-only  | DELETE  | admin/ | 403    | -              |
+    Examples: Django admin (superusers only, Bearer JWT)
+      | principal   | method  | path         | status | issue          |
+      | anonymous   | GET     | admin/       | 302    | login redirect |
+      | anonymous   | HEAD    | admin/       | 302    | n/a            |
+      | anonymous   | OPTIONS | admin/       | 302    | login redirect |
+      | anonymous   | POST    | admin/       | 403    | -              |
+      | anonymous   | DELETE  | admin/       | 403    | -              |
+      | customer    | GET     | admin/       | 403    | STAFF_ONLY     |
+      | customer    | HEAD    | admin/       | 403    | n/a            |
+      | customer    | OPTIONS | admin/       | 403    | STAFF_ONLY     |
+      | customer    | POST    | admin/       | 403    | -              |
+      | customer    | DELETE  | admin/       | 403    | -              |
+      | norole      | GET     | admin/       | 403    | ACCESS_DENIED  |
+      | norole      | HEAD    | admin/       | 403    | n/a            |
+      | norole      | OPTIONS | admin/       | 403    | ACCESS_DENIED  |
+      | norole      | POST    | admin/       | 403    | -              |
+      | norole      | DELETE  | admin/       | 403    | -              |
+      | viewer      | GET     | admin/       | 403    | ACCESS_DENIED  |
+      | viewer      | HEAD    | admin/       | 403    | n/a            |
+      | viewer      | OPTIONS | admin/       | 403    | ACCESS_DENIED  |
+      | viewer      | POST    | admin/       | 403    | -              |
+      | viewer      | DELETE  | admin/       | 403    | -              |
+      | editor      | GET     | admin/       | 403    | ACCESS_DENIED  |
+      | editor      | HEAD    | admin/       | 403    | n/a            |
+      | editor      | OPTIONS | admin/       | 403    | ACCESS_DENIED  |
+      | editor      | POST    | admin/       | 403    | -              |
+      | editor      | DELETE  | admin/       | 403    | -              |
+      | manager     | GET     | admin/       | 403    | ACCESS_DENIED  |
+      | manager     | HEAD    | admin/       | 403    | n/a            |
+      | manager     | OPTIONS | admin/       | 403    | ACCESS_DENIED  |
+      | manager     | POST    | admin/       | 403    | -              |
+      | manager     | DELETE  | admin/       | 403    | -              |
+      | accessadmin | GET     | admin/       | 403    | ACCESS_DENIED  |
+      | accessadmin | HEAD    | admin/       | 403    | n/a            |
+      | accessadmin | OPTIONS | admin/       | 403    | ACCESS_DENIED  |
+      | accessadmin | POST    | admin/       | 403    | -              |
+      | accessadmin | DELETE  | admin/       | 403    | -              |
+      | accessadmin | GET     | admin/login/ | 200    | -              |
+      | accessadmin | HEAD    | admin/login/ | 200    | n/a            |
+      | admin       | GET     | admin/       | 302    | login redirect |
+      | admin       | HEAD    | admin/       | 302    | n/a            |
+      | admin       | OPTIONS | admin/       | 302    | login redirect |
+      | admin       | POST    | admin/       | 403    | -              |
+      | admin       | DELETE  | admin/       | 403    | -              |
+      | token-only  | GET     | admin/       | 302    | login redirect |
+      | token-only  | HEAD    | admin/       | 302    | n/a            |
+      | token-only  | OPTIONS | admin/       | 302    | login redirect |
+      | token-only  | POST    | admin/       | 403    | -              |
+      | token-only  | DELETE  | admin/       | 403    | -              |
 
   Scenario Outline: PM-07 admin_not_self_auth (contentdb router root) — <principal> <method>
     # The router root authenticates on Session + Basic only, so a Bearer JWT is no principal there: the gate answers 401 itself.
@@ -446,7 +448,7 @@ Feature: Access security — principal × route class × method
       | token-only  | DELETE  | api/pim/v2/admin/bdd-no-such-route/ | 404    | -     |
 
   Scenario Outline: PM-09 Django admin with a session — <principal>
-    # Operator Q1: the admin site is behind access.manage; the superuser and the Administrator role get the HTML index.
+    # D32 (replaces operator Q1): the admin site is for superusers only; the Administrator role signs in (staff baseline) but gets 403.
     Given the caller has a Django admin session as <principal>
     When the caller sends GET to "admin/"
     Then the answer is <status> with "<issue>"
@@ -454,7 +456,7 @@ Feature: Access security — principal × route class × method
     Examples: Django admin index over a session login
       | principal   | status | issue         |
       | admin       | 200    | -             |
-      | accessadmin | 200    | -             |
+      | accessadmin | 403    | ACCESS_DENIED |
       | manager     | 403    | ACCESS_DENIED |
       | editor      | 403    | ACCESS_DENIED |
       | viewer      | 403    | ACCESS_DENIED |

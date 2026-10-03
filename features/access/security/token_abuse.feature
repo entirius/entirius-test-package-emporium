@@ -4,7 +4,8 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
   I want every way a token can be wrong to look the same from outside
   So that a caller learns nothing about which tokens exist, were revoked, expired or belong elsewhere
 
-  Every token here is fresh (its own throttle bucket, apart from plan 17's) and expires 30 days ahead; the answers
+  Every token here is fresh (its own throttle bucket, apart from plan 17's) and expires 30 days ahead (a choice since
+  D31, not a rule); the answers
   are compared without their per-request debug_id, and none of them may carry a token value.
 
   Background:
@@ -101,18 +102,18 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
     Then the answer is 200 with "-"
     And the response field "expires_at" should be null
 
-  Scenario: TA-09 an issued secret token keeps an expiry of at most 365 days
+  Scenario: TA-09 an issued secret token takes any future expiry or none (D31: no lifetime cap)
     Given a security token "saved.secret" with scope "reviews.moderate"
     And the caller is admin
     When the caller sends POST to "api/access/v2/admin/tokens/{saved.secret}/expiry/" with body
       """
       {"expires_at": null}
       """
-    Then the answer is 400 with "-"
-    And the answer names the issue "EXPIRY_REQUIRED"
+    Then the answer is 200 with "-"
+    And the response field "expires_at" should be null
     When the caller sends POST to "api/access/v2/admin/tokens/{saved.secret}/expiry/" with body
       """
       {"expires_at": "{days_ahead:366}"}
       """
-    Then the answer is 400 with "-"
-    And the answer names the issue "EXPIRY_TOO_LONG"
+    Then the answer is 200 with "-"
+    And the answered expiry is 366 days ahead

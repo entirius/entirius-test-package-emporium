@@ -129,15 +129,15 @@ Key settings table: see `README.md`.
 
 ## Tags
 
-- `@access` (`features/access/`, 21 scenarios + the 486 of `@access-security`; needs `django_access` and its seeded
+- `@access` (`features/access/`, 21 scenarios + the 488 of `@access-security`; needs `django_access` and its seeded
   role users `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
   custom role + grant, audit (`gate.bypass` for superuser writes only), application tokens (scope, channel pin,
   revoke, rotate) and the legacy checkout key. Re-runnable on one database: run-unique names, every created object
   deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay, inactive).
-- `@access-security` (`features/access/security/`, 486 scenarios, also tagged `@access`; needs the seeded role users
-  plus `accessadmin`/`norole`): principal × route class × method matrix (366 rows, incl. Django admin over a session),
+- `@access-security` (`features/access/security/`, 488 scenarios, also tagged `@access`; needs the seeded role users
+  plus `accessadmin`/`norole`): principal × route class × method matrix (368 rows, incl. Django admin — superusers only, D32 — over a session),
   public/customer/key routes unchanged for shoppers (69), token abuse — one answer for every failure kind, legacy
-  key expiry (11), `access.manage` built-in only, mass assignment, secret-token expiry ≤ 365 days (32), superuser
+  key expiry (11), `access.manage` built-in only, mass assignment, secret tokens without a lifetime cap (D31) (32), superuser
   `gate.bypass` audit (3), secret hygiene (5). Re-runnable on one database. The zeno gate pipes service/worker logs and
   the Redis key list through `scripts/secret_scan.py --fixtures fixtures`.
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,

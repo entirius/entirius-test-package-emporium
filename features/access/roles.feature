@@ -141,10 +141,7 @@ Feature: Access roles — what each staff role may read and write
       | the atlas merge-by-ean     | POST   | api/atlas/v2/admin/realproducts/merge-by-ean/         |
       | the suppliers merge-by-ean | POST   | api/suppliers/v2/admin/realproducts/merge-by-ean/     |
 
-  @blocked-by-module
   Scenario: A-14 the viewer cannot start a paid AI test generation
-    # Blocked by django_communicator: TemplateTestGenerateView declares access_levels {"POST": "read"}, which wins
-    # over the access defaults (test-generate is no longer a POST-read there). Drop the tag once the view follows.
     Given the channel is the primary channel
     And the caller is viewer
     When the caller sends POST to "api/communicator/v2/admin/{channel_idx}/templates/999999/test-generate/"

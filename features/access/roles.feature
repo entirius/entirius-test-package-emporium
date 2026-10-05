@@ -98,3 +98,55 @@ Feature: Access roles — what each staff role may read and write
     Given I am authenticated as the manager staff user
     When I GET the v2 admin endpoint "access/me/"
     Then the permission "pim.product_delete" should be "write"
+
+  Scenario: A-12 only the manager deletes a feature set that still has products
+    # Deleting a feature set cascades to every product of the set in every channel: it is a SKU delete.
+    Given the channel is the primary channel
+    And a run-unique suffix is saved as "saved.run"
+    And the admin sends DELETE to "pim/admin/{channel_idx}/products/BDD-ACCESS-FS-{saved.run}/" when the scenario ends
+    And the admin sends DELETE to "pim/admin/feature-sets/bdd-access-fs-{saved.run}/" when the scenario ends
+    And I am authenticated as the editor staff user
+    When I POST to the v2 admin endpoint "pim/admin/feature-sets/" with body
+      """
+      {"idx": "bdd-access-fs-{saved.run}", "name": "BDD access feature set"}
+      """
+    Then the response status should be 201
+    When I POST to the v2 admin endpoint "pim/admin/{channel_idx}/products/" with body
+      """
+      {"sku": "BDD-ACCESS-FS-{saved.run}", "feature_set_idx": "bdd-access-fs-{saved.run}", "visibility": 4, "is_enabled": true, "product_class": 1, "kind_of_product": 0}
+      """
+    Then the response status should be 201
+    When I DELETE the v2 admin endpoint "pim/admin/feature-sets/bdd-access-fs-{saved.run}/"
+    Then the gate refuses with issue "ACCESS_DENIED"
+    And the refusal names "needs pim.product_delete:write"
+    When I GET the v2 admin endpoint "pim/admin/{channel_idx}/products/BDD-ACCESS-FS-{saved.run}/"
+    Then the response status should be 200
+    Given I am authenticated as the manager staff user
+    When I DELETE the v2 admin endpoint "pim/admin/feature-sets/bdd-access-fs-{saved.run}/"
+    Then the response status should be 200
+    When I GET the unknown v2 admin path "pim/admin/{channel_idx}/products/BDD-ACCESS-FS-{saved.run}/"
+    Then the response status should be 404
+
+  Scenario Outline: A-13 the editor cannot delete a SKU through <route>
+    # The SKU does not exist and the merge body is empty: a wrongly admitted request meets the view's 400/404.
+    Given the channel is the primary channel
+    And the caller is editor
+    When the caller sends <method> to "<path>"
+    Then the answer is 403 with "ACCESS_DENIED"
+    And the refusal names "needs pim.product_delete:write"
+
+    Examples: SKU-deleting routes
+      | route                      | method | path                                                  |
+      | the legacy PIM root        | DELETE | api/pim/admin/{channel_idx}/products/BDD-NO-SUCH-SKU/ |
+      | the atlas merge-by-ean     | POST   | api/atlas/v2/admin/realproducts/merge-by-ean/         |
+      | the suppliers merge-by-ean | POST   | api/suppliers/v2/admin/realproducts/merge-by-ean/     |
+
+  @blocked-by-module
+  Scenario: A-14 the viewer cannot start a paid AI test generation
+    # Blocked by django_communicator: TemplateTestGenerateView declares access_levels {"POST": "read"}, which wins
+    # over the access defaults (test-generate is no longer a POST-read there). Drop the tag once the view follows.
+    Given the channel is the primary channel
+    And the caller is viewer
+    When the caller sends POST to "api/communicator/v2/admin/{channel_idx}/templates/999999/test-generate/"
+    Then the answer is 403 with "ACCESS_DENIED"
+    And the refusal names "needs communicator.content:write"

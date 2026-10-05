@@ -17,6 +17,7 @@ import itertools
 import json
 import re
 import secrets
+import time
 import uuid
 from datetime import UTC, datetime, timedelta
 
@@ -350,6 +351,7 @@ CREDENTIAL_HEADERS = ("Authorization", "Cookie", "X-API-KEY", "X-API-ADMIN-KEY")
 SECRET_FIELDS = frozenset({"raw", "key_hash"})
 DAYS_AHEAD = re.compile(r"\{days_ahead:(-?\d+)\}")
 EXPIRY_SLACK = timedelta(minutes=10)
+EXPIRES_SOON = timedelta(seconds=2)
 NO_VALUE = "-"
 STATUS_ONLY = "n/a"  # HEAD: no body to read
 LOGIN_REDIRECT = "login redirect"
@@ -656,6 +658,16 @@ def step_security_token(context, alias, scope):
 @given('a security token "{alias}" with scope "{scope}" pinned to the {position} seed channel')
 def step_pinned_security_token(context, alias, scope, position):
     _issue_security_token(context, alias, {"scopes": [scope], "channel_idx": _seed_channel(context, position)})
+
+
+@given('a security token "{alias}" with scope "{scope}" pinned to the {position} seed channel that has expired')
+def step_expired_security_token(context, alias, scope, position):
+    """Issued to expire in two seconds, then waited out: the API never takes an expiry in the past."""
+    expires_at = datetime.now(UTC) + EXPIRES_SOON
+    channel_idx = _seed_channel(context, position)
+    body = {"scopes": [scope], "channel_idx": channel_idx, "expires_at": expires_at.isoformat()}
+    _issue_security_token(context, alias, body)
+    time.sleep((expires_at - datetime.now(UTC)).total_seconds() + 1)
 
 
 @when('the tokens "{aliases}" are sent in "{header}" with {method:w} to "{path}"')

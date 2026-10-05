@@ -15,11 +15,12 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
     Given an unknown token value "unknown"
     And a security token "revoked" with scope "contact_forms.submit" pinned to the first seed channel
     And a security token "rotated" with scope "contact_forms.submit" pinned to the first seed channel
+    And a security token "expired" with scope "contact_forms.submit" pinned to the first seed channel that has expired
     And a security token "wrong-scope" with scope "contact_forms.booking" pinned to the first seed channel
     And a security token "other-channel" with scope "contact_forms.submit" pinned to the second seed channel
     When I revoke the token "revoked"
     And I rotate the token "rotated" without overlap as "successor"
-    And the tokens "unknown, revoked, rotated, wrong-scope, other-channel" are sent in "X-API-KEY" with POST to "api/contact-forms/v2/{channel_idx}/submit/"
+    And the tokens "unknown, revoked, rotated, expired, wrong-scope, other-channel" are sent in "X-API-KEY" with POST to "api/contact-forms/v2/{channel_idx}/submit/"
       """
       {"email": "bdd-access-security@example.com", "body": {"name": "BDD access security"}}
       """

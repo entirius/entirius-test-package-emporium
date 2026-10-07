@@ -71,9 +71,17 @@ Feature: Navigation Public API
     Then the response status should be 200
     And the first column of the first navigation item should have heading "Shop by Category"
 
-  Scenario: Unpublished footer navigation returns 404
+  Scenario: Get published navigation for footer type returns 200
     When I GET the v2 admin endpoint "contentdb/navigation/footer/"
-    Then the response status should be 404
+    Then the response status should be 200
+    And the navigation content should have 3 items
+
+  Scenario: Footer columns hold the links
+    When I GET the v2 admin endpoint "contentdb/navigation/footer/"
+    Then the response status should be 200
+    And the first navigation item should have label "Shop"
+    And the first navigation item should have 1 columns
+    And the first column of the first navigation item should have heading "Shop"
 
   Scenario: Non-existent content type returns 404
     When I GET the v2 admin endpoint "contentdb/navigation/nonexistent/"

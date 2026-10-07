@@ -142,6 +142,16 @@ for record in Content.objects.all():
                 }
                 changed = True
 
+    # Patch sections that carry their own image (they have no tiles)
+    if data and 'sections' in data:
+        for section_data in data['sections'].values():
+            if section_data.get('core_type') in ('section-banner', 'section-mini-banner') and hero_desktop:
+                section_data['images_set'] = {
+                    'desktop': hero_desktop,
+                    'mobile': hero_mobile or hero_desktop,
+                }
+                changed = True
+
     # Patch blog extension images_set
     ext = record.extension
     if ext and isinstance(ext, dict) and 'images_set' in ext and blog_cover:

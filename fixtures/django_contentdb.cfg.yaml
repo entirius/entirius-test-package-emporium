@@ -259,49 +259,147 @@
     content:
       document_configs: {}
       tiles:
-        bb000101-0000-4000-8000-000000000001:
+        bb000101-0001-4000-8000-000000000001:
           core_type: tile-hero
-          dye: 3
+          dye: 1
           tile_align: left
-          title: "Welcome to Entirius"
-          description: "<p>Your modern e-commerce platform for the digital age.</p>"
+          title: "Seats built for long shifts"
+          description: "<p>Command chairs, recliners and swivel seats from the Orion and Solaris collections.</p>"
           custom_buttons:
-            - label: "Explore"
-              url: "/about"
+            - label: "Shop chairs"
+              url: "/c/chairs"
+              type: "internal"
+        bb000101-0002-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 2
+          tile_align: right
+          title: "Up to 25% off selected pieces"
+          description: "<p>Sofas, ottomans and bundles at their lowest prices this season.</p>"
+          custom_buttons:
+            - label: "Shop the sale"
+              url: "/c/sale"
               type: "internal"
         bb000102-0001-4000-8000-000000000001:
-          core_type: tile-txt-btn
-          title: "Featured Products"
-          description: "<p>Discover our curated selection of quality products.</p>"
-          custom_buttons:
-            - label: "Browse"
-              url: "/c/"
-              type: "internal"
+          core_type: tile-title-desc-img
+          title: "Delivery across Europe"
+          description: "<p>Tracked shipping to every country we sell in.</p>"
         bb000102-0002-4000-8000-000000000001:
+          core_type: tile-title-desc-img
+          title: "30-day returns"
+          description: "<p>Changed your mind? Send it back within 30 days.</p>"
+        bb000102-0003-4000-8000-000000000001:
+          core_type: tile-title-desc-img
+          title: "Secure payments"
+          description: "<p>Card, bank transfer and pay-later options.</p>"
+        bb000105-0001-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-C004"
+        bb000105-0002-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-O003"
+        bb000105-0003-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-S004"
+        bb000105-0004-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-B005"
+        bb000106-0001-4000-8000-000000000001:
+          core_type: tile-image
+        bb000106-0002-4000-8000-000000000001:
           core_type: tile-txt-btn
-          title: "Latest News"
-          description: "<p>Stay updated with the latest from Entirius.</p>"
+          dye: 1
+          description: "<h2>Furniture for life in orbit</h2><p>Entirius is a demo store for the Entirius e-commerce platform. Every product, price and promotion here comes from the platform's seed data.</p>"
           custom_buttons:
-            - label: "Read more"
-              url: "/welcome-to-entirius"
+            - label: "About us"
+              url: "/about"
               type: "internal"
+        bb000107-0001-4000-8000-000000000001:
+          core_type: tile-accordion
+          accordion_tile:
+            - label: "How long does delivery take?"
+              wysiwyg: "<p>Most orders arrive within 3 to 7 working days. You get a tracking link as soon as the parcel leaves our warehouse.</p>"
+            - label: "Can I return a product?"
+              wysiwyg: "<p>Yes, within 30 days of delivery. The product should be unused and in its original packaging.</p>"
+            - label: "Which payment methods do you accept?"
+              wysiwyg: "<p>Card payments, bank transfer and pay-later, depending on your country.</p>"
+            - label: "Do I need an account to order?"
+              wysiwyg: "<p>No. You can check out as a guest; an account lets you see your orders and save addresses.</p>"
+            - label: "How do discount codes work?"
+              wysiwyg: "<p>Enter the code in the cart or at checkout. Only one code applies per order.</p>"
       sections:
         aa000101-0000-4000-8000-000000000001:
           core_type: section-hero-slider
           width: full_width
         aa000102-0000-4000-8000-000000000001:
-          core_type: section-text
-          title: "Discover Entirius"
-          width: content_width
+          core_type: section-icon-grid
+          dye: 1
+          title: "Why shop with us"
+        aa000103-0000-4000-8000-000000000001:
+          core_type: section-product-slider-category
+          grid: slider
+          title: "Chairs"
+          description: "<p>From command decks to quiet corners.</p>"
+          custom_field: "chairs"
+          custom_buttons:
+            - label: "All chairs"
+              url: "/c/chairs"
+              type: "internal"
+        aa000104-0000-4000-8000-000000000001:
+          core_type: section-banner
+          dye: 2
+          banner_type: banner
+          width: container
+          tile_align: left
+          margin: true
+          title: "Commander's Comfort Bundle"
+          description: "<p>A sofa, an ottoman and cushions that belong together, for less than apart.</p>"
+          product_sku: "ENT-BND01"
+          custom_buttons:
+            - label: "See the bundle"
+              url: "/p/commanders-comfort-bundle"
+              type: "internal"
+        aa000105-0000-4000-8000-000000000001:
+          core_type: section-product-slider-via-sku
+          grid: grid
+          title: "On sale"
+          custom_buttons:
+            - label: "All deals"
+              url: "/c/sale"
+              type: "internal"
+        aa000106-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: container
+          margin: true
+        aa000107-0000-4000-8000-000000000001:
+          core_type: section-accordion
+          dye: 1
+          title: "Frequently asked questions"
       tiles_order:
         aa000101-0000-4000-8000-000000000001:
-          - bb000101-0000-4000-8000-000000000001
+          - bb000101-0001-4000-8000-000000000001
+          - bb000101-0002-4000-8000-000000000001
         aa000102-0000-4000-8000-000000000001:
           - bb000102-0001-4000-8000-000000000001
           - bb000102-0002-4000-8000-000000000001
+          - bb000102-0003-4000-8000-000000000001
+        aa000105-0000-4000-8000-000000000001:
+          - bb000105-0001-4000-8000-000000000001
+          - bb000105-0002-4000-8000-000000000001
+          - bb000105-0003-4000-8000-000000000001
+          - bb000105-0004-4000-8000-000000000001
+        aa000106-0000-4000-8000-000000000001:
+          - bb000106-0001-4000-8000-000000000001
+          - bb000106-0002-4000-8000-000000000001
+        aa000107-0000-4000-8000-000000000001:
+          - bb000107-0001-4000-8000-000000000001
       sections_order:
         - aa000101-0000-4000-8000-000000000001
         - aa000102-0000-4000-8000-000000000001
+        - aa000103-0000-4000-8000-000000000001
+        - aa000104-0000-4000-8000-000000000001
+        - aa000105-0000-4000-8000-000000000001
+        - aa000106-0000-4000-8000-000000000001
+        - aa000107-0000-4000-8000-000000000001
     extension: null
     meta:
       title: "Home"
@@ -320,49 +418,147 @@
     content:
       document_configs: {}
       tiles:
-        bb000101-0000-4000-8000-000000000001:
+        bb000101-0001-4000-8000-000000000001:
           core_type: tile-hero
-          dye: 3
+          dye: 1
           tile_align: left
-          title: "Welcome to Entirius"
-          description: "<p>Your modern e-commerce platform for the digital age.</p>"
+          title: "Seats built for long shifts"
+          description: "<p>Command chairs, recliners and swivel seats from the Orion and Solaris collections.</p>"
           custom_buttons:
-            - label: "Explore"
-              url: "/about"
+            - label: "Shop chairs"
+              url: "/c/chairs"
+              type: "internal"
+        bb000101-0002-4000-8000-000000000001:
+          core_type: tile-hero
+          dye: 2
+          tile_align: right
+          title: "Up to 25% off selected pieces"
+          description: "<p>Sofas, ottomans and bundles at their lowest prices this season.</p>"
+          custom_buttons:
+            - label: "Shop the sale"
+              url: "/c/sale"
               type: "internal"
         bb000102-0001-4000-8000-000000000001:
-          core_type: tile-txt-btn
-          title: "Featured Products"
-          description: "<p>Discover our curated selection of quality products.</p>"
-          custom_buttons:
-            - label: "Browse"
-              url: "/c/"
-              type: "internal"
+          core_type: tile-title-desc-img
+          title: "Delivery across Europe"
+          description: "<p>Tracked shipping to every country we sell in.</p>"
         bb000102-0002-4000-8000-000000000001:
+          core_type: tile-title-desc-img
+          title: "30-day returns"
+          description: "<p>Changed your mind? Send it back within 30 days.</p>"
+        bb000102-0003-4000-8000-000000000001:
+          core_type: tile-title-desc-img
+          title: "Secure payments"
+          description: "<p>Card, bank transfer and pay-later options.</p>"
+        bb000105-0001-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-C004"
+        bb000105-0002-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-O003"
+        bb000105-0003-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-S004"
+        bb000105-0004-4000-8000-000000000001:
+          core_type: tile-product
+          sku: "ENT-B005"
+        bb000106-0001-4000-8000-000000000001:
+          core_type: tile-image
+        bb000106-0002-4000-8000-000000000001:
           core_type: tile-txt-btn
-          title: "Latest News"
-          description: "<p>Stay updated with the latest from Entirius.</p>"
+          dye: 1
+          description: "<h2>Furniture for life in orbit</h2><p>Entirius is a demo store for the Entirius e-commerce platform. Every product, price and promotion here comes from the platform's seed data.</p>"
           custom_buttons:
-            - label: "Read more"
-              url: "/welcome-to-entirius"
+            - label: "About us"
+              url: "/about"
               type: "internal"
+        bb000107-0001-4000-8000-000000000001:
+          core_type: tile-accordion
+          accordion_tile:
+            - label: "How long does delivery take?"
+              wysiwyg: "<p>Most orders arrive within 3 to 7 working days. You get a tracking link as soon as the parcel leaves our warehouse.</p>"
+            - label: "Can I return a product?"
+              wysiwyg: "<p>Yes, within 30 days of delivery. The product should be unused and in its original packaging.</p>"
+            - label: "Which payment methods do you accept?"
+              wysiwyg: "<p>Card payments, bank transfer and pay-later, depending on your country.</p>"
+            - label: "Do I need an account to order?"
+              wysiwyg: "<p>No. You can check out as a guest; an account lets you see your orders and save addresses.</p>"
+            - label: "How do discount codes work?"
+              wysiwyg: "<p>Enter the code in the cart or at checkout. Only one code applies per order.</p>"
       sections:
         aa000101-0000-4000-8000-000000000001:
           core_type: section-hero-slider
           width: full_width
         aa000102-0000-4000-8000-000000000001:
-          core_type: section-text
-          title: "Discover Entirius"
-          width: content_width
+          core_type: section-icon-grid
+          dye: 1
+          title: "Why shop with us"
+        aa000103-0000-4000-8000-000000000001:
+          core_type: section-product-slider-category
+          grid: slider
+          title: "Chairs"
+          description: "<p>From command decks to quiet corners.</p>"
+          custom_field: "chairs"
+          custom_buttons:
+            - label: "All chairs"
+              url: "/c/chairs"
+              type: "internal"
+        aa000104-0000-4000-8000-000000000001:
+          core_type: section-banner
+          dye: 2
+          banner_type: banner
+          width: container
+          tile_align: left
+          margin: true
+          title: "Commander's Comfort Bundle"
+          description: "<p>A sofa, an ottoman and cushions that belong together, for less than apart.</p>"
+          product_sku: "ENT-BND01"
+          custom_buttons:
+            - label: "See the bundle"
+              url: "/p/commanders-comfort-bundle"
+              type: "internal"
+        aa000105-0000-4000-8000-000000000001:
+          core_type: section-product-slider-via-sku
+          grid: grid
+          title: "On sale"
+          custom_buttons:
+            - label: "All deals"
+              url: "/c/sale"
+              type: "internal"
+        aa000106-0000-4000-8000-000000000001:
+          core_type: section-image-text
+          width: container
+          margin: true
+        aa000107-0000-4000-8000-000000000001:
+          core_type: section-accordion
+          dye: 1
+          title: "Frequently asked questions"
       tiles_order:
         aa000101-0000-4000-8000-000000000001:
-          - bb000101-0000-4000-8000-000000000001
+          - bb000101-0001-4000-8000-000000000001
+          - bb000101-0002-4000-8000-000000000001
         aa000102-0000-4000-8000-000000000001:
           - bb000102-0001-4000-8000-000000000001
           - bb000102-0002-4000-8000-000000000001
+          - bb000102-0003-4000-8000-000000000001
+        aa000105-0000-4000-8000-000000000001:
+          - bb000105-0001-4000-8000-000000000001
+          - bb000105-0002-4000-8000-000000000001
+          - bb000105-0003-4000-8000-000000000001
+          - bb000105-0004-4000-8000-000000000001
+        aa000106-0000-4000-8000-000000000001:
+          - bb000106-0001-4000-8000-000000000001
+          - bb000106-0002-4000-8000-000000000001
+        aa000107-0000-4000-8000-000000000001:
+          - bb000107-0001-4000-8000-000000000001
       sections_order:
         - aa000101-0000-4000-8000-000000000001
         - aa000102-0000-4000-8000-000000000001
+        - aa000103-0000-4000-8000-000000000001
+        - aa000104-0000-4000-8000-000000000001
+        - aa000105-0000-4000-8000-000000000001
+        - aa000106-0000-4000-8000-000000000001
+        - aa000107-0000-4000-8000-000000000001
     extension: null
     meta:
       title: "Home"
@@ -392,10 +588,10 @@
       sections:
         aa000201-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000202-0000-4000-8000-000000000001:
           core_type: section-image-text
-          width: content_width
+          width: container
       tiles_order:
         aa000201-0000-4000-8000-000000000001:
           - bb000201-0001-4000-8000-000000000001
@@ -433,10 +629,10 @@
       sections:
         aa000201-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000202-0000-4000-8000-000000000001:
           core_type: section-image-text
-          width: content_width
+          width: container
       tiles_order:
         aa000201-0000-4000-8000-000000000001:
           - bb000201-0001-4000-8000-000000000001
@@ -469,25 +665,23 @@
           description: "<p>Get in touch with our team for any questions or support.</p>"
         bb000302-0001-4000-8000-000000000001:
           core_type: tile-accordion
-          title: "How can I reach support?"
-          description: "<p>Email us at support@entirius.com or use the contact form.</p>"
-        bb000302-0002-4000-8000-000000000001:
-          core_type: tile-accordion
-          title: "What are your business hours?"
-          description: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
+          accordion_tile:
+            - label: "How can I reach support?"
+              wysiwyg: "<p>Email us at support@entirius.com or use the contact form.</p>"
+            - label: "What are your business hours?"
+              wysiwyg: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
       sections:
         aa000301-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000302-0000-4000-8000-000000000001:
           core_type: section-accordion
-          width: content_width
+          width: container
       tiles_order:
         aa000301-0000-4000-8000-000000000001:
           - bb000301-0001-4000-8000-000000000001
         aa000302-0000-4000-8000-000000000001:
           - bb000302-0001-4000-8000-000000000001
-          - bb000302-0002-4000-8000-000000000001
       sections_order:
         - aa000301-0000-4000-8000-000000000001
         - aa000302-0000-4000-8000-000000000001
@@ -515,25 +709,23 @@
           description: "<p>Get in touch with our team for any questions or support.</p>"
         bb000302-0001-4000-8000-000000000001:
           core_type: tile-accordion
-          title: "How can I reach support?"
-          description: "<p>Email us at support@entirius.com or use the contact form.</p>"
-        bb000302-0002-4000-8000-000000000001:
-          core_type: tile-accordion
-          title: "What are your business hours?"
-          description: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
+          accordion_tile:
+            - label: "How can I reach support?"
+              wysiwyg: "<p>Email us at support@entirius.com or use the contact form.</p>"
+            - label: "What are your business hours?"
+              wysiwyg: "<p>Monday to Friday, 9 AM to 5 PM CET.</p>"
       sections:
         aa000301-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000302-0000-4000-8000-000000000001:
           core_type: section-accordion
-          width: content_width
+          width: container
       tiles_order:
         aa000301-0000-4000-8000-000000000001:
           - bb000301-0001-4000-8000-000000000001
         aa000302-0000-4000-8000-000000000001:
           - bb000302-0001-4000-8000-000000000001
-          - bb000302-0002-4000-8000-000000000001
       sections_order:
         - aa000301-0000-4000-8000-000000000001
         - aa000302-0000-4000-8000-000000000001
@@ -593,12 +785,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000401-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000401-0000-4000-8000-000000000001:
           - bb000401-0001-4000-8000-000000000001
@@ -678,12 +870,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000401-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000401-0000-4000-8000-000000000001:
           - bb000401-0001-4000-8000-000000000001
@@ -774,17 +966,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000501-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000501-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000501-0000-4000-8000-000000000001:
           - bb000501-0001-4000-8000-000000000001
@@ -877,17 +1069,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000501-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000501-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000501-0000-4000-8000-000000000001:
           - bb000501-0001-4000-8000-000000000001
@@ -944,10 +1136,10 @@
       sections:
         aa000601-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000602-0000-4000-8000-000000000001:
           core_type: section-image-text
-          width: content_width
+          width: container
       tiles_order:
         aa000601-0000-4000-8000-000000000001:
           - bb000601-0001-4000-8000-000000000001
@@ -983,10 +1175,10 @@
       sections:
         aa000601-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
         aa000602-0000-4000-8000-000000000001:
           core_type: section-image-text
-          width: content_width
+          width: container
       tiles_order:
         aa000601-0000-4000-8000-000000000001:
           - bb000601-0001-4000-8000-000000000001
@@ -1216,17 +1408,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000701-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000701-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000701-0000-4000-8000-000000000001:
           - bb000701-0001-4000-8000-000000000001
@@ -1312,17 +1504,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000701-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000701-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000701-0000-4000-8000-000000000001:
           - bb000701-0001-4000-8000-000000000001
@@ -1397,12 +1589,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000801-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000801-0000-4000-8000-000000000001:
           - bb000801-0001-4000-8000-000000000001
@@ -1474,12 +1666,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa000801-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa000801-0000-4000-8000-000000000001:
           - bb000801-0001-4000-8000-000000000001
@@ -1650,10 +1842,10 @@
 
 # =========================================================================
 # Navigation — Megamenu (header layout extender)
-# Content pk=17 (draft body), pk=18 (published snapshot), pk=19 (footer draft)
+# Content pk=17 (draft body), pk=18 (published snapshot), pk=19 (footer draft), pk=28 (footer published)
 # Draft pk=9 (megamenu, is_system=true), pk=10 (footer, is_system=true)
-# Published pk=9 (megamenu only — footer not published)
-# Route pk=8 (layout-extender-header)
+# Published pk=9 (megamenu), pk=14 (footer)
+# Route pk=8 (layout-extender-header), pk=13 (layout-extender-footer)
 # =========================================================================
 
 # --- Megamenu draft content ---
@@ -2094,7 +2286,94 @@
   fields:
     uid: c0000019-0001-4000-8000-000000000001
     content:
-      items: []
+      items:
+        - id: "foot-item-0001-0000-4000-8000-000000000001"
+          label: "Shop"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 0
+          columns:
+            - id: "foot-col-0001-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Shop"
+              sort_order: 0
+              links:
+                - id: "foot-link-0001-0001-4000-8000-000000000001"
+                  label: "Chairs"
+                  link_type: "category"
+                  link_value: "chairs"
+                  sort_order: 0
+                - id: "foot-link-0001-0002-4000-8000-000000000001"
+                  label: "Sofas"
+                  link_type: "category"
+                  link_value: "sofas"
+                  sort_order: 1
+                - id: "foot-link-0001-0003-4000-8000-000000000001"
+                  label: "Ottomans"
+                  link_type: "category"
+                  link_value: "ottomans"
+                  sort_order: 2
+                - id: "foot-link-0001-0004-4000-8000-000000000001"
+                  label: "Office"
+                  link_type: "category"
+                  link_value: "office"
+                  sort_order: 3
+                - id: "foot-link-0001-0005-4000-8000-000000000001"
+                  label: "Sale"
+                  link_type: "category"
+                  link_value: "sale"
+                  sort_order: 4
+        - id: "foot-item-0002-0000-4000-8000-000000000001"
+          label: "Help"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 1
+          columns:
+            - id: "foot-col-0002-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Help"
+              sort_order: 0
+              links:
+                - id: "foot-link-0002-0001-4000-8000-000000000001"
+                  label: "Contact"
+                  link_type: "page"
+                  link_value: "contact"
+                  sort_order: 0
+                - id: "foot-link-0002-0002-4000-8000-000000000001"
+                  label: "Product showcase"
+                  link_type: "page"
+                  link_value: "product-showcase"
+                  sort_order: 1
+        - id: "foot-item-0003-0000-4000-8000-000000000001"
+          label: "Company"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 2
+          columns:
+            - id: "foot-col-0003-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Company"
+              sort_order: 0
+              links:
+                - id: "foot-link-0003-0001-4000-8000-000000000001"
+                  label: "About us"
+                  link_type: "page"
+                  link_value: "about"
+                  sort_order: 0
+                - id: "foot-link-0003-0002-4000-8000-000000000001"
+                  label: "Blog"
+                  link_type: "page"
+                  link_value: "blog"
+                  sort_order: 1
     extension: null
     meta: null
     created_at: 2026-03-15 10:00:00+00:00
@@ -2115,7 +2394,7 @@
       - 1
     channels: []
 
-# --- Footer Draft (is_system=true, not published) ---
+# --- Footer Draft (is_system=true) ---
 - model: django_contentdb.draft
   pk: 10
   fields:
@@ -2148,6 +2427,126 @@
     updated_at: 2026-03-15 10:00:00+00:00
     drafts:
       - 9
+
+# --- Footer published snapshot content (mirrors pk=19) ---
+- model: django_contentdb.content
+  pk: 28
+  fields:
+    uid: c0000019-0002-4000-8000-000000000002
+    content:
+      items:
+        - id: "foot-item-0001-0000-4000-8000-000000000001"
+          label: "Shop"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 0
+          columns:
+            - id: "foot-col-0001-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Shop"
+              sort_order: 0
+              links:
+                - id: "foot-link-0001-0001-4000-8000-000000000001"
+                  label: "Chairs"
+                  link_type: "category"
+                  link_value: "chairs"
+                  sort_order: 0
+                - id: "foot-link-0001-0002-4000-8000-000000000001"
+                  label: "Sofas"
+                  link_type: "category"
+                  link_value: "sofas"
+                  sort_order: 1
+                - id: "foot-link-0001-0003-4000-8000-000000000001"
+                  label: "Ottomans"
+                  link_type: "category"
+                  link_value: "ottomans"
+                  sort_order: 2
+                - id: "foot-link-0001-0004-4000-8000-000000000001"
+                  label: "Office"
+                  link_type: "category"
+                  link_value: "office"
+                  sort_order: 3
+                - id: "foot-link-0001-0005-4000-8000-000000000001"
+                  label: "Sale"
+                  link_type: "category"
+                  link_value: "sale"
+                  sort_order: 4
+        - id: "foot-item-0002-0000-4000-8000-000000000001"
+          label: "Help"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 1
+          columns:
+            - id: "foot-col-0002-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Help"
+              sort_order: 0
+              links:
+                - id: "foot-link-0002-0001-4000-8000-000000000001"
+                  label: "Contact"
+                  link_type: "page"
+                  link_value: "contact"
+                  sort_order: 0
+                - id: "foot-link-0002-0002-4000-8000-000000000001"
+                  label: "Product showcase"
+                  link_type: "page"
+                  link_value: "product-showcase"
+                  sort_order: 1
+        - id: "foot-item-0003-0000-4000-8000-000000000001"
+          label: "Company"
+          display_as: "megamenu"
+          link_type: "url"
+          link_value: ""
+          icon: ""
+          color: ""
+          sort_order: 2
+          columns:
+            - id: "foot-col-0003-0001-4000-8000-000000000001"
+              type: "links"
+              heading: "Company"
+              sort_order: 0
+              links:
+                - id: "foot-link-0003-0001-4000-8000-000000000001"
+                  label: "About us"
+                  link_type: "page"
+                  link_value: "about"
+                  sort_order: 0
+                - id: "foot-link-0003-0002-4000-8000-000000000001"
+                  label: "Blog"
+                  link_type: "page"
+                  link_value: "blog"
+                  sort_order: 1
+    extension: null
+    meta: null
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    category: null
+
+# --- Footer Published ---
+- model: django_contentdb.published
+  pk: 14
+  fields:
+    draft: 10
+    content: 28
+    created_at: 2026-03-15 10:00:00+00:00
+
+# --- Footer Route ---
+- model: django_contentdb.route
+  pk: 13
+  fields:
+    url: layout-extender-footer
+    label: Footer
+    placement: bottom
+    created_at: 2026-03-15 10:00:00+00:00
+    updated_at: 2026-03-15 10:00:00+00:00
+    drafts:
+      - 10
 
 # =========================================================================
 # Page 9: Product Showcase (static-page with product_sku tile props)
@@ -2204,7 +2603,7 @@
         aa000902-0000-4000-8000-000000000001:
           core_type: section-text
           title: "More Picks"
-          width: content_width
+          width: container
       tiles_order:
         aa000901-0000-4000-8000-000000000001:
           - bb000901-0001-4000-8000-000000000001
@@ -2272,7 +2671,7 @@
         aa000902-0000-4000-8000-000000000001:
           core_type: section-text
           title: "More Picks"
-          width: content_width
+          width: container
       tiles_order:
         aa000901-0000-4000-8000-000000000001:
           - bb000901-0001-4000-8000-000000000001
@@ -2359,7 +2758,7 @@
           width: full_width
         aa001002-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
       tiles_order:
         aa001001-0000-4000-8000-000000000001:
           - bb001001-0001-4000-8000-000000000001
@@ -2406,7 +2805,7 @@
           width: full_width
         aa001002-0000-4000-8000-000000000001:
           core_type: section-text
-          width: content_width
+          width: container
       tiles_order:
         aa001001-0000-4000-8000-000000000001:
           - bb001001-0001-4000-8000-000000000001
@@ -2498,12 +2897,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001101-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa001101-0000-4000-8000-000000000001:
           - bb001101-0001-4000-8000-000000000001
@@ -2576,12 +2975,12 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001101-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa001101-0000-4000-8000-000000000001:
           - bb001101-0001-4000-8000-000000000001
@@ -2717,17 +3116,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001201-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001201-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa001201-0000-4000-8000-000000000001:
           - bb001201-0001-4000-8000-000000000001
@@ -2824,17 +3223,17 @@
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001201-0001-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
         aa001201-0002-4000-8000-000000000001:
           core_type: section-text
           variant: 3
           dye: 3
-          width: content_width
+          width: container
       tiles_order:
         aa001201-0000-4000-8000-000000000001:
           - bb001201-0001-4000-8000-000000000001

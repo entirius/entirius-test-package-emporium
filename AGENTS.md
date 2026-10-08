@@ -122,6 +122,13 @@ Key settings table: see `README.md`.
   Tokens of these steps live in the shared, never-deactivated application `bdd-access-security` (revoked per
   scenario, 30-day expiry); a `raw` in any answer moves to `context.raw_tokens` and its token is revoked at the end.
   Audit: `the audit log counts {n} "gate.bypass" after "{mark}" for {METHOD} "{route}" [with status {s}]`.
+  A generated staff `password` in an answer is kept aside like a `raw` (`I save the answered password as "{alias}"`);
+  `a generated password is saved as "{alias}"`, `the caller signs in as "{username}" through customer tokens with the
+  password "{alias}"` (the CMS login, primary channel), `no staff account has the {username|email} "{value}"`,
+  `the answer field "{dotted.path}" is {json}`, `the answer names the field "{field}"`. Pinned erase: `the channel is
+  the {first|second} seed channel`, `the caller presents the token "{alias}" in "{header}"`, `the customer account of
+  user "{alias}" belongs to the {position} seed channel` (Django admin form — the signup is not available on zeno).
+  Legacy keys are chosen by channel: `… legacy "{scope}" token pinned to the {first|second} seed channel …`.
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
 - `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
@@ -129,17 +136,20 @@ Key settings table: see `README.md`.
 
 ## Tags
 
-- `@access` (`features/access/`, 21 scenarios + the 488 of `@access-security`; needs `django_access` and its seeded
+- `@access` (`features/access/`, 38 scenarios + the 507 of `@access-security`; needs `django_access` and its seeded
   role users `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
-  custom role + grant, audit (`gate.bypass` for superuser writes only), application tokens (scope, channel pin,
-  revoke, rotate) and the legacy checkout key. Re-runnable on one database: run-unique names, every created object
-  deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay, inactive).
-- `@access-security` (`features/access/security/`, 488 scenarios, also tagged `@access`; needs the seeded role users
+  custom role + grant, audit (`gate.bypass` for superuser writes only), staff accounts created through the admin API
+  (D1: sign-in through `customer/tokens/`, refusals), application tokens (scope, channel pin, revoke, rotate) and the
+  legacy checkout key — one pinned token per seed channel (D2). Re-runnable on one database: run-unique names, every
+  created object deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay,
+  inactive; created staff accounts stay too, there is no delete endpoint).
+- `@access-security` (`features/access/security/`, 507 scenarios, also tagged `@access`; needs the seeded role users
   plus `accessadmin`/`norole`): principal × route class × method matrix (368 rows, incl. Django admin — superusers only, D32 — over a session),
   public/customer/key routes unchanged for shoppers (69), token abuse — one answer for every failure kind, legacy
-  key expiry (11), `access.manage` built-in only, mass assignment, secret tokens without a lifetime cap (D31) (32), superuser
-  `gate.bypass` audit (3), secret hygiene (5). Re-runnable on one database. The zeno gate pipes service/worker logs and
-  the Redis key list through `scripts/secret_scan.py --fixtures fixtures`.
+  key expiry (11), `access.manage` built-in only, mass assignment, secret tokens without a lifetime cap (D31) (33),
+  sensitive routes (17), a pinned erase token erases only in its channel (D3, 1), superuser `gate.bypass` audit (3),
+  secret hygiene (5). Re-runnable on one database. The zeno gate pipes service/worker logs and the Redis key list
+  through `scripts/secret_scan.py --fixtures fixtures`.
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
   no API; needs GreenMail (zeno `make mail`).
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,

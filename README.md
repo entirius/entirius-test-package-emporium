@@ -68,7 +68,7 @@ Point `test_package_path` at any directory with the standard CSV layout to switc
 | `@checkout`, `@discount-rules` | Cart and discount rules |
 | `@admin`, `@pim-admin`, `@v2`, `@crud` | Authenticated admin API tests |
 | `@suppliers` | Supplier feeds, mapping, delta sync |
-| `@access` | Access gate: roles, refusals, grants, audit, application tokens, legacy keys (re-runnable) |
+| `@access` | Access gate: roles, refusals, grants, audit, staff accounts, application tokens, legacy keys per channel, pinned erase (re-runnable) |
 | `@spec-first` | Scenarios written ahead of step implementation — excluded from `make test`/`make bdd` |
 
 ## Layout

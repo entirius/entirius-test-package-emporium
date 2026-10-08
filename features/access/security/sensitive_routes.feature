@@ -33,5 +33,6 @@ Feature: Access security — sensitive routes need exactly their permission
       | GET    | api-admin/contentdb/v1/content/bdd-ct/bdd-uid/published/                | needs content.publish:write      |
       | POST   | api/access/v2/admin/roles/                                              | needs access.manage:write        |
       | POST   | api/access/v2/admin/grants/                                             | needs access.manage:write        |
+      | POST   | api/access/v2/admin/staff/                                              | needs access.manage:write        |
       | GET    | admin/                                                                  | superuser only                   |
       | POST   | api/communicator/v2/admin/{channel_idx}/templates/999999/test-generate/ | needs communicator.content:write |

@@ -73,6 +73,7 @@ Feature: Access security — access management stays with the built-in Administr
       | manager | grant Administrator to self | api/access/v2/admin/grants/       | {"role": "administrator", "user_id": {saved.me}} |
       | manager | create a role               | api/access/v2/admin/roles/        | {"key": "bdd-sec-{saved.run}", "name": "x"}      |
       | manager | create an application       | api/access/v2/admin/applications/ | {"name": "bdd-sec-{saved.run}"}                  |
+      | manager | create a staff account      | api/access/v2/admin/staff/        | {"username": "bdd-sec-{saved.run}", "email": "bdd-sec-{saved.run}@example.com", "role": "viewer"} |
       | editor  | grant Administrator to self | api/access/v2/admin/grants/       | {"role": "administrator", "user_id": {saved.me}} |
       | editor  | create a role               | api/access/v2/admin/roles/        | {"key": "bdd-sec-{saved.run}", "name": "x"}      |
       | editor  | create an application       | api/access/v2/admin/applications/ | {"name": "bdd-sec-{saved.run}"}                  |

@@ -87,3 +87,28 @@ def test_with_days_ahead_fills_future_and_past_instants():
     assert (
         filled == f'{{"a": "{(NOW + timedelta(days=30)).isoformat()}", "b": "{(NOW - timedelta(days=1)).isoformat()}"}}'
     )
+
+
+def test_pinned_legacy_picks_the_token_of_one_channel():
+    tokens = [
+        {"id": 1, "legacy": True, "scopes": ["checkout.storefront"], "channel_idx": "default-europe"},
+        {"id": 2, "legacy": True, "scopes": ["checkout.storefront"], "channel_idx": "default-local"},
+        {"id": 3, "legacy": False, "scopes": ["checkout.storefront"], "channel_idx": "default-local"},
+        {"id": 4, "legacy": True, "scopes": ["agreements.public"], "channel_idx": "default-local"},
+    ]
+    picked = access_steps.pinned_legacy(tokens, "checkout.storefront", "default-local")
+    assert [token["id"] for token in picked] == [2]
+
+
+def test_one_time_field_names_a_token_raw_or_a_generated_password():
+    assert access_steps.one_time_field({"id": 1, "raw": "x"}) == "raw"
+    assert access_steps.one_time_field({"id": 1, "password": "x"}) == "password"
+    assert access_steps.one_time_field({"id": 1, "password": None}) is None
+    assert access_steps.one_time_field({"password": "x"}) is None
+    assert access_steps.one_time_field([]) is None
+
+
+def test_answer_field_walks_keys_and_list_indexes():
+    body = {"grants": [{"id": 31}], "data": {"deleted": True}}
+    assert access_steps.answer_field(body, "grants.0.id") == 31
+    assert access_steps.answer_field(body, "data.deleted") is True

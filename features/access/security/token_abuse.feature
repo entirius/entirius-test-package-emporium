@@ -75,10 +75,10 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
 
   Scenario: TA-07 the legacy checkout fixture key still opens the storefront cart and never expires by itself
     When I make a storefront checkout call on the first seed channel
-    Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token without expiry, used just now
+    Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token pinned to the first seed channel without expiry, used just now
 
   Scenario: TA-08 a team sets, refuses and clears an expiry on the legacy checkout token
-    Given I save the id of the legacy "checkout.storefront" token of application "Legacy keys: django_checkout" as "saved.legacy"
+    Given I save the id of the legacy "checkout.storefront" token of application "Legacy keys: django_checkout" pinned to the first seed channel as "saved.legacy"
     And the expiry of token "saved.legacy" is cleared when the scenario ends
     And I save the newest audit entry id as "saved.mark"
     And the caller is admin

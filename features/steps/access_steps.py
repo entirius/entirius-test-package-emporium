@@ -326,20 +326,49 @@ def step_storefront_call(context, position):
     assert response.status_code == 200, f"storefront call: HTTP {response.status_code}"
 
 
-def _legacy_token(context, name: str, scope: str) -> dict:
-    tokens = _admin(context, "GET", f"access/admin/applications/{_application_id(context, name)}/tokens/").json()[
-        "results"
+def pinned_legacy(tokens: list[dict], scope: str, channel_idx: str) -> list[dict]:
+    """Legacy tokens of a scope pinned to one channel — D2 imports one per channel a legacy secret was set on."""
+    return [
+        token
+        for token in tokens
+        if token["legacy"] and scope in token["scopes"] and token["channel_idx"] == channel_idx
     ]
-    legacy = [token for token in tokens if token["legacy"] and scope in token["scopes"]]
-    assert legacy, f"no legacy {scope} token in '{name}'"
-    return legacy[0]
 
 
-@then('the application "{name}" holds a legacy "{scope}" token without expiry, used just now')
-def step_legacy_token(context, name, scope):
-    token = _legacy_token(context, name, scope)
+def _legacy_token(context, name: str, scope: str, position: str) -> dict:
+    path = f"access/admin/applications/{_application_id(context, name)}/tokens/"
+    tokens = _admin(context, "GET", path, params={"page_size": PAGE_SIZE}).json()["results"]
+    channel_idx = _seed_channel(context, position)
+    pinned = pinned_legacy(tokens, scope, channel_idx)
+    assert len(pinned) == 1, f"{len(pinned)} legacy {scope} tokens pinned to {channel_idx} in '{name}', want one"
+    return pinned[0]
+
+
+@then(
+    'the application "{name}" holds a legacy "{scope}" token pinned to the {position} seed channel without expiry, '
+    "used just now"
+)
+def step_legacy_token(context, name, scope, position):
+    token = _legacy_token(context, name, scope, position)
     assert token["expires_at"] is None, f"legacy token expires at {token['expires_at']} (D28: never by itself)"
     assert is_recent(token["last_used_at"], datetime.now(UTC)), f"last_used_at {token['last_used_at']} is not recent"
+
+
+@given(
+    'I save the last use of the legacy "{scope}" token of application "{name}" pinned to the {position} seed channel '
+    'as "{alias}"'
+)
+def step_save_legacy_last_use(context, scope, name, position, alias):
+    context.saved[alias] = _legacy_token(context, name, scope, position)["last_used_at"]
+
+
+@then(
+    'the legacy "{scope}" token of application "{name}" pinned to the {position} seed channel was last used at '
+    '"{alias}"'
+)
+def step_legacy_last_use_kept(context, scope, name, position, alias):
+    last_used_at = _legacy_token(context, name, scope, position)["last_used_at"]
+    assert last_used_at == context.saved[alias], f"last_used_at moved: {context.saved[alias]} → {last_used_at}"
 
 
 # --- Security (`@access-security`): callers, raw requests, token abuse, audit counts, secret hygiene ---
@@ -349,6 +378,7 @@ SECURITY_TOKEN_TTL = timedelta(days=30)  # every token these steps issue expires
 GATE_401_ISSUE = "NOT_AUTHENTICATED"
 CREDENTIAL_HEADERS = ("Authorization", "Cookie", "X-API-KEY", "X-API-ADMIN-KEY")
 SECRET_FIELDS = frozenset({"raw", "key_hash"})
+ONE_TIME_FIELDS = ("raw", "password")
 DAYS_AHEAD = re.compile(r"\{days_ahead:(-?\d+)\}")
 EXPIRY_SLACK = timedelta(minutes=10)
 EXPIRES_SOON = timedelta(seconds=2)
@@ -452,16 +482,26 @@ def _redact(response: requests.Response) -> None:
             response.request.headers[header] = "<redacted>"
 
 
+def one_time_field(body: object) -> str | None:
+    """The field holding a one-time secret in an answer — a token's `raw` or a created staff account's generated
+    `password` (null when the request gave one) — or None."""
+    if not isinstance(body, dict) or "id" not in body:
+        return None
+    return next((field for field in ONE_TIME_FIELDS if body.get(field)), None)
+
+
 def _store_answer(context, response: requests.Response) -> None:
-    """Like `_store`; a one-time `raw` moves to `context.raw_tokens` (redacted in the stored body) and its token is
-    revoked at the end."""
+    """Like `_store`; a one-time secret moves to `context.raw_tokens` as `answer-<id>` (redacted in the stored body)
+    and a token's is revoked at the end."""
     _store(context, response)
     body = context.response_data
-    context.answer_had_raw = isinstance(body, dict) and "raw" in body
-    if context.answer_had_raw:
-        context.raw_tokens[f"answer-{body['id']}"] = body["raw"]
-        response._content = response.content.replace(body["raw"].encode(), b"<redacted>")
-        context.response_data = without_raw(body)
+    field = one_time_field(body)
+    context.answer_had_raw = field is not None
+    if field:
+        context.raw_tokens[f"answer-{body['id']}"] = body[field]
+        response._content = response.content.replace(body[field].encode(), b"<redacted>")
+        context.response_data = {key: value for key, value in body.items() if key != field}
+    if field == "raw":
         context.add_cleanup(_cleanup, context, "POST", f"access/admin/tokens/{body['id']}/revoke/")
     _undo_created(context, response)
 
@@ -514,15 +554,36 @@ def step_caller(context, who):
     _new_caller(context, who, session)
 
 
-@given("the caller has a Django admin session as {who}")
-def step_django_admin_session(context, who):
+def _django_admin_session(context, who: str) -> requests.Session:
     session, login = requests.Session(), context.api.url("admin/login/")
     session.get(login, timeout=30)
     username, password = _credentials(context, who)
     form = {"username": username, "password": password, "csrfmiddlewaretoken": session.cookies.get("csrftoken")}
     response = session.post(login, data=form, headers={"Referer": login}, allow_redirects=False, timeout=30)
     assert response.status_code == 302, f"Django admin login as {who}: HTTP {response.status_code}"
-    _new_caller(context, who, session)
+    return session
+
+
+@given("the caller has a Django admin session as {who}")
+def step_django_admin_session(context, who):
+    _new_caller(context, who, _django_admin_session(context, who))
+
+
+@given('the caller signs in as "{username}" through customer tokens with the password "{alias}"')
+def step_caller_customer_tokens(context, username, alias):
+    """The CMS login: accounts `customer/tokens/` on the primary channel; its `email` field carries the username."""
+    url = context.api.url(f"api/accounts/v1/{context.primary_channel}/customer/tokens/")
+    body = {"email": resolve(username, context), "password": context.saved[alias]}
+    response = requests.post(url, json=body, timeout=30)
+    assert response.status_code == 200, f"customer/tokens: HTTP {response.status_code}"
+    session = requests.Session()
+    session.headers["Authorization"] = f"Bearer {response.json()['data']['access']}"
+    _new_caller(context, username, session)
+
+
+@given('the caller presents the token "{alias}" in "{header}"')
+def step_caller_token_header(context, alias, header):
+    context.caller_session.headers[header] = context.raw_tokens[alias]
 
 
 def _key_value(context, key: str) -> str:
@@ -701,9 +762,11 @@ def step_answers_no_secret(context):
         _assert_no_secret(context, response, f"answer to '{alias}'")
 
 
-@given('I save the id of the legacy "{scope}" token of application "{name}" as "{alias}"')
-def step_save_legacy_id(context, scope, name, alias):
-    context.saved[alias] = _legacy_token(context, name, scope)["id"]
+@given(
+    'I save the id of the legacy "{scope}" token of application "{name}" pinned to the {position} seed channel as "{alias}"'
+)
+def step_save_legacy_id(context, scope, name, position, alias):
+    context.saved[alias] = _legacy_token(context, name, scope, position)["id"]
 
 
 @given('the expiry of token "{alias}" is cleared when the scenario ends')
@@ -774,3 +837,98 @@ def step_action_count(context, count, action, mark, target_id):
     wanted = resolve(target_id, context)
     found = [entry for entry in _audit_after(context, action, mark) if entry["target_id"] == wanted]
     assert len(found) == count, f"{len(found)} {action} entries for target {wanted}, want {count}"
+
+
+# Answer fields
+
+
+def answer_field(body: object, path: str) -> object:
+    """`grants.0.id` → body["grants"][0]["id"]."""
+    for key in path.split("."):
+        body = body[int(key)] if isinstance(body, list) else body[key]
+    return body
+
+
+@then('I save the answer field "{path}" as "{alias}"')
+def step_save_answer_field(context, path, alias):
+    context.saved[alias] = answer_field(context.response_data, path)
+
+
+@then('the answer field "{path}" is {value}')
+def step_answer_field_is(context, path, value):
+    """`value` is JSON: `true`, `"viewer"`, `3`."""
+    got = answer_field(context.response_data, path)
+    assert got == json.loads(value), f"{path} = {got!r}, want {value}"
+
+
+@then('the answer names the field "{field}"')
+def step_answer_field_named(context, field):
+    if field == NO_VALUE:
+        return
+    fields = [detail.get("field") for detail in context.response_data.get("details") or []]
+    assert field in fields, f"field {field} not in {fields}"
+
+
+# Staff accounts (D1)
+
+
+@given('a generated password is saved as "{alias}"')
+def step_generated_password(context, alias):
+    context.saved[alias] = secrets.token_urlsafe(18)
+
+
+@then('I save the answered password as "{alias}"')
+def step_save_answered_password(context, alias):
+    """The generated password `_store_answer` kept aside; the stored answer no longer has it."""
+    context.saved[alias] = context.raw_tokens[f"answer-{context.response_data['id']}"]
+
+
+@then('no staff account has the {field} "{value}"')
+def step_no_staff_account(context, field, value):
+    wanted = resolve(value, context).lower()
+    response = _admin(context, "GET", "access/admin/staff/", params={"search": wanted, "page_size": PAGE_SIZE})
+    assert response.status_code == 200, f"staff list: HTTP {response.status_code}"
+    found = [row["id"] for row in response.json()["results"] if row[field].lower() == wanted]
+    assert not found, f"staff accounts {found} have the {field} {wanted}"
+
+
+# Channel-pinned erase (D3)
+
+CUSTOMER_CHANGE_LINK = re.compile(r"/admin/django_accounts/customer/(\d+)/change/")
+CHANNEL_OPTION = re.compile(r'<option value="(\d+)"[^>]*>[^<]*\[([^\]<]+)\]</option>')
+# The Customer change form of a fresh staff account: active, verified, every other field empty, no address rows.
+CUSTOMER_FORM = {
+    "is_active": "on",
+    "is_verified": "on",
+    "addresses-TOTAL_FORMS": "0",
+    "addresses-INITIAL_FORMS": "0",
+    "addresses-MIN_NUM_FORMS": "0",
+    "addresses-MAX_NUM_FORMS": "1000",
+}
+
+
+@given("the channel is the {position} seed channel")
+def step_seed_channel(context, position):
+    context.channel = _seed_channel(context, position)
+
+
+def _customer_change_url(context, session: requests.Session, email: str) -> str:
+    listing = session.get(context.api.url("admin/django_accounts/customer/"), params={"q": email}, timeout=30)
+    pks = set(CUSTOMER_CHANGE_LINK.findall(listing.text))
+    assert len(pks) == 1, f"{len(pks)} customers with the e-mail {email}"
+    return context.api.url(f"admin/django_accounts/customer/{pks.pop()}/change/")
+
+
+@step('the customer account of user "{alias}" belongs to the {position} seed channel')
+def step_customer_channel(context, alias, position):
+    """A fresh staff account's Customer row (FIX-12) moved to a channel through the superuser's Django admin form —
+    the storefront signup is not available on zeno (no NEW_ACCOUNT_REDIRECT_URL)."""
+    user_id = context.saved[alias]
+    email = _admin(context, "GET", f"access/admin/staff/{user_id}/").json()["email"]
+    session = _django_admin_session(context, "admin")
+    url = _customer_change_url(context, session, email)
+    channel_pks = {idx: pk for pk, idx in CHANNEL_OPTION.findall(session.get(url, timeout=30).text)}
+    form = {**CUSTOMER_FORM, "user": user_id, "source_channel": channel_pks[_seed_channel(context, position)]}
+    form["csrfmiddlewaretoken"] = session.cookies.get("csrftoken")
+    response = session.post(url, data=form, headers={"Referer": url}, allow_redirects=False, timeout=30)
+    assert response.status_code == 302, f"customer change form: HTTP {response.status_code} (a form error)"

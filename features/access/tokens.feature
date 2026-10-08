@@ -40,4 +40,12 @@ Feature: Access tokens on the contact-forms key routes and legacy keys
 
   Scenario: T-05 the checkout fixture key lives on as a legacy token that never expires by itself
     When I make a storefront checkout call on the first seed channel
-    Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token without expiry, used just now
+    Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token pinned to the first seed channel without expiry, used just now
+
+  Scenario: TL-01 a storefront call on the second seed channel uses that channel's legacy token only
+    # D2: the fixture checkout secret is set on both seed channels, so the import made one pinned token per channel.
+    # last_used_at is written at most every 300 s: "used just now" is recent, never "changed by this call".
+    Given I save the last use of the legacy "checkout.storefront" token of application "Legacy keys: django_checkout" pinned to the first seed channel as "saved.first_used"
+    When I make a storefront checkout call on the second seed channel
+    Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token pinned to the second seed channel without expiry, used just now
+    And the legacy "checkout.storefront" token of application "Legacy keys: django_checkout" pinned to the first seed channel was last used at "saved.first_used"

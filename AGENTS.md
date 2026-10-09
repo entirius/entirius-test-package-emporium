@@ -14,7 +14,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make fix` | auto-fix lint + format |
 | `make test` | behave dry-run — steps bind to scenarios, no API needed — plus the pytest unit tests in `tests/` |
 | `make unit` | only the pytest unit tests for the assertion step definitions, no API needed |
-| `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`) |
+| `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`); a single tag reads only the feature files carrying it, so the summary's skipped count holds real skips only (tag expressions keep the whole tree) |
 | `make e2e [E2E_ARGS=…] [E2E_DEVICE=…]` | Playwright e2e; `E2E_ARGS` narrows pytest targets (default `e2e/`), `E2E_DEVICE` emulates a Playwright device (`e2e/conftest.py`) |
 
 ## Conventions
@@ -69,6 +69,8 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only);
 │   │                                      # --verify fixtures/siteintel = leak gate only (.gitleaks.toml words, hosts, emails, IPs)
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
+│   ├── seed-access.py               # seed.sh Step 3e — role staff users (README § Key settings); Step 4b imports legacy keys
+│   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
 ├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
@@ -101,6 +103,32 @@ Key settings table: see `README.md`.
   equal to "{v}"` (resolves `{saved.alias}`), `the last sandbox message subject starts with "{prefix}"`,
   `the value "{value}" is saved as "{alias}"`. Fixture mails use a `{message_id}` placeholder (single braces)
   in `In-Reply-To`/`References`/`Original-Message-ID`; `duplicate.eml` shares `Message-ID` with `reply_plain.eml`.
+- Access (`features/steps/access_steps.py`, shared with the security matrix): `I am authenticated as the
+  {viewer|editor|manager} staff user`, `the gate refuses with issue "{ACCESS_DENIED|STAFF_ONLY|UNMAPPED_ROUTE}"`,
+  `the refusal names "{text}"`, `the response is not a gate refusal`, `the permission "{area}" should be
+  "{level}"|absent` (on `access/me/`), audit lookups after `I save the newest audit entry id as "{alias}"`,
+  `an application "{alias}" for this run` + `a token "{alias}" of application … with scope "{scope}" [pinned to the
+  first|second seed channel]`, `I submit a contact form with the token "{alias}" on the first|second seed channel`.
+  Raw token values stay in `context.raw_tokens` — never printed, never in `context.saved` or an assertion message.
+  `the admin sends {METHOD} to "{path}" when the scenario ends` registers a cleanup that runs even when the
+  scenario fails (resolved at the end; an alias never saved means nothing to clean).
+- Access security (`@access-security`, same file): `the caller is {anonymous|customer|bad-bearer|token-only|norole|
+  viewer|editor|manager|accessadmin|admin}` (a requests session with exactly those headers; token-only = fresh
+  publishable + secret tokens, no JWT), `the caller has a Django admin session as {who}`, `the caller presents the
+  {-|checkout fixture|contact-forms fixture|<scope>} key`, `the caller sends {METHOD} to "{path}"` (POST = `{}`;
+  `with JSON <cell>` / `with body` docstring; `{days_ahead:N}` → an ISO instant), `the answer is {status} with
+  "{gate issue|-|n/a|login redirect}"` (`-` = no gate issue, `n/a` = HEAD). Token abuse: `the tokens "a, b" are sent in
+  "{header}" with {METHOD} to "{path}"` → `every answer is the same {status}`, `no answer carries a token secret`.
+  Tokens of these steps live in the shared, never-deactivated application `bdd-access-security` (revoked per
+  scenario, 30-day expiry); a `raw` in any answer moves to `context.raw_tokens` and its token is revoked at the end.
+  Audit: `the audit log counts {n} "gate.bypass" after "{mark}" for {METHOD} "{route}" [with status {s}]`.
+  A generated staff `password` in an answer is kept aside like a `raw` (`I save the answered password as "{alias}"`);
+  `a generated password is saved as "{alias}"`, `the caller signs in as "{username}" through customer tokens with the
+  password "{alias}"` (the CMS login, primary channel), `no staff account has the {username|email} "{value}"`,
+  `the answer field "{dotted.path}" is {json}`, `the answer names the field "{field}"`. Pinned erase: `the channel is
+  the {first|second} seed channel`, `the caller presents the token "{alias}" in "{header}"`, `the customer account of
+  user "{alias}" belongs to the {position} seed channel` (Django admin form — the signup is not available on zeno).
+  Legacy keys are chosen by channel: `… legacy "{scope}" token pinned to the {first|second} seed channel …`.
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
 - `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
@@ -108,6 +136,20 @@ Key settings table: see `README.md`.
 
 ## Tags
 
+- `@access` (`features/access/`, 38 scenarios + the 507 of `@access-security`; needs `django_access` and its seeded
+  role users `viewer`/`editor`/`manager`, `scripts/seed-access.py`): roles, gate refusals, 404 stays 404, SKU delete,
+  custom role + grant, audit (`gate.bypass` for superuser writes only), staff accounts created through the admin API
+  (D1: sign-in through `customer/tokens/`, refusals), application tokens (scope, channel pin, revoke, rotate) and the
+  legacy checkout key — one pinned token per seed channel (D2). Re-runnable on one database: run-unique names, every
+  created object deleted, revoked or deactivated at the scenario's end (applications cannot be deleted — they stay,
+  inactive; created staff accounts stay too, there is no delete endpoint).
+- `@access-security` (`features/access/security/`, 507 scenarios, also tagged `@access`; needs the seeded role users
+  plus `accessadmin`/`norole`): principal × route class × method matrix (368 rows, incl. Django admin — superusers only, D32 — over a session),
+  public/customer/key routes unchanged for shoppers (69), token abuse — one answer for every failure kind, legacy
+  key expiry (11), `access.manage` built-in only, mass assignment, secret tokens without a lifetime cap (D31) (33),
+  sensitive routes (17), a pinned erase token erases only in its channel (D3, 1), superuser `gate.bypass` audit (3),
+  secret hygiene (5). Re-runnable on one database. The zeno gate pipes service/worker logs and the Redis key list
+  through `scripts/secret_scan.py --fixtures fixtures`.
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
   no API; needs GreenMail (zeno `make mail`).
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,

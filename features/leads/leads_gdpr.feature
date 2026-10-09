@@ -55,11 +55,11 @@ Feature: Leads — retention and GDPR export and erasure
       {"template_key": "lead.cold.b2b", "contact_id": {subject}}
       """
     Then the response status should be 409
-    Given the sandbox mailbox count is remembered
+    Given the sandbox mailbox count about "@example-gdpr.test" is remembered
     When I request the "lead.cold.b2b" message for "erase@example-gdpr.test" about "leads.Company:152"
     Then the nested response field "status" should equal "suppressed"
     When the communicator beat sends due messages
-    Then the sandbox mailbox count is unchanged
+    Then the scoped sandbox mailbox count is unchanged
     When I import the leads contact "erase@example-gdpr.test" of the company "example-gdpr.test"
     Then the import report should contain the reason "erased_address"
     And the company "subject.company" has no contact "erase@example-gdpr.test"

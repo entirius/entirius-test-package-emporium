@@ -41,6 +41,16 @@ Configuration comes from environment variables, `behave.ini` (gitignored — cop
 | `admin_password` | `ADMIN_PASSWORD` | `admin123` | Admin password |
 | `test_username` | `TEST_USERNAME` | `testuser` | Regular (non-admin) user for auth tests |
 | `test_password` | `TEST_PASSWORD` | `testuser123` | Regular user password |
+| `viewer_username` / `viewer_password` | `VIEWER_USERNAME` / `VIEWER_PASSWORD` | `viewer` / `viewer123` | Access Viewer staff user (`@access`) |
+| `editor_username` / `editor_password` | `EDITOR_USERNAME` / `EDITOR_PASSWORD` | `editor` / `editor123` | Access Editor staff user (`@access`) |
+| `manager_username` / `manager_password` | `MANAGER_USERNAME` / `MANAGER_PASSWORD` | `manager` / `manager123` | Access Manager staff user (`@access`) |
+| `accessadmin_username` / `accessadmin_password` | `ACCESSADMIN_USERNAME` / `ACCESSADMIN_PASSWORD` | `accessadmin` / `accessadmin123` | Access Administrator role, not superuser (`@access-security`) |
+| `norole_username` / `norole_password` | `NOROLE_USERNAME` / `NOROLE_PASSWORD` | `norole` / `norole123` | Staff user without a role (`@access-security`) |
+
+Access staff users (seeded only when `django_access` is installed, `ENVIRONMENT=development` only; dev defaults,
+never real): `viewer`/`viewer123` (Viewer), `editor`/`editor123` (Editor), `manager`/`manager123` (Manager),
+`accessadmin`/`accessadmin123` (Administrator role, not superuser), `norole`/`norole123` (staff without a role) —
+staff, not superuser, each with a `Customer` row so the CMS login works (`scripts/seed-access.py`).
 
 Channel auto-discovery scans `test_package_path` for `products--{channel}.csv` filenames.
 Point `test_package_path` at any directory with the standard CSV layout to switch datasets.
@@ -58,6 +68,7 @@ Point `test_package_path` at any directory with the standard CSV layout to switc
 | `@checkout`, `@discount-rules` | Cart and discount rules |
 | `@admin`, `@pim-admin`, `@v2`, `@crud` | Authenticated admin API tests |
 | `@suppliers` | Supplier feeds, mapping, delta sync |
+| `@access` | Access gate: roles, refusals, grants, audit, staff accounts, application tokens, legacy keys per channel, pinned erase (re-runnable) |
 | `@spec-first` | Scenarios written ahead of step implementation — excluded from `make test`/`make bdd` |
 
 ## Layout

@@ -1,4 +1,4 @@
-.PHONY: help install check fix test unit bdd e2e
+.PHONY: help install check fix test unit bdd e2e data-package
 .DEFAULT_GOAL := help
 
 help:  ## List targets
@@ -17,9 +17,9 @@ fix:  ## Auto-fix lint + format
 EXCLUDES = --tags=-@spec-first --tags=-@blocked-by-module
 test:  ## Bind steps to scenarios without hitting an API (behave dry-run) + unit tests in tests/
 	uv run behave --dry-run $(EXCLUDES) --no-summary -f progress
-	uv run --extra dev pytest tests -q -p no:cacheprovider
+	uv run --extra dev --extra data pytest tests -q -p no:cacheprovider
 unit:  ## Run only the step-definition unit tests (pytest, no API needed)
-	uv run --extra dev pytest tests -q -p no:cacheprovider
+	uv run --extra dev --extra data pytest tests -q -p no:cacheprovider
 # A single-tag run (TAGS=@x) reads only the feature files that carry the tag: behave counts every scenario its tag
 # filter drops as skipped, which would bury the real skips. Tag expressions keep the whole tree.
 TAG_FILES = $(if $(filter-out @%,$(TAGS))$(findstring $(comma),$(TAGS)),,$(sort $(shell grep -rlE --include='*.feature' -e '(^|[[:space:]])$(TAGS)([[:space:]]|$$)' features)))
@@ -29,3 +29,7 @@ bdd:  ## Run BDD suite against a live API (API_BASE_URL, TAGS optional)
 E2E_BASE_URL ?= http://localhost:3100
 e2e:  ## Run e2e suites against live PWAs (E2E_ARGS = pytest targets, default e2e/; E2E_DEVICE = playwright device; E2E_BASE_URL = storefront; CMS_BASE_URL, API_BASE_URL via env)
 	uv run --extra e2e pytest $(if $(E2E_ARGS),$(E2E_ARGS),e2e/) --base-url $(E2E_BASE_URL)
+DATA_PACKAGE = uv run --extra data python -m entirius_tests.data_package
+data-package:  ## Build and validate a data package (PROFILE, CATALOG, OUT; MOUNT optional)
+	$(DATA_PACKAGE) build --profile $(PROFILE) --catalog $(CATALOG) --out $(OUT) $(if $(MOUNT),--mount $(MOUNT),)
+	$(DATA_PACKAGE) validate $(OUT)

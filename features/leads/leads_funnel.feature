@@ -126,6 +126,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
 
   Scenario: Funnel 8 a blocked contact gets no draft and no mail
     Given the leads contact "blocked@example-shop-9.test" of the company "example-shop-7.test" is saved as "blocked"
+    And the sandbox mailbox count about "blocked@example-shop-9.test" is remembered
     When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/companies/{blocked.company}/communicate/" with body
       """
       {"template_key": "lead.cold.b2b", "contact_id": {blocked}}
@@ -134,4 +135,4 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the company "blocked.company" has an activity "blocked" containing "blocked: do_not_contact"
     And the review queue holds no draft about the company "blocked.company"
     When the communicator beat sends due messages
-    Then the sandbox mailbox count is unchanged
+    Then the scoped sandbox mailbox count is unchanged

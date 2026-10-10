@@ -23,10 +23,10 @@ Feature: Lookup — cross-catalog duplicate detection
       """
     Then the response status should be 200
     And the response field "decision" should equal "match"
-    And the response field "candidates" should contain a candidate for "atl-lookup-a:EXACT-00"
+    And the response field "candidates" should contain a candidate for "atl-lookup-a:CHR0100"
 
   Scenario: An image-only search returns a ranked candidate list with reasons
-    # exact_dup-00-pim.png is LKP-PIM-EXACT-00's own fingerprinted photo — the pHash near-hash
+    # exact_dup-00-pim.png is PET-CHR-1000's own fingerprinted photo — the pHash near-hash
     # leg (blocking.py) self-matches it at distance 0 regardless of the image-embedding backend,
     # so this must come back with at least one hit, not just an (possibly empty) list.
     Given I use the lookup fixture image "exact_dup-00-pim.png"
@@ -47,7 +47,7 @@ Feature: Lookup — cross-catalog duplicate detection
 
   Scenario: Creating a PIM product with a duplicate EAN surfaces the atlas candidate
     # Reuses the exact_dup pair at index 2 (scripts/seed-lookup.py CREATE_HOOK_PAIR_INDEX) — its EAN
-    # already exists on atl-lookup-a:EXACT-02, so a brand-new PIM product sharing it must come back
+    # already exists on atl-lookup-a:YGM0102, so a brand-new PIM product sharing it must come back
     # with that candidate in `possible_duplicates`.
     Given I ensure v2 admin resource "pim/admin/{channel_idx}/products/BDD-LKP-DUPCHECK/" is deleted
     When I POST to the v2 admin endpoint "pim/admin/{channel_idx}/products/" with body
@@ -56,7 +56,7 @@ Feature: Lookup — cross-catalog duplicate detection
        "attributes": [{"feature_idx": "name", "value_txt_t9n": {"en": "BDD duplicate-check product"}}]}
       """
     Then the response status should be 201
-    And the response field "possible_duplicates" should contain a candidate for "LKP-PIM-EXACT-02"
+    And the response field "possible_duplicates" should contain a candidate for "ANV-YGM-1020"
 
   Scenario: Check without a token is rejected
     When I POST to the v2 public endpoint "lookup/admin/check/" with body

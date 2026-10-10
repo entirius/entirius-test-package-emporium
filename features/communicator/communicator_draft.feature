@@ -14,6 +14,7 @@ Feature: Communicator — templates, communicate() and the review queue
   Background:
     Given I am authenticated as an admin user
 
+  @needs-toolbox
   Scenario: C-01 an AI template creates a draft waiting for review
     When I request the "lead.cold.shop" message for "jan@example-shop-1.test" about "bdd:c-01"
     Then the response field "status" should equal "review_required"
@@ -39,6 +40,7 @@ Feature: Communicator — templates, communicate() and the review queue
     Then the response field "status" should equal "suppressed"
     And the response field "attempts" should equal integer 0
 
+  @needs-toolbox
   Scenario: C-07 accept stamps the reviewer and cannot be repeated
     When I request the "lead.cold.shop" message for "jan@example-shop-1.test" about "bdd:c-07"
     Then I save the response field "id" as "saved.c07"
@@ -50,6 +52,7 @@ Feature: Communicator — templates, communicate() and the review queue
     When I accept the message "saved.c07"
     Then the response status should be 409
 
+  @needs-toolbox
   Scenario: C-08 rewrite with notes creates the next version and supersedes the draft
     When I request the "lead.cold.shop" message for "jan@example-shop-1.test" about "bdd:c-08"
     Then I save the response field "id" as "saved.c08"
@@ -65,6 +68,7 @@ Feature: Communicator — templates, communicate() and the review queue
     When I accept the message "saved.c08"
     Then the response status should be 409
 
+  @needs-toolbox
   Scenario: C-09 a manual edit is a human version without a toolbox call
     When I request the "lead.cold.shop" message for "jan@example-shop-1.test" about "bdd:c-09"
     Then I save the response field "id" as "saved.c09"
@@ -78,6 +82,7 @@ Feature: Communicator — templates, communicate() and the review queue
     And the response field "attempts" should equal integer 0
     And the response field "subject" should equal "Pytanie o sklep"
 
+  @needs-toolbox
   Scenario: C-29 editing a template keeps existing drafts on their version
     When I request the "lead.cold.b2b" message for "anna@example-shop-2.test" about "bdd:c-29"
     Then I save the response field "id" as "saved.c29_old"

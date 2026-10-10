@@ -152,6 +152,11 @@ Key settings table: see `README.md`.
   through `scripts/secret_scan.py --fixtures fixtures`.
 - `@harness` (`features/harness/mail_roundtrip.feature`, 2 scenarios): harness plumbing only — no module,
   no API; needs GreenMail (zeno `make mail`).
+- `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI
+  template draft, a lead analysis, or a later step of a chain built on one. `before_scenario` skips it with the
+  reason unless the public munin registry reports `platform.toolbox.state` = `configured`
+  (`entirius_tests.munin.parse_toolbox_state`; an older munin is read through `platform.toolbox_status`). A failed
+  probe skips nothing. Scenarios that only prove a refusal or use a static template carry no tag.
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,
   `communicator`, `siteintel`, `notifications` — a feature carrying one is skipped when the backend lacks it.
 

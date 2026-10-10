@@ -17,6 +17,12 @@ MUNIN_REGISTRY_PATH = "api/munin/v2/"
 # suite stays green against environments that adopted fewer modules.
 MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers", "leads", "communicator", "siteintel", "notifications"})
 
+# A scenario carrying this tag needs a live AI completion. It runs when the registry reports the toolbox
+# as `configured` (or the probe failed) and is skipped with a reason for every other state.
+TOOLBOX_TAG = "needs-toolbox"
+TOOLBOX_READY_STATE = "configured"
+TOOLBOX_ABSENT = "absent"
+
 
 def parse_modules(payload: dict) -> set[str] | None:
     """Module keys from a munin registry response body.
@@ -29,3 +35,21 @@ def parse_modules(payload: dict) -> set[str] | None:
     if not isinstance(modules, dict) or not modules:
         return None
     return set(modules.keys())
+
+
+def parse_toolbox_state(payload: dict) -> str | None:
+    """AI toolbox state from a munin registry response body (`platform.toolbox.state`).
+
+    `platform.toolbox` null means the toolbox client is not installed ("absent"). A registry without the
+    `toolbox` key is an older munin: its deprecated `platform.toolbox_status` is read instead. Returns None
+    for an unshaped payload or when neither field is there — an unknown state must not skip anything.
+    """
+    platform = payload.get("platform") if isinstance(payload, dict) else None
+    if not isinstance(platform, dict):
+        return None
+    if "toolbox" not in platform:
+        return platform.get("toolbox_status")
+    toolbox = platform["toolbox"]
+    if toolbox is None:
+        return TOOLBOX_ABSENT
+    return toolbox.get("state") if isinstance(toolbox, dict) else None

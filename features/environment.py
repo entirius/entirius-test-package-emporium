@@ -12,26 +12,40 @@ import sys
 from pathlib import Path
 
 from entirius_tests.api_client import ApiClient
-from entirius_tests.munin import MODULE_TAGS, MUNIN_REGISTRY_PATH, parse_modules
+from entirius_tests.munin import (
+    MODULE_TAGS,
+    MUNIN_REGISTRY_PATH,
+    TOOLBOX_READY_STATE,
+    TOOLBOX_TAG,
+    parse_modules,
+    parse_toolbox_state,
+)
 
 logger = logging.getLogger("entirius_tests")
 
 
-def probe_installed_modules(api: ApiClient) -> set[str] | None:
-    """Module keys from the public munin registry; None when the probe fails
-    (backend down / munin absent / empty registry) — then nothing is skipped and
-    features fail with their real errors instead of a silent skip."""
+def probe_registry(api: ApiClient) -> dict | None:
+    """The public munin registry body; None when the probe fails (backend down / munin absent) — then
+    nothing is skipped and features fail with their real errors instead of a silent skip."""
     try:
         resp = api.get(api.url(MUNIN_REGISTRY_PATH))
         if resp.status_code == 200:
-            modules = parse_modules(resp.json())
-            if modules is None:
-                logger.warning("munin registry empty/unshaped — module-tagged features will run")
-            return modules
+            return resp.json()
         logger.warning("munin probe HTTP %s — module-tagged features will run", resp.status_code)
     except Exception as exc:  # noqa: BLE001 — any probe failure means "don't skip"
         logger.warning("munin module probe failed (%s) — module-tagged features will run", exc)
     return None
+
+
+def read_registry(context) -> None:
+    """Installed modules and the AI toolbox state, both None when the registry cannot tell."""
+    registry = probe_registry(context.api)
+    context.installed_modules = parse_modules(registry) if registry is not None else None
+    context.toolbox_state = parse_toolbox_state(registry) if registry is not None else None
+    if registry is not None and context.installed_modules is None:
+        logger.warning("munin registry empty/unshaped — module-tagged features will run")
+    if context.toolbox_state not in (None, TOOLBOX_READY_STATE):
+        logger.warning("AI toolbox %s — @%s scenarios are skipped", context.toolbox_state, TOOLBOX_TAG)
 
 
 def discover_channels(package_path: str) -> list[str]:
@@ -95,7 +109,7 @@ def before_all(context):
     else:
         context.primary_channel = "default-europe"
 
-    context.installed_modules = probe_installed_modules(context.api)
+    read_registry(context)
 
 
 def before_feature(context, feature):
@@ -109,7 +123,7 @@ def before_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    """Reset per-scenario state."""
+    """Reset per-scenario state; skip a `@needs-toolbox` scenario unless the toolbox can answer."""
     context.response = None
     context.response_data = None
     context.channel = None
@@ -118,6 +132,9 @@ def before_scenario(context, scenario):
     context.saved = {}
     context.raw_tokens = {}  # access token values: never printed, never in context.saved
     context.api.clear_auth_token()
+    state = context.toolbox_state
+    if TOOLBOX_TAG in scenario.effective_tags and state not in (None, TOOLBOX_READY_STATE):
+        scenario.skip(reason=f"AI toolbox {state}: needs a live completion (munin platform.toolbox.state)")
 
 
 def after_scenario(context, scenario):

@@ -69,6 +69,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only);
 │   │                                      # --verify fixtures/siteintel = leak gate only (.gitleaks.toml words, hosts, emails, IPs)
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
+│   ├── installed-apps.py            # enabled app labels, one per line — the one app list of a seed run
 │   ├── seed-access.py               # seed.sh Step 3e — role staff users (README § Key settings); Step 4b imports legacy keys
 │   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
@@ -84,6 +85,20 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 `scripts/generate-behave-ini.sh`. Priority: env vars > `behave.ini` `[behave.userdata]` >
 auto-discovery (`discover_channels()` scans `products--{channel}.csv` filenames).
 Key settings table: see `README.md`.
+
+## Module subsets
+
+The seed and the suite follow the modules the service enables. `scripts/seed.sh` reads the enabled apps once
+(`scripts/installed-apps.py`; a service that does not boot fails the seed at `init`) and wraps every step in
+`guard <step> [app…]`, as does `scripts/import-package.sh`: a step whose apps are not all enabled prints
+`skipped: <step> (<app> not enabled)`, a step that applies is fatal, and the last line reads `SEED OK in <N>s (profile
+full, <S> skipped, <W> warnings)` after one line per skip and warning. `SEED_PROFILE` has one value, `full` (every data
+set whose apps are enabled); anything else fails at `init`. `SEED_APPS="<labels>" scripts/seed.sh --dry-run` prints
+the plan (`seed: plan <step> run` / `skip (<app> not enabled)`) without docker or a database. Features map to munin
+module keys by directory (`entirius_tests.munin.FEATURE_MODULES`, `required_modules(path)`; `features/admin/` by file
+prefix): `before_feature` skips a feature whose module the public registry does not list, with the reason `module
+'<key>' not installed (munin registry)`, and a scenario tag `@module-<key>` does the same for one scenario. A new
+feature directory or admin prefix goes into the map (`tests/test_feature_modules.py` fails on an unmapped file).
 
 ## Step patterns (essentials)
 
@@ -131,7 +146,8 @@ Key settings table: see `README.md`.
   Legacy keys are chosen by channel: `… legacy "{scope}" token pinned to the {first|second} seed channel …`.
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
-- `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a warning otherwise).
+- `seed.sh` purges GreenMail once when `GREENMAIL_API_URL` is set (zeno passes it; a `skipped:` line without it, a
+  `warn:` line when the sandbox does not answer).
   Scenarios needing an empty mailbox purge in their own `Background` — never rely on order.
 
 ## Tags
@@ -158,7 +174,8 @@ Key settings table: see `README.md`.
   (`entirius_tests.munin.parse_toolbox_state`; an older munin is read through `platform.toolbox_status`). A failed
   probe skips nothing. Scenarios that only prove a refusal or use a static template carry no tag.
 - Module tags gated by the munin registry (`MODULE_TAGS`): `atlas`, `pricefighter`, `suppliers`, `leads`,
-  `communicator`, `siteintel`, `notifications` — a feature carrying one is skipped when the backend lacks it.
+  `communicator`, `siteintel`, `notifications` — a feature carrying one is skipped when the backend lacks it, on top
+  of the modules of its directory (§ Module subsets).
 
 ## API endpoints under test
 

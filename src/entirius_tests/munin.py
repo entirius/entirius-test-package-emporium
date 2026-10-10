@@ -10,12 +10,65 @@ registry path/shape change is fixed in one place.
 
 from __future__ import annotations
 
+from pathlib import PurePath
+
 MUNIN_REGISTRY_PATH = "api/munin/v2/"
 
 # Feature/module tags that map 1:1 onto munin module keys. A feature carrying one
 # of these tags is skipped when the backend does not report the module — the
 # suite stays green against environments that adopted fewer modules.
 MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers", "leads", "communicator", "siteintel", "notifications"})
+
+# A scenario tag `@module-<key>` names one more munin module that scenario needs.
+MODULE_TAG_PREFIX = "module-"
+
+# Feature directory -> the munin module keys its features need. A feature is skipped when the
+# backend does not report one of them, so the suite runs against any module subset. An empty set
+# is harness plumbing: no module. `features/admin/` is mapped per file, see ADMIN_FEATURE_PREFIXES.
+_SAME_NAME = (
+    "access",
+    "agreements",
+    "atlas",
+    "checkout",
+    "communicator",
+    "contact_forms",
+    "contentdb",
+    "deliverypoints",
+    "faq",
+    "leads",
+    "matrix",
+    "notifications",
+    "pim_csv",
+    "pricemanager",
+    "qms",
+    "siteintel",
+    "suppliers",
+)
+FEATURE_MODULES: dict[str, frozenset[str]] = {
+    **{name: frozenset({name}) for name in _SAME_NAME},
+    "matrix_v2": frozenset({"matrix"}),
+    "lookup": frozenset({"lookup", "atlas"}),
+    "pricefighter": frozenset({"pricefighter", "atlas"}),
+    "toolbox": frozenset({"communicator"}),
+    "harness": frozenset(),
+}
+
+# `features/admin/<prefix>_*.feature` needs the module `<prefix>`.
+ADMIN_FEATURE_PREFIXES = frozenset(
+    {
+        "accounts",
+        "agreements",
+        "contentdb",
+        "deliverypoints",
+        "email",
+        "faq",
+        "pim",
+        "pricemanager",
+        "qms",
+        "regional",
+        "suppliers",
+    }
+)
 
 # A scenario carrying this tag needs a live AI completion. It runs when the registry reports the toolbox
 # as `configured` (or the probe failed) and is skipped with a reason for every other state.
@@ -53,3 +106,29 @@ def parse_toolbox_state(payload: dict) -> str | None:
     if toolbox is None:
         return TOOLBOX_ABSENT
     return toolbox.get("state") if isinstance(toolbox, dict) else None
+
+
+def required_modules(path: str) -> frozenset[str]:
+    """Munin module keys a feature file needs, from its place under `features/`.
+
+    Raises KeyError for a file the map does not cover: a new feature directory (or admin file
+    prefix) is added to the map together with its features.
+    """
+    parts = PurePath(path).parts
+    if "features" not in parts[:-1]:
+        raise KeyError(path)
+    section = parts[len(parts) - 1 - parts[-2::-1].index("features")]
+    if section != "admin":
+        return FEATURE_MODULES[section]
+    prefix = parts[-1].split("_", 1)[0]
+    if prefix not in ADMIN_FEATURE_PREFIXES:
+        raise KeyError(path)
+    return frozenset({prefix})
+
+
+def missing_module(required: frozenset[str] | set[str], installed: set[str] | None) -> str | None:
+    """The first required module key the registry does not list; None when all are there or the
+    registry could not tell (`installed` is None: nothing is skipped)."""
+    if installed is None:
+        return None
+    return next((key for key in sorted(required) if key not in installed), None)

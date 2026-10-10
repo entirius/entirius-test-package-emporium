@@ -13,12 +13,15 @@ from pathlib import Path
 
 from entirius_tests.api_client import ApiClient
 from entirius_tests.munin import (
+    MODULE_TAG_PREFIX,
     MODULE_TAGS,
     MUNIN_REGISTRY_PATH,
     TOOLBOX_READY_STATE,
     TOOLBOX_TAG,
+    missing_module,
     parse_modules,
     parse_toolbox_state,
+    required_modules,
 )
 
 logger = logging.getLogger("entirius_tests")
@@ -112,18 +115,20 @@ def before_all(context):
     read_registry(context)
 
 
+def module_skip_reason(key: str) -> str:
+    return f"module '{key}' not installed (munin registry)"
+
+
 def before_feature(context, feature):
-    """Skip module-tagged features when the backend does not adopt the module."""
-    if context.installed_modules is None:
-        return
-    for tag in MODULE_TAGS:
-        if tag in feature.tags and tag not in context.installed_modules:
-            feature.skip(reason=f"module '{tag}' not installed (munin registry)")
-            return
+    """Skip a feature when the backend lacks a module of its directory (`required_modules`) or of a module tag."""
+    required = required_modules(feature.filename) | (MODULE_TAGS & set(feature.tags))
+    if key := missing_module(required, context.installed_modules):
+        feature.skip(reason=module_skip_reason(key))
 
 
 def before_scenario(context, scenario):
-    """Reset per-scenario state; skip a `@needs-toolbox` scenario unless the toolbox can answer."""
+    """Reset per-scenario state; skip a `@module-<key>` scenario without its module and a `@needs-toolbox`
+    scenario unless the toolbox can answer."""
     context.response = None
     context.response_data = None
     context.channel = None
@@ -132,6 +137,12 @@ def before_scenario(context, scenario):
     context.saved = {}
     context.raw_tokens = {}  # access token values: never printed, never in context.saved
     context.api.clear_auth_token()
+    tagged = {
+        tag.removeprefix(MODULE_TAG_PREFIX) for tag in scenario.effective_tags if tag.startswith(MODULE_TAG_PREFIX)
+    }
+    if key := missing_module(tagged, context.installed_modules):
+        scenario.skip(reason=module_skip_reason(key))
+        return
     state = context.toolbox_state
     if TOOLBOX_TAG in scenario.effective_tags and state not in (None, TOOLBOX_READY_STATE):
         scenario.skip(reason=f"AI toolbox {state}: needs a live completion (munin platform.toolbox.state)")

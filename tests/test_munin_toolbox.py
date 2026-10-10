@@ -38,7 +38,7 @@ def test_parse_toolbox_state(payload, expected):
 
 
 def _run_before_scenario(state: str | None, tags: set[str]) -> MagicMock:
-    context = SimpleNamespace(api=MagicMock(), toolbox_state=state)
+    context = SimpleNamespace(api=MagicMock(), toolbox_state=state, installed_modules=None)
     scenario = MagicMock(effective_tags=tags)
     environment.before_scenario(context, scenario)
     return scenario

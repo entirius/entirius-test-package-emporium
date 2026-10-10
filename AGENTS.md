@@ -16,6 +16,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 | `make unit` | only the pytest unit tests for the assertion step definitions, no API needed |
 | `make bdd [TAGS=@tag]` | full BDD suite against a live API (`API_BASE_URL`); a single tag reads only the feature files carrying it, so the summary's skipped count holds real skips only (tag expressions keep the whole tree) |
 | `make e2e [E2E_ARGS=…] [E2E_DEVICE=…]` | Playwright e2e; `E2E_ARGS` narrows pytest targets (default `e2e/`), `E2E_DEVICE` emulates a Playwright device (`e2e/conftest.py`) |
+| `make data-package PROFILE=… CATALOG=… OUT=… [MOUNT=…]` | build, then validate, a data package from a profile and a JSON or CSV catalog (`python -m entirius_tests.data_package`, extra `data`; README § Data package from your own catalog) |
 
 ## Conventions
 
@@ -51,7 +52,8 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   ├── csv_loader.py       # Parse CSV from package/
 │   ├── assertions.py       # Assert helpers + extract_items()
 │   ├── mail.py             # GreenMail sandbox: purge/count/read (REST), send (SMTP), inject (IMAP APPEND)
-│   └── clock.py            # communicator dev-only test endpoints: channel clock, send-due, poll-now
+│   ├── clock.py            # communicator dev-only test endpoints: channel clock, send-due, poll-now
+│   └── data_package/       # profile.yaml + catalog (JSON/CSV) -> package/, fixtures/, images/ (build, validate); no network
 ├── features/               # Behave BDD features
 │   ├── environment.py      # before_all: API client + channels; before_scenario: reset + clear auth
 │   ├── steps/              # Shared step definitions (HTTP verbs, assertions, admin CRUD, domains)
@@ -64,6 +66,7 @@ Runs as an external consumer against a running Volkanos backend seeded with `pac
 │   └── lookup/             # Calibration set (dev-plan 09): pim_products.json, atlas_products.json,
 │                           # labelled_pairs.csv, img/*.png — see scripts/generate-lookup-fixtures.py
 ├── images/                 # Product images per SKU
+├── examples/data-package/  # example profile, the same catalog as JSON and CSV, three images
 ├── devtools/               # Bulk data multiplier (stress tests)
 ├── scripts/                # Seed (host) + import (container) + behave.ini generator
 │   ├── anonymise-siteintel-recordings.py  # private export -> fixtures/siteintel (mapping to stdout only);
@@ -199,7 +202,7 @@ feature directory or admin prefix goes into the map (`tests/test_feature_modules
   the same fixture pairs — multipack, dirty_ean, name_only, photo_lookalike; `exact_dup`/`variant`
   already had equivalents there). Scenarios: exact EAN match (exact_dup), image-only search
   (`hits` list), image-only check of a look-alike photo never promoting to `match`
-  (photo_lookalike — the image-only guard, research r01 §2/§3), the PIM create-hook
+  (photo_lookalike — the image-only guard), the PIM create-hook
   (`possible_duplicates`, plan 07, reuses the exact_dup pair at index 2 — see
   `scripts/seed-lookup.py` `CREATE_HOOK_PAIR_INDEX`), 401 without a token on both endpoints, and
   `@lookup-oneshot` the `duplicate_in_pim` enrichment proposal accept (`enrichment/admin/proposals/`,

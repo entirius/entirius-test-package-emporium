@@ -21,10 +21,10 @@ Every row states the expected outcome — anything else is a bug (file it agains
 
 | # | Step | Expected |
 |---|---|---|
-| 2.1 | Atlas → Duplicates | ≥2 groups; ATL-DUP-A1/A2 suggests **merge**, ATL-DUP-B1/B2 suggests **review** (missing weight) |
-| 2.2 | Merge A1 (winner) ← A2 (loser), reason "operator cleanup" | Modal requires the reason; success toast; group disappears from the list |
-| 2.3 | Check the audit trail of ATL-DUP-A1 | A `manual_merge` change-log entry with the reason |
-| 2.4 | Try merging across groups (A1 + B1) | Refused — EANs differ |
+| 2.1 | Atlas → Duplicates | ≥2 groups; FRW-SKL-2001 / FRWSKL2001 suggests **merge**, TDM-THR-1317 / TDM-THR-1317-2 suggests **review** (missing weight) |
+| 2.2 | Merge FRW-SKL-2001 (winner) ← FRWSKL2001 (loser), reason "operator cleanup" | Modal requires the reason; success toast; group disappears from the list |
+| 2.3 | Check the audit trail of FRW-SKL-2001 | A `manual_merge` change-log entry with the reason |
+| 2.4 | Try merging across groups (FRW-SKL-2001 + TDM-THR-1317) | Refused — EANs differ |
 
 ## 3. Auto-matched dashboard
 

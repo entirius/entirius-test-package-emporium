@@ -68,11 +68,12 @@ ANCHORS = [
     ("ATL-ANCHOR-3", "5902000000035", Decimal("1000.00")),
 ]
 # (sku, ean, weight|None) — pairs share an EAN; weights drive the merge/review suggestion.
+# A skillet imported twice (the SKU separator lost on one import) and a throw blanket listed twice.
 DUPLICATES = [
-    ("ATL-DUP-A1", "5902000000905", Decimal("1000.00")),
-    ("ATL-DUP-A2", "5902000000905", Decimal("1050.00")),  # 5% apart -> merge
-    ("ATL-DUP-B1", "5902000000912", Decimal("1000.00")),
-    ("ATL-DUP-B2", "5902000000912", None),  # missing weight -> review
+    ("FRW-SKL-2001", "5902000000905", Decimal("1000.00")),
+    ("FRWSKL2001", "5902000000905", Decimal("1050.00")),  # 5% apart -> merge
+    ("TDM-THR-1317", "5902000000912", Decimal("1000.00")),
+    ("TDM-THR-1317-2", "5902000000912", None),  # missing weight -> review
 ]
 PUSH_PRODUCTS = ["BDD-ATL-P001", "BDD-ATL-P002", "BDD-ATL-P003"]
 

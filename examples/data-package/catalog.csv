@@ -1,0 +1,7 @@
+sku,name,slug,price,quantity,brand,category,category_name,parent_category,description,images
+DEMO-TEA-1,Black Tea 100 g,black-tea-100g,6.50,40,Brand A,tea,Tea,,Loose leaf black tea.,images/black-tea.png
+DEMO-TEA-2,Green Tea 100 g,green-tea-100g,7.90,35,Brand A,green-tea,Green Tea,tea,Loose leaf green tea.,images/green-tea.png|images/black-tea.png
+,Green Tea 250 g,,17.50,,Brand A,green-tea,Green Tea,tea,"Loose leaf green tea, the larger bag.",
+DEMO-COF-1,Coffee Beans 250 g,coffee-beans-250g,9.90,25,Brand B,coffee,Coffee,,"Medium roast, whole beans.",images/coffee.png
+,Coffee Beans 1 kg,,32.00,10,Brand B,coffee,Coffee,,"Medium roast, whole beans, the large bag.",
+,Ground Coffee 250 g,,8.90,,,coffee,Coffee,,,

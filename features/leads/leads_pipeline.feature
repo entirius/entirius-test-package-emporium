@@ -44,6 +44,7 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
     And the company "company_id" has an activity "blocked" containing "blocked: do_not_contact"
     And the review queue holds no draft about the company "company_id"
 
+  @needs-toolbox
   Scenario: L-10 entering the same stage twice within the cooldown fires the rule once
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-3.test"
     Then I save the first result field "id" as "company_id"
@@ -61,6 +62,7 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
     Then the response status should be 200
     And the company "company_id" has an activity "skipped" containing "skipped: no hooks"
 
+  @needs-toolbox
   Scenario: L-12 a finished audit gives hooks and a draft for the AI-picked contact
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-4.test"
     Then I save the first result field "id" as "company_id"
@@ -76,7 +78,7 @@ Feature: Leads — stage rules, intel analysis, recipient pick and rotation
     And the company "company_id" has an activity "draft" containing "draft review_required"
     And the review queue holds a draft about the company "company_id"
 
-  @leads-oneshot
+  @leads-oneshot @needs-toolbox
   Scenario: L-14 silence after the sequence rotates to the next contact, then parks the company
     The extra contact guarantees a second rotation whether or not leads_import added its form contact first.
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-4.test"

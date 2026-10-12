@@ -3,203 +3,240 @@
 # import-package.sh — Imports entirius-test-package data into Volkanos
 # Runs INSIDE the Docker container
 # Usage: ./import-package.sh /entirius/test-package/package
+#        SEED_APPS="<labels>" ./import-package.sh --dry-run   (prints the plan; needs nothing else)
 #
 # Channels are read from volkanos-config/channels.conf inside the package.
 # Override via IMPORT_CHANNELS env var (e.g. "default-local:USD,default-europe:EUR").
+# Every step runs only when its apps are enabled (guard). The app list is SEED_APPS when
+# seed.sh passes it, else one Django boot here. Skips are appended to SEED_SKIP_FILE when set.
 #
 
 set -e
 
-PACKAGE_DIR="${1:?Usage: $0 <package-directory>}"
-
-if [ ! -d "$PACKAGE_DIR" ]; then
-    echo "ERROR: Package directory not found: $PACKAGE_DIR"
-    exit 1
+DRY_RUN=0
+if [ "${1:-}" = "--dry-run" ]; then
+    DRY_RUN=1
 fi
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# ── Load channel configuration ──────────────────────────────────────
+note() { # note <summary line> — printed here, kept for the seed summary
+    echo "  $1"
+    if [ -n "${SEED_SKIP_FILE:-}" ]; then
+        echo "$1" >> "$SEED_SKIP_FILE"
+    fi
+}
+app_installed() { [[ "$APPS" == *" $1 "* ]]; }
 
-CHANNELS_CONF="$PACKAGE_DIR/volkanos-config/channels.conf"
-CHANNEL_LIST=()
-declare -A CHANNEL_CURRENCY
-
-if [ -n "$IMPORT_CHANNELS" ]; then
-    echo "Using channels from IMPORT_CHANNELS env var: $IMPORT_CHANNELS"
-    IFS=',' read -ra PAIRS <<< "$IMPORT_CHANNELS"
-    for pair in "${PAIRS[@]}"; do
-        ch="${pair%%:*}"
-        cur="${pair##*:}"
-        CHANNEL_LIST+=("$ch")
-        CHANNEL_CURRENCY["$ch"]="$cur"
+# guard <step> [app…] — 0 when every app is enabled (the step starts); otherwise a `skipped:`
+# line and 1. With --dry-run it prints the plan line and always returns 1: no step body runs.
+guard() {
+    local name="$1" app
+    shift
+    for app in "$@"; do
+        app_installed "$app" && continue
+        if [ "$DRY_RUN" = "1" ]; then
+            echo "seed: plan $name skip ($app not enabled)"
+        else
+            note "skipped: $name ($app not enabled)"
+        fi
+        return 1
     done
-elif [ -f "$CHANNELS_CONF" ]; then
-    echo "Reading channels from $CHANNELS_CONF"
-    while IFS=: read -r ch cur; do
-        [[ "$ch" =~ ^#.*$ || -z "$ch" ]] && continue
-        ch=$(echo "$ch" | xargs)
-        cur=$(echo "$cur" | xargs)
-        CHANNEL_LIST+=("$ch")
-        CHANNEL_CURRENCY["$ch"]="$cur"
-    done < "$CHANNELS_CONF"
+    if [ "$DRY_RUN" = "1" ]; then
+        echo "seed: plan $name run"
+        return 1
+    fi
+    printf '\n========================================\n%s\n========================================\n\n' "$name"
+}
+
+if [ "$DRY_RUN" = "1" ]; then
+    APPS="${SEED_APPS:?--dry-run needs SEED_APPS (enabled app labels, space- or newline-separated)}"
 else
-    echo "ERROR: No channel configuration found."
-    echo "  Create $CHANNELS_CONF or set IMPORT_CHANNELS env var."
-    echo "  Format: channel:currency (one per line or comma-separated)"
-    exit 1
+    PACKAGE_DIR="${1:?Usage: $0 <package-directory>}"
+
+    if [ ! -d "$PACKAGE_DIR" ]; then
+        echo "ERROR: Package directory not found: $PACKAGE_DIR"
+        exit 1
+    fi
+
+    # ── Load channel configuration ──────────────────────────────────────
+
+    CHANNELS_CONF="$PACKAGE_DIR/volkanos-config/channels.conf"
+    CHANNEL_LIST=()
+    declare -A CHANNEL_CURRENCY
+
+    if [ -n "$IMPORT_CHANNELS" ]; then
+        echo "Using channels from IMPORT_CHANNELS env var: $IMPORT_CHANNELS"
+        IFS=',' read -ra PAIRS <<< "$IMPORT_CHANNELS"
+        for pair in "${PAIRS[@]}"; do
+            ch="${pair%%:*}"
+            cur="${pair##*:}"
+            CHANNEL_LIST+=("$ch")
+            CHANNEL_CURRENCY["$ch"]="$cur"
+        done
+    elif [ -f "$CHANNELS_CONF" ]; then
+        echo "Reading channels from $CHANNELS_CONF"
+        while IFS=: read -r ch cur; do
+            [[ "$ch" =~ ^#.*$ || -z "$ch" ]] && continue
+            ch=$(echo "$ch" | xargs)
+            cur=$(echo "$cur" | xargs)
+            CHANNEL_LIST+=("$ch")
+            CHANNEL_CURRENCY["$ch"]="$cur"
+        done < "$CHANNELS_CONF"
+    else
+        echo "ERROR: No channel configuration found."
+        echo "  Create $CHANNELS_CONF or set IMPORT_CHANNELS env var."
+        echo "  Format: channel:currency (one per line or comma-separated)"
+        exit 1
+    fi
+
+    if [ ${#CHANNEL_LIST[@]} -eq 0 ]; then
+        echo "ERROR: No channels configured."
+        exit 1
+    fi
+
+    echo "Channels: ${CHANNEL_LIST[*]}"
+    for ch in "${CHANNEL_LIST[@]}"; do
+        echo "  $ch -> ${CHANNEL_CURRENCY[$ch]}"
+    done
+
+    cd "${SVC_DIR:?SVC_DIR not set}"
+    APPS="${SEED_APPS:-}"
+    if [ -z "$APPS" ]; then
+        APPS=$(python - < "$SCRIPT_DIR/installed-apps.py")
+    fi
+fi
+# shellcheck disable=SC2086 # word splitting on purpose: any whitespace becomes one space
+APPS=" $(echo $APPS) "
+
+if guard "import 1 Fixtures"; then
+    FIXTURE_DIR="$(dirname "$PACKAGE_DIR")/fixtures"
+    if [ -d "$FIXTURE_DIR" ]; then
+        echo "Loading Django fixtures from $FIXTURE_DIR..."
+        for fixture in "$FIXTURE_DIR"/*.yaml; do
+            if [ -f "$fixture" ]; then
+                # *_golden* fixtures are unit-test catalogues (own channels at pk 1/2, features at
+                # pk 3+) — loading them here would overwrite the real seed records. Skip them.
+                # This glob-skip is the canonical guard; the FIXTURE_FILES allow-list in
+                # seed.sh is a load-ordering convenience, not a safety boundary.
+                case "$(basename "$fixture")" in
+                    *_golden*) echo "  Skipping $(basename "$fixture") (unit-test fixture)"; continue ;;
+                    # References the agreements channel that seed.sh Step 6 syncs from PIM — loaded there.
+                    django_agreements.cfg.yaml) echo "  Skipping $(basename "$fixture") (loaded after channel sync)"; continue ;;
+                esac
+                # A fixture belongs to the app of its first `model:` line (as in seed.sh).
+                APP=$(grep -m1 -E "^- model:" "$fixture" | sed 's/.*model: *//; s/\..*//')
+                if [ -z "$APP" ]; then
+                    echo "ERROR: no '- model:' line in $fixture"
+                    exit 1
+                fi
+                if ! app_installed "$APP"; then
+                    note "skipped: import 1 $(basename "$fixture") ($APP not enabled)"
+                    continue
+                fi
+                echo "  Loading $(basename "$fixture")..."
+                python manage.py loaddata --format=yaml "$fixture"
+            fi
+        done
+    else
+        echo "No fixtures directory found at $FIXTURE_DIR — skipping"
+    fi
 fi
 
-if [ ${#CHANNEL_LIST[@]} -eq 0 ]; then
-    echo "ERROR: No channels configured."
-    exit 1
-fi
+if guard "import 2 PIM Configuration" django_pim_csv; then
+    PIM_CONFIG="$PACKAGE_DIR/volkanos-config"
+    python manage.py config-load-pim-channels "$PIM_CONFIG/pim-channels.csv"
+    # The CSVs are the source of truth for features, set memberships and positions:
+    # any rejected row fails the seed, --prune drops memberships the CSVs do not list.
+    python manage.py config-load-pim-features "$PIM_CONFIG/pim-features.csv"
+    python manage.py config-load-pim-features-sets "$PIM_CONFIG/pim-features-sets.csv" --prune
+    python manage.py config-load-pim-feature-position-in-features-sets "$PIM_CONFIG/pim-feature-position-in-features-sets.csv" --prune
 
-echo "Channels: ${CHANNEL_LIST[*]}"
-for ch in "${CHANNEL_LIST[@]}"; do
-    echo "  $ch -> ${CHANNEL_CURRENCY[$ch]}"
-done
+    echo "Checking the PIM config importers reject bad rows (an error below is expected)..."
+    out=$(python manage.py config-load-pim-features "$PIM_CONFIG/invalid/pim-features-scope-change.csv" 2>&1 || true)
+    if ! grep -q "can not change scope of existing feature series" <<< "$out"; then
+        echo "$out"
+        echo "ERROR: config-load-pim-features did not reject the scope change of an existing feature"
+        exit 1
+    fi
 
-cd "${SVC_DIR:?SVC_DIR not set}"
-
-echo ""
-echo "========================================"
-echo "Step 1: Fixtures (Django loaddata)"
-echo "========================================"
-echo ""
-FIXTURE_DIR="$(dirname "$PACKAGE_DIR")/fixtures"
-if [ -d "$FIXTURE_DIR" ]; then
-    echo "Loading Django fixtures from $FIXTURE_DIR..."
-    for fixture in "$FIXTURE_DIR"/*.yaml; do
-        if [ -f "$fixture" ]; then
-            # *_golden* fixtures are unit-test catalogues (own channels at pk 1/2, features at
-            # pk 3+) — loading them here would overwrite the real seed records. Skip them.
-            # This glob-skip is the canonical guard; the FIXTURE_FILES allow-list in
-            # seed.sh is a load-ordering convenience, not a safety boundary.
-            case "$(basename "$fixture")" in
-                *_golden*) echo "  Skipping $(basename "$fixture") (unit-test fixture)"; continue ;;
-                # References the agreements channel that seed.sh Step 6 syncs from PIM — loaded there.
-                django_agreements.cfg.yaml) echo "  Skipping $(basename "$fixture") (loaded after channel sync)"; continue ;;
-            esac
-            echo "  Loading $(basename "$fixture")..."
-            python manage.py loaddata --format=yaml "$fixture" || echo "WARNING: $(basename "$fixture") failed"
+    echo "Checking the PIM config CSVs match the database..."
+    for check in "features-sets pim-features-sets.csv" "feature-position-in-features-sets pim-feature-position-in-features-sets.csv"; do
+        read -r command csv_file <<< "$check"
+        out=$(python manage.py "config-load-pim-$command" "$PIM_CONFIG/$csv_file" --prune --dry-run 2>&1) || {
+            echo "$out"
+            echo "ERROR: dry run of $csv_file failed"
+            exit 1
+        }
+        if ! echo "$out" | grep -q "^Would detach 0 "; then
+            echo "$out"
+            echo "ERROR: a second import of $csv_file would still detach features"
+            exit 1
         fi
     done
-else
-    echo "No fixtures directory found at $FIXTURE_DIR — skipping"
 fi
 
-echo ""
-echo "========================================"
-echo "Step 2: PIM Configuration"
-echo "========================================"
-echo ""
-PIM_CONFIG="$PACKAGE_DIR/volkanos-config"
-python manage.py config-load-pim-channels "$PIM_CONFIG/pim-channels.csv"
-# The CSVs are the source of truth for features, set memberships and positions:
-# any rejected row fails the seed, --prune drops memberships the CSVs do not list.
-python manage.py config-load-pim-features "$PIM_CONFIG/pim-features.csv"
-python manage.py config-load-pim-features-sets "$PIM_CONFIG/pim-features-sets.csv" --prune
-python manage.py config-load-pim-feature-position-in-features-sets "$PIM_CONFIG/pim-feature-position-in-features-sets.csv" --prune
-
-echo "Checking the PIM config importers reject bad rows (an error below is expected)..."
-out=$(python manage.py config-load-pim-features "$PIM_CONFIG/invalid/pim-features-scope-change.csv" 2>&1 || true)
-if ! grep -q "can not change scope of existing feature series" <<< "$out"; then
-    echo "$out"
-    echo "ERROR: config-load-pim-features did not reject the scope change of an existing feature"
-    exit 1
+if guard "import 3 Attributes" django_pim_csv; then
+    python manage.py attributes-import-from-csv badge "$PACKAGE_DIR/attributes--badge.csv"
+    python manage.py attributes-import-from-csv brand "$PACKAGE_DIR/attributes--brand.csv"
+    python manage.py attributes-import-from-csv series "$PACKAGE_DIR/attributes--series.csv"
+    python manage.py attributes-import-from-csv options "$PACKAGE_DIR/attributes--options.csv"
 fi
 
-echo "Checking the PIM config CSVs match the database..."
-for check in "features-sets pim-features-sets.csv" "feature-position-in-features-sets pim-feature-position-in-features-sets.csv"; do
-    read -r command csv_file <<< "$check"
-    out=$(python manage.py "config-load-pim-$command" "$PIM_CONFIG/$csv_file" --prune --dry-run 2>&1) || {
-        echo "$out"
-        echo "ERROR: dry run of $csv_file failed"
-        exit 1
-    }
-    if ! echo "$out" | grep -q "^Would detach 0 "; then
-        echo "$out"
-        echo "ERROR: a second import of $csv_file would still detach features"
-        exit 1
-    fi
-done
+if guard "import 4 Categories" django_pim_csv; then
+    for ch in "${CHANNEL_LIST[@]}"; do
+        CSV="$PACKAGE_DIR/categories--${ch}.csv"
+        if [ -f "$CSV" ]; then
+            python manage.py categories-import-from-csv "$ch" "$CSV"
+        else
+            note "skipped: import 4 Categories ($(basename "$CSV") not in the package)"
+        fi
+    done
+fi
 
-echo ""
-echo "========================================"
-echo "Step 3: Attributes"
-echo "========================================"
-echo ""
-python manage.py attributes-import-from-csv badge "$PACKAGE_DIR/attributes--badge.csv"
-python manage.py attributes-import-from-csv brand "$PACKAGE_DIR/attributes--brand.csv"
-python manage.py attributes-import-from-csv series "$PACKAGE_DIR/attributes--series.csv"
-python manage.py attributes-import-from-csv options "$PACKAGE_DIR/attributes--options.csv"
-
-echo ""
-echo "========================================"
-echo "Step 4: Categories"
-echo "========================================"
-echo ""
-for ch in "${CHANNEL_LIST[@]}"; do
-    CSV="$PACKAGE_DIR/categories--${ch}.csv"
-    if [ -f "$CSV" ]; then
-        python manage.py categories-import-from-csv "$ch" "$CSV"
-    else
-        echo "WARNING: $CSV not found — skipping categories for $ch"
-    fi
-done
-
-echo ""
-echo "========================================"
-echo "Step 5: Products"
-echo "========================================"
-echo ""
+# Read by the product import and by the thumbnails step.
 SKIP_PICS="--skip-pictures"
-if [ -d "$(dirname "$PACKAGE_DIR")/images" ]; then
+if [ "$DRY_RUN" = "0" ] && [ -d "$(dirname "$PACKAGE_DIR")/images" ]; then
     echo "Images directory found — importing with pictures"
     SKIP_PICS=""
 fi
-for ch in "${CHANNEL_LIST[@]}"; do
-    CSV="$PACKAGE_DIR/products--${ch}.csv"
-    if [ -f "$CSV" ]; then
-        python manage.py products-import-from-csv "$ch" "$CSV" $SKIP_PICS
-    else
-        echo "WARNING: $CSV not found — skipping products for $ch"
-    fi
-done
 
-echo ""
-echo "========================================"
-echo "Step 6: Product Positions"
-echo "========================================"
-echo ""
-for ch in "${CHANNEL_LIST[@]}"; do
-    CSV="$PACKAGE_DIR/products-position--${ch}.csv"
-    if [ -f "$CSV" ]; then
-        python manage.py products-position-import-from-csv "$ch" "$CSV"
-    else
-        echo "WARNING: $CSV not found — skipping product positions for $ch"
-    fi
-done
+if guard "import 5 Products" django_pim_csv; then
+    for ch in "${CHANNEL_LIST[@]}"; do
+        CSV="$PACKAGE_DIR/products--${ch}.csv"
+        if [ -f "$CSV" ]; then
+            python manage.py products-import-from-csv "$ch" "$CSV" $SKIP_PICS
+        else
+            note "skipped: import 5 Products ($(basename "$CSV") not in the package)"
+        fi
+    done
+fi
 
-echo ""
-echo "========================================"
-echo "Step 7: Prices"
-echo "========================================"
-echo ""
-for ch in "${CHANNEL_LIST[@]}"; do
-    CSV="$PACKAGE_DIR/pricelist--${ch}.csv"
-    CUR="${CHANNEL_CURRENCY[$ch]}"
-    if [ -f "$CSV" ]; then
-        python manage.py import-pricelist-from-csv "$ch" "$CSV" --currency_code="$CUR"
-    else
-        echo "WARNING: $CSV not found — skipping pricelist for $ch"
-    fi
-done
-python manage.py manage-pricelists
+if guard "import 6 Product Positions" django_pim_csv; then
+    for ch in "${CHANNEL_LIST[@]}"; do
+        CSV="$PACKAGE_DIR/products-position--${ch}.csv"
+        if [ -f "$CSV" ]; then
+            python manage.py products-position-import-from-csv "$ch" "$CSV"
+        else
+            note "skipped: import 6 Product Positions ($(basename "$CSV") not in the package)"
+        fi
+    done
+fi
 
-echo ""
-echo "Step 7b: Bundle Component Prices"
-echo ""
-python manage.py shell -c "
+if guard "import 7 Prices" django_pricemanager; then
+    for ch in "${CHANNEL_LIST[@]}"; do
+        CSV="$PACKAGE_DIR/pricelist--${ch}.csv"
+        CUR="${CHANNEL_CURRENCY[$ch]}"
+        if [ -f "$CSV" ]; then
+            python manage.py import-pricelist-from-csv "$ch" "$CSV" --currency_code="$CUR"
+        else
+            note "skipped: import 7 Prices ($(basename "$CSV") not in the package)"
+        fi
+    done
+    python manage.py manage-pricelists
+fi
+
+if guard "import 7b Bundle Component Prices" django_pricemanager django_pim; then
+    python manage.py shell -c "
 from django_pricemanager.models import Price, PriceList, ProductRepresentation
 from django_pim.models.product_bundle.bundle_link import BundleLink
 count = 0
@@ -225,38 +262,36 @@ for pricelist in PriceList.objects.all():
         count += 1
 print(f'Created {count} bundle component prices')
 "
-
-echo ""
-echo "========================================"
-echo "Step 7c: Thumbnails"
-echo "========================================"
-echo ""
-if [ -z "$SKIP_PICS" ]; then
-    echo "Generating thumbnails for imported images..."
-    for ch in "${CHANNEL_LIST[@]}"; do
-        python manage.py pim-thumbs-generate "$ch" || echo "WARNING: pim-thumbs-generate $ch failed"
-    done
-else
-    echo "Skipping thumbnail generation (no images imported)"
 fi
 
-echo ""
-echo "========================================"
-echo "Step 7d: Omnibus Prices (EU compliance)"
-echo "========================================"
-echo ""
-for ch in "${CHANNEL_LIST[@]}"; do
-    python manage.py fill-omnibus-product-representation-from-pim "$ch"
-done
-python manage.py calculate-omnibus-price
+if guard "import 7c Thumbnails" django_pim; then
+    if [ -z "$SKIP_PICS" ]; then
+        echo "Generating thumbnails for imported images..."
+        # Soft for one known cause only: a service without THUMBS_CONFIG has no resizer.
+        for ch in "${CHANNEL_LIST[@]}"; do
+            if out=$(python manage.py pim-thumbs-generate "$ch" 2>&1); then
+                echo "$out"
+            elif grep -q "THUMBS_CONFIG is not set" <<< "$out"; then
+                note "warn: import 7c Thumbnails ($ch: THUMBS_CONFIG is not set in the service settings)"
+            else
+                echo "$out"
+                exit 1
+            fi
+        done
+    else
+        note "skipped: import 7c Thumbnails (no images directory in the package)"
+    fi
+fi
 
-echo ""
-echo "========================================"
-echo "Step 8: Quantities (requires Celery)"
-echo "========================================"
-echo ""
+if guard "import 7d Omnibus" django_omnibus; then
+    for ch in "${CHANNEL_LIST[@]}"; do
+        python manage.py fill-omnibus-product-representation-from-pim "$ch"
+    done
+    python manage.py calculate-omnibus-price
+fi
+
 # Condition-based wait for the async xray pull->push chain (writes checkout.Stock).
-# The cap is a safety net, not the expected duration; on a fresh build the chain
+# The cap is a safety net, not the expected duration (reaching it fails the import); on a fresh build the chain
 # routinely exceeds 60s. NOTE: `manage.py shell -c` can emit banner/warning lines on
 # stdout before the result, so we take only the LAST line (tail -1) — parsing the whole
 # multi-line blob is what silently broke the old loop (it never detected completion and
@@ -290,7 +325,8 @@ print(f'{pits.count()},{pits.filter(proces_status__in=[\"waiting\",\"processing\
         fi
         echo "  ${ELAPSED}s: ${PIT_TOTAL:-0} PITs, ${PIT_PENDING:-?} still pending..."
     done
-    echo "WARNING: QMS tasks not complete after ${MAX_WAIT}s — proceeding anyway"
+    echo "ERROR: QMS tasks not complete after ${MAX_WAIT}s"
+    return 1
 }
 
 # The xray->checkout push that writes checkout.Stock is a downstream async step NOT
@@ -324,50 +360,43 @@ print(Stock.objects.filter(product__sku__in=['ENT-S001','ENT-C001'], quantity__g
         echo "  ${ELAPSED}s: ${CUR:-?} non-zero stock rows (stable x${STABLE}, sentinels ${SENT:-0}/2)..."
         PREV="$CUR"
     done
-    echo "WARNING: checkout.Stock not settled after ${MAX_WAIT}s — proceeding anyway"
+    echo "ERROR: checkout.Stock not settled after ${MAX_WAIT}s"
+    return 1
 }
 
-python manage.py qms-manage-quantities
-wait_for_qms
+if guard "import 8 Quantities" django_qms; then
+    python manage.py qms-manage-quantities
+    wait_for_qms
+fi
 
-echo ""
-echo "========================================"
-echo "Step 9: Matrix (Read Model)"
-echo "========================================"
-echo ""
-python manage.py fill-read-model
+if guard "import 9 Matrix" django_matrix; then
+    python manage.py fill-read-model
+fi
 
-echo ""
-echo "========================================"
-echo "Step 9b: Reconcile quantities (configurable products)"
-echo "========================================"
-echo ""
-# Configurable products (variants with a parent) only have their checkout
-# ProductRepresentation rows materialised after the catalogue is fully built, so the
-# first quantity push (Step 9) can land on a not-yet-existing representation and leave
-# them at stock 0 — sale/voucher-template SKUs like ENT-S001 in particular. Re-push now
-# that every representation exists, wait for completion, then rebuild the read model so
-# Matrix reflects the reconciled stock. Idempotent: re-pushing the same qty is a no-op
-# for products already correct.
-python manage.py qms-manage-quantities
-wait_for_checkout_stock
-python manage.py fill-read-model
+if guard "import 9b Reconcile" django_qms django_checkout django_matrix; then
+    # Configurable products (variants with a parent) only have their checkout
+    # ProductRepresentation rows materialised after the catalogue is fully built, so the
+    # first quantity push (Step 9) can land on a not-yet-existing representation and leave
+    # them at stock 0 — sale/voucher-template SKUs like ENT-S001 in particular. Re-push now
+    # that every representation exists, wait for completion, then rebuild the read model so
+    # Matrix reflects the reconciled stock. Idempotent: re-pushing the same qty is a no-op
+    # for products already correct.
+    python manage.py qms-manage-quantities
+    wait_for_checkout_stock
+    python manage.py fill-read-model
+fi
 
-echo ""
-echo "========================================"
-echo "Step 10: Delivery Points"
-echo "========================================"
-echo ""
-for dp_csv in "$PACKAGE_DIR"/deliverypoints--*.csv; do
-    [ -f "$dp_csv" ] || continue
-    DP_TYPE=$(basename "$dp_csv" | sed 's/deliverypoints--//;s/\.csv//')
-    echo "Importing delivery points: $DP_TYPE"
-    python manage.py import_deliverypoints --file "$dp_csv" --type "$DP_TYPE" --mode incremental
-done
+if guard "import 10 Delivery Points" django_deliverypoints; then
+    for dp_csv in "$PACKAGE_DIR"/deliverypoints--*.csv; do
+        [ -f "$dp_csv" ] || continue
+        DP_TYPE=$(basename "$dp_csv" | sed 's/deliverypoints--//;s/\.csv//')
+        echo "Importing delivery points: $DP_TYPE"
+        python manage.py import_deliverypoints --file "$dp_csv" --type "$DP_TYPE" --mode incremental
+    done
+fi
 
-echo ""
-echo "========================================"
-echo "Import Complete!"
-echo "========================================"
-echo "Channels imported: ${CHANNEL_LIST[*]}"
-echo ""
+if [ "$DRY_RUN" = "0" ]; then
+    printf '\n========================================\nImport Complete!\n========================================\n'
+    echo "Channels imported: ${CHANNEL_LIST[*]}"
+    echo ""
+fi

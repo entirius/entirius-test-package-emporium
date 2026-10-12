@@ -157,6 +157,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+data = [
+    { name = "pyyaml" },
+]
 dev = [
     { name = "holidays" },
     { name = "pillow" },
@@ -178,10 +181,11 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest", marker = "extra == 'e2e'", specifier = ">=8" },
     { name = "pytest-playwright", marker = "extra == 'e2e'", specifier = ">=0.5" },
+    { name = "pyyaml", marker = "extra == 'data'", specifier = ">=6" },
     { name = "requests", specifier = ">=2.31" },
     { name = "ruff", marker = "extra == 'dev'" },
 ]
-provides-extras = ["dev", "e2e"]
+provides-extras = ["dev", "e2e", "data"]
 
 [[package]]
 name = "filelock"

@@ -1,0 +1,80 @@
+{
+  "categories": [
+    {
+      "name": "Tea",
+      "slug": "tea",
+      "children": [
+        {
+          "name": "Green Tea",
+          "slug": "green-tea"
+        }
+      ]
+    },
+    {
+      "name": "Coffee",
+      "slug": "coffee"
+    }
+  ],
+  "products": [
+    {
+      "sku": "DEMO-TEA-1",
+      "name": "Black Tea 100 g",
+      "slug": "black-tea-100g",
+      "price": "6.50",
+      "quantity": 40,
+      "brand": "Brand A",
+      "category_slug": "tea",
+      "description": "Loose leaf black tea.",
+      "images": [
+        "images/black-tea.png"
+      ]
+    },
+    {
+      "sku": "DEMO-TEA-2",
+      "name": "Green Tea 100 g",
+      "slug": "green-tea-100g",
+      "price": "7.90",
+      "quantity": 35,
+      "brand": "Brand A",
+      "category_slug": "green-tea",
+      "description": "Loose leaf green tea.",
+      "images": [
+        "images/green-tea.png",
+        "images/black-tea.png"
+      ]
+    },
+    {
+      "name": "Green Tea 250 g",
+      "price": "17.50",
+      "brand": "Brand A",
+      "category_slug": "green-tea",
+      "description": "Loose leaf green tea, the larger bag."
+    },
+    {
+      "sku": "DEMO-COF-1",
+      "name": "Coffee Beans 250 g",
+      "slug": "coffee-beans-250g",
+      "price": "9.90",
+      "quantity": 25,
+      "brand": "Brand B",
+      "category_slug": "coffee",
+      "description": "Medium roast, whole beans.",
+      "images": [
+        "images/coffee.png"
+      ]
+    },
+    {
+      "name": "Coffee Beans 1 kg",
+      "price": "32.00",
+      "quantity": 10,
+      "brand": "Brand B",
+      "category_slug": "coffee",
+      "description": "Medium roast, whole beans, the large bag."
+    },
+    {
+      "name": "Ground Coffee 250 g",
+      "price": "8.90",
+      "category_slug": "coffee"
+    }
+  ]
+}

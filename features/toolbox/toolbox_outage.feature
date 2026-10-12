@@ -1,4 +1,4 @@
-@toolbox-down @toolbox-oneshot @v2 @admin
+@toolbox-down @toolbox-oneshot @needs-toolbox @v2 @admin
 Feature: AI toolbox outage — degraded mode and automatic recovery
   As an operator of a stack whose AI toolbox went down
   I want failed drafts and intel analyses to be visible during the outage and retried once it is back

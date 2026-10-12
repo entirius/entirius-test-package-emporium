@@ -14,7 +14,7 @@ product's picture from the in-network `fixtures` host, runs `lookup_backfill` (t
 spend the whole run on HTTP timeouts), then seeds one pending `duplicate_in_pim` enrichment proposal
 so the `@lookup-oneshot` accept scenario has something to accept.
 
-Idempotent: wipes prior LKP-PIM-*/atl-lookup-* rows before recreating (same convention as
+Idempotent: wipes the prior fixture products and atl-lookup-* rows before recreating (same convention as
 `seed-atlas-e2e.py`); the enrichment proposal intake supersedes its own prior pending row.
 Target channel: `default-europe` (package Step 4 must have run — this step lives after Step 6x).
 Feature set: `furniture` (loaded by fixtures/django_pim.cfg.yaml, Step 2).
@@ -35,7 +35,7 @@ FIXTURES_DIR = Path("/entirius/test-package/fixtures/lookup")
 CHANNEL = "default-europe"
 FEATURE_SET = "furniture"
 SOURCE_IDXS = ["atl-lookup-a", "atl-lookup-b"]
-SKU_PREFIX = "LKP-PIM-"
+LEGACY_SKU_PREFIX = "LKP-PIM-"  # SKUs of databases seeded before the merchant-style ones
 # Reserved exact_dup indices (both documented here so seed-lookup.py and the .feature file agree —
 # a BDD step comment cannot import a Python constant, so it names the constant instead):
 #   index 1 -> PROPOSAL_PAIR_INDEX: the pending duplicate_in_pim proposal the @lookup-oneshot accept
@@ -51,11 +51,13 @@ def _load(name: str) -> list[dict]:
     return json.loads((FIXTURES_DIR / name).read_text(encoding="utf-8"))
 
 
-def _wipe_prior_run() -> None:
+def _wipe_prior_run(skus: list[str]) -> None:
+    from django.db.models import Q
     from django_pim.models import Product, RealProduct
 
-    Product.objects.filter(real_product__sku__startswith=SKU_PREFIX).delete()
-    RealProduct.objects.filter(sku__startswith=SKU_PREFIX).delete()
+    prior = RealProduct.objects.filter(Q(sku__in=skus) | Q(sku__startswith=LEGACY_SKU_PREFIX))
+    Product.objects.filter(real_product__in=prior).delete()
+    prior.delete()
     with suppress(Exception):
         from django_atlas.models import Source, SourceProduct
 
@@ -250,7 +252,7 @@ def _ensure_spawn_rule() -> None:
     )
 
 
-def _seed_duplicate_proposal() -> str:
+def _seed_duplicate_proposal(atlas_products: list[dict]) -> str:
     """One pending `duplicate_in_pim` proposal, ready for the @lookup-oneshot accept scenario.
 
     `django_enrichment`/`django_atlas` are optional — this degrades to a no-op the same way the
@@ -262,12 +264,17 @@ def _seed_duplicate_proposal() -> str:
         if not (apps.is_installed("django_enrichment") and apps.is_installed("django_atlas")):
             return "duplicate-in-pim proposal: skipped (django_enrichment or django_atlas not installed)"
         _ensure_spawn_rule()
-        return _intake_duplicate_proposal()
+        return _intake_duplicate_proposal(_proposal_pair(atlas_products))
     except Exception as exc:  # advisory step — never fail the seed over a proposal
         return f"duplicate-in-pim proposal: skipped ({exc})"
 
 
-def _intake_duplicate_proposal() -> str:
+def _proposal_pair(atlas_products: list[dict]) -> dict:
+    """The atlas side of the reserved exact_dup pair (PROPOSAL_PAIR_INDEX)."""
+    return next(p for p in atlas_products if p["pair_class"] == "exact_dup" and p["pair_index"] == PROPOSAL_PAIR_INDEX)
+
+
+def _intake_duplicate_proposal(pair: dict) -> str:
     from dataclasses import asdict
     from decimal import Decimal as Dec
 
@@ -276,8 +283,7 @@ def _intake_duplicate_proposal() -> str:
     from django_lookup.schemas.requests.lookup import LookupQuery
     from django_lookup.services import lookup_service
 
-    i = PROPOSAL_PAIR_INDEX
-    source_idx, external_id = "atl-lookup-a" if i % 2 == 0 else "atl-lookup-b", f"EXACT-{i:02d}"
+    source_idx, external_id = pair["source_idx"], pair["external_id"]
     subject_ref = f"{source_idx}:{external_id}"
     sp = SourceProduct.objects.filter(source__idx=source_idx, external_id=external_id).first()
     if sp is None:
@@ -309,7 +315,7 @@ def _intake_duplicate_proposal() -> str:
 def main() -> None:
     pim_products = _load("pim_products.json")
     atlas_products = _load("atlas_products.json")
-    _wipe_prior_run()
+    _wipe_prior_run([p["sku"] for p in pim_products])
     msgs = [
         _ensure_brand_attributes(pim_products),
         _create_pim_products(pim_products),
@@ -317,7 +323,7 @@ def main() -> None:
     sources = _ensure_atlas_sources()
     msgs.append(_create_atlas_products(atlas_products, sources))
     msgs.append(_run_backfill())
-    msgs.append(_seed_duplicate_proposal())
+    msgs.append(_seed_duplicate_proposal(atlas_products))
     print("=== seed-lookup ===")
     for msg in msgs:
         print(msg)

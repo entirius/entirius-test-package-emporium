@@ -70,6 +70,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the report for source "urlscan" should have status "completed"
     And the report for source "heuristic" should have status "failed"
 
+  @needs-toolbox
   Scenario: Funnel 3 the analysis finds hooks, picks the recipient and leaves a draft to review
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
@@ -79,6 +80,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the company "company_id" has one "recipient picked" activity with a contact_id
     And the review queue holds a draft about the company "company_id"
 
+  @needs-toolbox
   Scenario: Funnel 4 the reviewer accepts the draft
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
@@ -88,6 +90,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the response field "status" should equal "approved"
     And the response field "scheduled_at" should not be null
 
+  @needs-toolbox
   Scenario: Funnel 5 send-due delivers the message into the sandbox with footer and both parts
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
@@ -98,6 +101,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the sandbox message to "anna@example-shop-funnel.test" is multipart/alternative with our Message-ID
     And the sandbox message to "anna@example-shop-funnel.test" has a text and an html part containing "placeholder for legitimate interest, PL"
 
+  @needs-toolbox
   Scenario: Funnel 6 a reply to the sent message marks the thread replied
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
@@ -107,6 +111,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     Then the thread of "outreach" has status "replied"
     And the last reply in the thread of "outreach" has kind "reply" matched by "header"
 
+  @needs-toolbox
   Scenario: Funnel 7 leads moves the company to replied and the unread alert escalates by email
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/?search=example-shop-1.test"
     Then I save the first result field "id" as "company_id"
@@ -121,6 +126,7 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
 
   Scenario: Funnel 8 a blocked contact gets no draft and no mail
     Given the leads contact "blocked@example-shop-9.test" of the company "example-shop-7.test" is saved as "blocked"
+    And the sandbox mailbox count about "blocked@example-shop-9.test" is remembered
     When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/companies/{blocked.company}/communicate/" with body
       """
       {"template_key": "lead.cold.b2b", "contact_id": {blocked}}
@@ -129,4 +135,4 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     And the company "blocked.company" has an activity "blocked" containing "blocked: do_not_contact"
     And the review queue holds no draft about the company "blocked.company"
     When the communicator beat sends due messages
-    Then the sandbox mailbox count is unchanged
+    Then the scoped sandbox mailbox count is unchanged

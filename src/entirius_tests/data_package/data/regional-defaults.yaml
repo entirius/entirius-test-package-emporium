@@ -1,0 +1,491 @@
+# Copy of src/django_regional/fixtures/regional-defaults.yaml in entirius-django-regional (languages, currencies, countries and their pks).
+- model: django_regional.country
+  pk: 1
+  fields:
+    iso2: BE
+    iso3: BEL
+    name_en: Belgium
+    name_pl: Belgia
+    prefix: "+32"
+- model: django_regional.country
+  pk: 2
+  fields:
+    iso2: BG
+    iso3: BGR
+    name_en: Bulgaria
+    name_pl: Bułgaria
+    prefix: "+359"
+- model: django_regional.country
+  pk: 3
+  fields:
+    iso2: CZ
+    iso3: CZE
+    name_en: Czech Republic
+    name_pl: Czechy
+    prefix: "+420"
+- model: django_regional.country
+  pk: 4
+  fields:
+    iso2: DK
+    iso3: DNK
+    name_en: Denmark
+    name_pl: Dania
+    prefix: "+45"
+- model: django_regional.country
+  pk: 5
+  fields:
+    iso2: DE
+    iso3: DEU
+    name_en: Germany
+    name_pl: Niemcy
+    prefix: "+49"
+- model: django_regional.country
+  pk: 6
+  fields:
+    iso2: EE
+    iso3: EST
+    name_en: Estonia
+    name_pl: Estonia
+    prefix: "+372"
+- model: django_regional.country
+  pk: 7
+  fields:
+    iso2: IE
+    iso3: IRL
+    name_en: Ireland
+    name_pl: Irlandia
+    prefix: "+353"
+- model: django_regional.country
+  pk: 8
+  fields:
+    iso2: EL
+    iso3: GRC
+    name_en: Greece
+    name_pl: Grecja
+    prefix: "+30"
+- model: django_regional.country
+  pk: 9
+  fields:
+    iso2: ES
+    iso3: ESP
+    name_en: Spain
+    name_pl: Hiszpania
+    prefix: "+34"
+- model: django_regional.country
+  pk: 10
+  fields:
+    iso2: FR
+    iso3: FRA
+    name_en: France
+    name_pl: Francja
+    prefix: "+33"
+- model: django_regional.country
+  pk: 11
+  fields:
+    iso2: HR
+    iso3: HRV
+    name_en: Croatia
+    name_pl: Chorwacja
+    prefix: "+385"
+- model: django_regional.country
+  pk: 12
+  fields:
+    iso2: IT
+    iso3: ITA
+    name_en: Italy
+    name_pl: Włochy
+    prefix: "+39"
+- model: django_regional.country
+  pk: 13
+  fields:
+    iso2: CY
+    iso3: CYP
+    name_en: Cyprus
+    name_pl: Cypr
+    prefix: "+357"
+- model: django_regional.country
+  pk: 14
+  fields:
+    iso2: LV
+    iso3: LVA
+    name_en: Latvia
+    name_pl: Łotwa
+    prefix: "+371"
+- model: django_regional.country
+  pk: 15
+  fields:
+    iso2: LT
+    iso3: LTU
+    name_en: Lithuania
+    name_pl: Litwa
+    prefix: "+370"
+- model: django_regional.country
+  pk: 16
+  fields:
+    iso2: LU
+    iso3: LUX
+    name_en: Luxembourg
+    name_pl: Luksemburg
+    prefix: "+352"
+- model: django_regional.country
+  pk: 17
+  fields:
+    iso2: HU
+    iso3: HUN
+    name_en: Hungary
+    name_pl: Węgry
+    prefix: "+36"
+- model: django_regional.country
+  pk: 18
+  fields:
+    iso2: MT
+    iso3: MLT
+    name_en: Malta
+    name_pl: Malta
+    prefix: "+356"
+- model: django_regional.country
+  pk: 19
+  fields:
+    iso2: NL
+    iso3: NLD
+    name_en: Netherlands
+    name_pl: Holandia
+    prefix: "+31"
+- model: django_regional.country
+  pk: 20
+  fields:
+    iso2: AT
+    iso3: AUT
+    name_en: Austria
+    name_pl: Austria
+    prefix: "+43"
+- model: django_regional.country
+  pk: 21
+  fields:
+    iso2: PL
+    iso3: POL
+    name_en: Poland
+    name_pl: Polska
+    prefix: "+48"
+- model: django_regional.country
+  pk: 22
+  fields:
+    iso2: PT
+    iso3: PRT
+    name_en: Portugal
+    name_pl: Portugalia
+    prefix: "+351"
+- model: django_regional.country
+  pk: 23
+  fields:
+    iso2: RO
+    iso3: ROU
+    name_en: Romania
+    name_pl: Rumunia
+    prefix: "+40"
+- model: django_regional.country
+  pk: 24
+  fields:
+    iso2: SI
+    iso3: SVN
+    name_en: Slovenia
+    name_pl: Słowenia
+    prefix: "+386"
+- model: django_regional.country
+  pk: 25
+  fields:
+    iso2: SK
+    iso3: SVK
+    name_en: Slovakia
+    name_pl: Słowacja
+    prefix: "+421"
+- model: django_regional.country
+  pk: 26
+  fields:
+    iso2: FI
+    iso3: FIN
+    name_en: Finland
+    name_pl: Finlandia
+    prefix: "+32"
+- model: django_regional.country
+  pk: 27
+  fields:
+    iso2: SE
+    iso3: SWE
+    name_en: Sweden
+    name_pl: Szwecja
+    prefix: "+46"
+- model: django_regional.country
+  pk: 28
+  fields:
+    iso2: GB
+    iso3: GBR
+    name_en: United Kingdom
+    name_pl: Wielka Brytania
+    prefix: "+44"
+- model: django_regional.country
+  pk: 29
+  fields:
+    iso2: 'NO'
+    iso3: NOR
+    name_en: Norway
+    name_pl: Norwegia
+    prefix: "+47"
+- model: django_regional.country
+  pk: 30
+  fields:
+    iso2: CH
+    iso3: CHE
+    name_en: Switzerland
+    name_pl: Szwajcaria
+    prefix: "+41"
+- model: django_regional.country
+  pk: 31
+  fields:
+    iso2: LI
+    iso3: LIE
+    name_en: Liechtenstein
+    name_pl: Liechtenstein
+    prefix: "+423"
+- model: django_regional.country
+  pk: 32
+  fields:
+    iso2: IS
+    iso3: ISL
+    name_en: Iceland
+    name_pl: Islandia
+    prefix: "+354"
+- model: django_regional.language
+  pk: 1
+  fields:
+    iso2: pl
+    iso3: pol
+    name_en: polish
+    name_pl: polski
+    name_source: Polski
+- model: django_regional.language
+  pk: 2
+  fields:
+    iso2: en
+    iso3: eng
+    name_en: english
+    name_pl: angielski
+    name_source: English
+- model: django_regional.language
+  pk: 3
+  fields:
+    iso2: bg
+    iso3: bul
+    name_en: bulgarian
+    name_pl: bułgarski
+    name_source: български
+- model: django_regional.language
+  pk: 4
+  fields:
+    iso2: es
+    iso3: spa
+    name_en: spanish
+    name_pl: hiszpański
+    name_source: español
+- model: django_regional.language
+  pk: 5
+  fields:
+    iso2: cs
+    iso3: cze
+    name_en: czech
+    name_pl: czeski
+    name_source: čeština
+- model: django_regional.language
+  pk: 6
+  fields:
+    iso2: da
+    iso3: dan
+    name_en: danish
+    name_pl: duński
+    name_source: dansk
+- model: django_regional.language
+  pk: 7
+  fields:
+    iso2: de
+    iso3: ger
+    name_en: german
+    name_pl: niemiecki
+    name_source: deutsch
+- model: django_regional.language
+  pk: 8
+  fields:
+    iso2: et
+    iso3: est
+    name_en: estonian
+    name_pl: estoński
+    name_source: eesti
+- model: django_regional.language
+  pk: 9
+  fields:
+    iso2: el
+    iso3: gre
+    name_en: greek
+    name_pl: grecki
+    name_source: ελληνικά
+- model: django_regional.language
+  pk: 10
+  fields:
+    iso2: fr
+    iso3: fre
+    name_en: french
+    name_pl: francuski
+    name_source: français
+- model: django_regional.language
+  pk: 11
+  fields:
+    iso2: ga
+    iso3: gle
+    name_en: irish
+    name_pl: irlandzki
+    name_source: gaeilge
+- model: django_regional.language
+  pk: 12
+  fields:
+    iso2: hr
+    iso3: hrv
+    name_en: croatian
+    name_pl: chorwacki
+    name_source: hrvatski
+- model: django_regional.language
+  pk: 13
+  fields:
+    iso2: it
+    iso3: ita
+    name_en: italian
+    name_pl: włoski
+    name_source: italiano
+- model: django_regional.language
+  pk: 14
+  fields:
+    iso2: lv
+    iso3: lav
+    name_en: latvian
+    name_pl: łotewski
+    name_source: latviešu
+- model: django_regional.language
+  pk: 15
+  fields:
+    iso2: lt
+    iso3: lit
+    name_en: lithuanian
+    name_pl: litewski
+    name_source: lietuvių
+- model: django_regional.language
+  pk: 16
+  fields:
+    iso2: hu
+    iso3: hun
+    name_en: hungarian
+    name_pl: węgierski
+    name_source: magyar
+- model: django_regional.language
+  pk: 17
+  fields:
+    iso2: mt
+    iso3: mlt
+    name_en: maltese
+    name_pl: maltański
+    name_source: malti
+- model: django_regional.language
+  pk: 18
+  fields:
+    iso2: nl
+    iso3: dut
+    name_en: dutch
+    name_pl: holenderski
+    name_source: nederlands
+- model: django_regional.language
+  pk: 19
+  fields:
+    iso2: pt
+    iso3: por
+    name_en: portuguese
+    name_pl: portugalski
+    name_source: português
+- model: django_regional.language
+  pk: 20
+  fields:
+    iso2: ro
+    iso3: rum
+    name_en: romanian
+    name_pl: rumuński
+    name_source: română
+- model: django_regional.language
+  pk: 21
+  fields:
+    iso2: sk
+    iso3: slo
+    name_en: slovak
+    name_pl: słowacki
+    name_source: slovenčina
+- model: django_regional.language
+  pk: 22
+  fields:
+    iso2: sl
+    iso3: slv
+    name_en: slovenian
+    name_pl: słoweński
+    name_source: slovenščina
+- model: django_regional.language
+  pk: 23
+  fields:
+    iso2: fi
+    iso3: fin
+    name_en: finnish
+    name_pl: fiński
+    name_source: suomi
+- model: django_regional.language
+  pk: 24
+  fields:
+    iso2: sv
+    iso3: swe
+    name_en: swedish
+    name_pl: szwedzki
+    name_source: svenska
+- model: django_regional.currency
+  pk: 1
+  fields:
+    iso3: PLN
+    symbol: zł
+    name_en: Polish zloty
+    name_pl: Polski złoty
+- model: django_regional.currency
+  pk: 2
+  fields:
+    iso3: USD
+    symbol: $
+    name_en: United States dollar
+    name_pl: Dolar amerykański
+- model: django_regional.currency
+  pk: 3
+  fields:
+    iso3: EUR
+    symbol: €
+    name_en: Euro
+    name_pl: Euro
+- model: django_regional.currency
+  pk: 4
+  fields:
+    iso3: GBP
+    symbol: £
+    name_en: Pound sterling
+    name_pl: Funt szterling
+- model: django_regional.currency
+  pk: 5
+  fields:
+    iso3: CNY
+    symbol: ¥
+    name_en: Yuan
+    name_pl: Yuan
+- model: django_regional.currency
+  pk: 6
+  fields:
+    iso3: SEK
+    symbol: kr
+    name_en: Swedish krona
+    name_pl: Korona szwedzka

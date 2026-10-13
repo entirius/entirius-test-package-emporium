@@ -4,6 +4,7 @@ Feature: Access tokens on the contact-forms key routes and legacy keys
   I want application tokens that are scoped, channel-pinned, revocable and rotatable
   So that a widget key opens exactly the routes and channel it was issued for
 
+  @module-contact_forms
   Scenario: T-01 a submit token pinned to the first channel submits there only
     Given an application "saved.app" for this run
     And a token "saved.submit" of application "saved.app" with scope "contact_forms.submit" pinned to the first seed channel
@@ -12,12 +13,14 @@ Feature: Access tokens on the contact-forms key routes and legacy keys
     When I submit a contact form with the token "saved.submit" on the second seed channel
     Then the response status should be 401
 
+  @module-contact_forms
   Scenario: T-02 a booking-only token cannot submit a contact form
     Given an application "saved.app" for this run
     And a token "saved.booking" of application "saved.app" with scope "contact_forms.booking"
     When I submit a contact form with the token "saved.booking" on the first seed channel
     Then the response status should be 401
 
+  @module-contact_forms
   Scenario: T-03 a revoked token stops at once
     Given an application "saved.app" for this run
     And a token "saved.submit" of application "saved.app" with scope "contact_forms.submit"
@@ -27,6 +30,7 @@ Feature: Access tokens on the contact-forms key routes and legacy keys
     And I submit a contact form with the token "saved.submit" on the first seed channel
     Then the response status should be 401
 
+  @module-contact_forms
   Scenario: T-04 a rotation without overlap retires the old token and keeps the pin
     Given an application "saved.app" for this run
     And a token "saved.old" of application "saved.app" with scope "contact_forms.submit" pinned to the first seed channel

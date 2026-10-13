@@ -11,6 +11,7 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
   Background:
     Given the channel is the primary channel
 
+  @module-contact_forms
   Scenario: TA-01 every token failure on the contact-form submit route answers the same
     Given an unknown token value "unknown"
     And a security token "revoked" with scope "contact_forms.submit" pinned to the first seed channel
@@ -55,6 +56,7 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
     Then every answer is the same 401
     And no answer carries a token secret
 
+  @module-contact_forms
   Scenario: TA-05 a token in Authorization Bearer does not open a key route
     Given a security token "submit" with scope "contact_forms.submit" pinned to the first seed channel
     When the tokens "submit" are sent in "Authorization" with POST to "api/contact-forms/v2/{channel_idx}/submit/"

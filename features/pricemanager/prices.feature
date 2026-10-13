@@ -7,6 +7,7 @@ Feature: Price Verification
   Background:
     Given the test package has been imported
 
+  @module-matrix
   Scenario: Prices exist for primary channel products via matrix
     Given the channel is the primary channel
     And the CSV pricelist is loaded for the primary channel

@@ -20,6 +20,7 @@ Feature: Access security — superuser writes leave an audit row, reads do not
     And the audit log counts 1 "gate.bypass" after "saved.mark" for POST "api/access/v2/admin/roles/" with status 201
     And the audit log counts 1 "role.create" after "saved.mark" for target "{saved.role}"
 
+  @module-agreements
   Scenario: AU-02 a superuser GET of a PII export leaves one gate.bypass row
     Given I save the newest audit entry id as "saved.mark"
     And the caller is admin

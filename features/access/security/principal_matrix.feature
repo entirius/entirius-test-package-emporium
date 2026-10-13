@@ -122,6 +122,7 @@ Feature: Access security — principal × route class × method
       | token-only  | POST    | api/checkout/v2/admin/{channel_idx}/orders/                   | 401    | -             |
       | token-only  | DELETE  | api/checkout/v2/admin/{channel_idx}/orders/bdd-no-such-order/ | 401    | -             |
 
+  @module-agreements
   Scenario Outline: PM-03 GET PII export (agreements.consents, write) — <principal> <method>
     # A GET PII export counts as a write: Viewer and Editor are refused (OPTIONS stays a read and answers the metadata).
     Given the caller is <principal>
@@ -340,6 +341,7 @@ Feature: Access security — principal × route class × method
       | token-only  | POST    | admin/       | 403    | -              |
       | token-only  | DELETE  | admin/       | 403    | -              |
 
+  @module-contentdb
   Scenario Outline: PM-07 admin_not_self_auth (contentdb router root) — <principal> <method>
     # The router root authenticates on Session + Basic only, so a Bearer JWT is no principal there: the gate answers 401 itself.
     Given the caller is <principal>

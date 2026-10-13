@@ -25,12 +25,20 @@ Feature: Access security — sensitive routes need exactly their permission
       | DELETE | api/pim/v2/admin/feature-sets/bdd-no-such-set/                          | needs pim.product_delete:write   |
       | DELETE | api/pim/admin/feature-sets/bdd-no-such-set/                             | needs pim.product_delete:write   |
       | PATCH  | api/pim/v2/admin/feature-sets/bdd-no-such-set/                          | needs pim.schema:write           |
-      | GET    | api/agreements/v2/admin/marketing-subscribers/export/                   | needs agreements.consents:write  |
-      | GET    | api-admin/contentdb/v1/content/bdd-ct/bdd-uid/published/                | needs content.publish:write      |
       | POST   | api/access/v2/admin/roles/                                              | needs access.manage:write        |
       | POST   | api/access/v2/admin/grants/                                             | needs access.manage:write        |
       | POST   | api/access/v2/admin/staff/                                              | needs access.manage:write        |
       | GET    | admin/                                                                  | superuser only                   |
+
+    @module-agreements
+    Examples: sensitive routes, agreements
+      | method | path                                                                    | needs                            |
+      | GET    | api/agreements/v2/admin/marketing-subscribers/export/                   | needs agreements.consents:write  |
+
+    @module-contentdb
+    Examples: sensitive routes, content
+      | method | path                                                                    | needs                            |
+      | GET    | api-admin/contentdb/v1/content/bdd-ct/bdd-uid/published/                | needs content.publish:write      |
 
     @module-atlas
     Examples: sensitive routes, atlas

@@ -8,6 +8,7 @@ Feature: Attribute Import Verification
     Given the test package has been imported
     And the channel is the primary channel
 
+  @module-matrix
   Scenario: Products have badge attributes from CSV
     Given the CSV attributes are loaded for type "badge"
     When I GET the Matrix endpoint "products/" with params
@@ -16,6 +17,7 @@ Feature: Attribute Import Verification
     Then the response status should be 200
     And products with badges should reference valid badge values
 
+  @module-matrix
   Scenario: Products have series attributes from CSV
     Given the CSV attributes are loaded for type "series"
     When I GET the Matrix endpoint "products/" with params

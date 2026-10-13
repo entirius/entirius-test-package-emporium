@@ -7,6 +7,7 @@ Feature: Category Import Verification
   Background:
     Given the test package has been imported
 
+  @module-matrix
   Scenario: All CSV leaf categories exist in primary channel API
     Given the channel is the primary channel
     And the CSV categories are loaded for the primary channel
@@ -14,6 +15,7 @@ Feature: Category Import Verification
     Then the response status should be 200
     And every CSV leaf category should exist in the API response
 
+  @module-matrix
   Scenario: API has at least as many categories as CSV leaf categories
     Given the channel is the primary channel
     And the CSV categories are loaded for the primary channel

@@ -34,6 +34,7 @@ Feature: Product Types Import Verification
     Given the CSV product type counts are loaded for the primary channel
     Then the total CSV product count should be 35
 
+  @module-matrix
   Scenario: All configurable products exist in API
     Given the channel is the primary channel
     And the CSV products of type "config" are loaded for the primary channel
@@ -43,6 +44,7 @@ Feature: Product Types Import Verification
     Then the response status should be 200
     And every CSV product SKU should exist in the API response
 
+  @module-matrix
   Scenario: All bundle products exist in API
     Given the channel is the primary channel
     And the CSV products of type "bundle" are loaded for the primary channel
@@ -52,6 +54,7 @@ Feature: Product Types Import Verification
     Then the response status should be 200
     And every CSV product SKU should exist in the API response
 
+  @module-matrix
   Scenario: All custom products exist in API
     Given the channel is the primary channel
     And the CSV products of type "custom" are loaded for the primary channel

@@ -11,6 +11,7 @@ Feature: PIM Admin API -- Attribute CRUD
 
   # --- List ---
 
+  @module-pim_csv
   Scenario: List attributes returns paginated structure
     When I GET the v2 admin endpoint "pim/admin/attributes/"
     Then the response status should be 200

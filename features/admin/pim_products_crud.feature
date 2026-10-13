@@ -40,6 +40,7 @@ Feature: PIM Admin API -- Product CRUD
 
   # --- Product Detail (existing product from import) ---
 
+  @module-pim_csv
   Scenario: Product detail returns enriched fields
     And the CSV products are loaded for the primary channel
     When I GET the v2 admin endpoint for the first CSV product

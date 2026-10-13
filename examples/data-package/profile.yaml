@@ -1,0 +1,11 @@
+# The profile of one channel. Every key under `channel` is required.
+channel:
+  idx: demo-shop            # the key of the channel in every module and in the CSV file names
+  name: Demo Shop           # the name of the channel as the CMS shows it
+  currency: EUR             # ISO 4217, upper case
+  default_language: en      # ISO 639-1, lower case; one of `languages`
+  languages: [en, de]       # every language gets its own name, URL key and description columns
+  default_country: DE       # ISO 3166-1 alpha-2, upper case
+  tax_rate: "0.19"          # the standard rate of default_country, as a decimal string
+sku_prefix: DEMO            # products without a sku get <prefix>-P001, -P002 … in catalog order
+default_quantity: 20        # stock for products without a quantity

@@ -1,0 +1,71 @@
+# =========================================================================
+# django_notifications seed — one channel (default-europe) with email + Google Chat delivery
+# configs and the escalation rules the @notifications BDD feature relies on.
+#
+# The google_chat webhook_url is deliberately blank: N-05 path (delivery skipped with a warning).
+# Email recipients point at the GreenMail sandbox mailbox.
+# default_language references django_regional.language pk (pl=1, en=2).
+# =========================================================================
+
+# --- Channel ---
+- model: django_notifications.channel
+  pk: 1
+  fields:
+    idx: default-europe
+    label: Default Europe Notifications
+    default_language: 1
+    languages: [1, 2]
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Delivery configs ---
+- model: django_notifications.deliverychannelconfig
+  pk: 1
+  fields:
+    channel: 1
+    kind: email
+    config: {"recipients": ["sandbox@greenmail.test"]}
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_notifications.deliverychannelconfig
+  pk: 2
+  fields:
+    channel: 1
+    kind: google_chat
+    config: {"webhook_url": ""}
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+# --- Escalation rules ---
+- model: django_notifications.escalationrule
+  pk: 1
+  fields:
+    channel: 1
+    severity: high
+    after_minutes: 1
+    to_kind: email
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_notifications.escalationrule
+  pk: 2
+  fields:
+    channel: 1
+    severity: high
+    after_minutes: 2
+    to_kind: google_chat
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_notifications.escalationrule
+  pk: 3
+  fields:
+    channel: 1
+    severity: critical
+    after_minutes: 0
+    to_kind: email
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

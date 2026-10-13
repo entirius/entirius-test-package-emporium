@@ -100,6 +100,24 @@ Feature: Checkout API -- Discount Rules
     And the discount value should be 20 percent
 
   # ─────────────────────────────────────────────────────────────────────
+  # Negative paths
+  # ─────────────────────────────────────────────────────────────────────
+
+  Scenario: An unknown discount code is not applied
+    Given I have an empty cart
+    And I add product "ENT-S001" with quantity 1 to cart
+    When I apply discount code "NONEXISTENT99"
+    Then the discount should not be applied
+
+  # COMBINE50 needs a 500 EUR cart; ENT-O003 is the cheapest product in the package,
+  # so a single-item cart stays well below the threshold.
+  Scenario: A price discount below its minimum order amount is not applied
+    Given I have an empty cart
+    And I add product "ENT-O003" with quantity 1 to cart
+    When I apply discount code "COMBINE50"
+    Then the discount should not be applied
+
+  # ─────────────────────────────────────────────────────────────────────
   # Progressive Gratis (Gratis Stepped)
   # TODO: Requires DiscountModeOfAction fixture records to define eligible
   #       products for gratis selection. Re-enable when fixture is ready.

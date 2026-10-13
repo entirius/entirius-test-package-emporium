@@ -1,0 +1,9 @@
+{
+  "message": "Submission successful",
+  "uuid": "f30c0257-a202-41e6-a081-041f339126b0",
+  "result": "https://third-party-348.test/scan/f30c0257-a202-41e6-a081-041f339126b0",
+  "api": null,
+  "visibility": "unlisted",
+  "url": "https://example-shop-5.test",
+  "_note": "reconstructed from the result envelope; no separate submit response was stored by the prototype"
+}

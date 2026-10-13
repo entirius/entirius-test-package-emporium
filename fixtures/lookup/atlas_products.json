@@ -1,7 +1,7 @@
 [
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "EXACT-00",
+    "external_id": "CHR0100",
     "ean": "5900010000005",
     "brand": "Petrichor",
     "name": "Petrichor Office Chair (Petrichor)",
@@ -13,7 +13,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "EXACT-01",
+    "external_id": "BLN0101",
     "ean": "5900010000012",
     "brand": "Halvorn",
     "name": "Halvorn Blender (Halvorn)",
@@ -25,7 +25,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "EXACT-02",
+    "external_id": "YGM0102",
     "ean": "5900010000029",
     "brand": "Anvora",
     "name": "Anvora Yoga Mat (Anvora)",
@@ -37,7 +37,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "EXACT-03",
+    "external_id": "CHR0103",
     "ean": "5900010000036",
     "brand": "Cindra",
     "name": "Cindra Office Chair (Cindra)",
@@ -49,7 +49,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "EXACT-04",
+    "external_id": "BTL0104",
     "ean": "5900010000043",
     "brand": "Talveri",
     "name": "Talveri Water Bottle (Talveri)",
@@ -61,7 +61,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "EXACT-05",
+    "external_id": "BLN0105",
     "ean": "5900010000050",
     "brand": "Cindra",
     "name": "Cindra Blender (Cindra)",
@@ -73,7 +73,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "EXACT-06",
+    "external_id": "BTL0106",
     "ean": "5900010000067",
     "brand": "Cindra",
     "name": "Cindra Water Bottle (Cindra)",
@@ -85,7 +85,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "EXACT-07",
+    "external_id": "TST0107",
     "ean": "5900010000074",
     "brand": "Petrichor",
     "name": "Petrichor Toaster (Petrichor)",
@@ -97,7 +97,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "EXACT-08",
+    "external_id": "KTL0108",
     "ean": "5900010000081",
     "brand": "Talveri",
     "name": "Talveri Kettle (Talveri)",
@@ -109,7 +109,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "EXACT-09",
+    "external_id": "HPH0109",
     "ean": "5900010000098",
     "brand": "Ombrix",
     "name": "Ombrix Headphones (Ombrix)",
@@ -121,7 +121,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "VARIANT-00",
+    "external_id": "BPK0200",
     "ean": "5900010000111",
     "brand": "Talveri",
     "name": "Talveri Backpack white",
@@ -133,7 +133,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "VARIANT-01",
+    "external_id": "SPK0201",
     "ean": "5900010000135",
     "brand": "Ombrix",
     "name": "Ombrix Bluetooth Speaker red",
@@ -145,7 +145,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "VARIANT-02",
+    "external_id": "BPK0202",
     "ean": "5900010000159",
     "brand": "Anvora",
     "name": "Anvora Backpack blue",
@@ -157,7 +157,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "VARIANT-03",
+    "external_id": "YGM0203",
     "ean": "5900010000173",
     "brand": "Sundrift",
     "name": "Sundrift Yoga Mat green",
@@ -169,7 +169,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "VARIANT-04",
+    "external_id": "CHR0204",
     "ean": "5900010000197",
     "brand": "Boreal",
     "name": "Boreal Office Chair grey",
@@ -181,7 +181,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "VARIANT-05",
+    "external_id": "BPK0205",
     "ean": "5900010000210",
     "brand": "Cindra",
     "name": "Cindra Backpack black",
@@ -193,7 +193,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "VARIANT-06",
+    "external_id": "HPH0206",
     "ean": "5900010000234",
     "brand": "Northcraft",
     "name": "Northcraft Headphones white",
@@ -205,7 +205,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "VARIANT-07",
+    "external_id": "LMP0207",
     "ean": "5900010000258",
     "brand": "Kestrel",
     "name": "Kestrel Desk Lamp red",
@@ -217,7 +217,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "VARIANT-08",
+    "external_id": "TST0208",
     "ean": "5900010000272",
     "brand": "Boreal",
     "name": "Boreal Toaster blue",
@@ -229,7 +229,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "VARIANT-09",
+    "external_id": "BTL0209",
     "ean": "5900010000296",
     "brand": "Anvora",
     "name": "Anvora Water Bottle green",
@@ -241,7 +241,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "MULTI-00",
+    "external_id": "LMP0300",
     "ean": "5900010000319",
     "brand": "Boreal",
     "name": "Boreal Desk Lamp 3-pack",
@@ -253,7 +253,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "MULTI-01",
+    "external_id": "HPH0301",
     "ean": "5900010000333",
     "brand": "Sundrift",
     "name": "Sundrift Headphones 3-pack",
@@ -265,7 +265,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "MULTI-02",
+    "external_id": "LMP0302",
     "ean": "5900010000357",
     "brand": "Sundrift",
     "name": "Sundrift Desk Lamp 3-pack",
@@ -277,7 +277,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "MULTI-03",
+    "external_id": "BPK0303",
     "ean": "5900010000371",
     "brand": "Boreal",
     "name": "Boreal Backpack 3-pack",
@@ -289,7 +289,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "MULTI-04",
+    "external_id": "HPH0304",
     "ean": "5900010000395",
     "brand": "Talveri",
     "name": "Talveri Headphones 3-pack",
@@ -301,7 +301,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "MULTI-05",
+    "external_id": "BPK0305",
     "ean": "5900010000418",
     "brand": "Halvorn",
     "name": "Halvorn Backpack 3-pack",
@@ -313,7 +313,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "MULTI-06",
+    "external_id": "LMP0306",
     "ean": "5900010000432",
     "brand": "Cindra",
     "name": "Cindra Desk Lamp 3-pack",
@@ -325,7 +325,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "MULTI-07",
+    "external_id": "SPK0307",
     "ean": "5900010000456",
     "brand": "Petrichor",
     "name": "Petrichor Bluetooth Speaker 3-pack",
@@ -337,7 +337,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "MULTI-08",
+    "external_id": "TST0308",
     "ean": "5900010000470",
     "brand": "Ombrix",
     "name": "Ombrix Toaster 3-pack",
@@ -349,7 +349,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "MULTI-09",
+    "external_id": "SPK0309",
     "ean": "5900010000494",
     "brand": "Halvorn",
     "name": "Halvorn Bluetooth Speaker 3-pack",
@@ -361,7 +361,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "DIRTY-00",
+    "external_id": "KTL0400",
     "ean": "5900010000500",
     "brand": "Cindra",
     "name": "Boreal Kettle",
@@ -373,7 +373,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "DIRTY-01",
+    "external_id": "HPH0401",
     "ean": "5900010000517",
     "brand": "Sundrift",
     "name": "Halvorn Headphones",
@@ -385,7 +385,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "DIRTY-02",
+    "external_id": "KTL0402",
     "ean": "5900010000524",
     "brand": "Boreal",
     "name": "Sundrift Kettle",
@@ -397,7 +397,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "DIRTY-03",
+    "external_id": "KTL0403",
     "ean": "5900010000531",
     "brand": "Ombrix",
     "name": "Petrichor Kettle",
@@ -409,7 +409,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "DIRTY-04",
+    "external_id": "BPK0404",
     "ean": "5900010000548",
     "brand": "Ombrix",
     "name": "Petrichor Backpack",
@@ -421,7 +421,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "DIRTY-05",
+    "external_id": "LMP0405",
     "ean": "5900010000555",
     "brand": "Kestrel",
     "name": "Talveri Desk Lamp",
@@ -433,7 +433,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "DIRTY-06",
+    "external_id": "TST0406",
     "ean": "5900010000562",
     "brand": "Boreal",
     "name": "Sundrift Toaster",
@@ -445,7 +445,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "DIRTY-07",
+    "external_id": "BPK0407",
     "ean": "5900010000579",
     "brand": "Anvora",
     "name": "Northcraft Backpack",
@@ -457,7 +457,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "DIRTY-08",
+    "external_id": "KTL0408",
     "ean": "5900010000586",
     "brand": "Anvora",
     "name": "Northcraft Kettle",
@@ -469,7 +469,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "DIRTY-09",
+    "external_id": "SPK0409",
     "ean": "5900010000593",
     "brand": "Anvora",
     "name": "Northcraft Bluetooth Speaker",
@@ -481,7 +481,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "NAMEONLY-00",
+    "external_id": "CHR0500",
     "ean": "",
     "brand": "Sundrift",
     "name": "Sundrift Office Chair edition",
@@ -493,7 +493,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "NAMEONLY-01",
+    "external_id": "CHR0501",
     "ean": "",
     "brand": "Halvorn",
     "name": "Halvorn Office Chair edition",
@@ -505,7 +505,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "NAMEONLY-02",
+    "external_id": "SPK0502",
     "ean": "",
     "brand": "Sundrift",
     "name": "Sundrift Bluetooth Speaker edition",
@@ -517,7 +517,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "NAMEONLY-03",
+    "external_id": "BPK0503",
     "ean": "",
     "brand": "Kestrel",
     "name": "Kestrel Backpack edition",
@@ -529,7 +529,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "NAMEONLY-04",
+    "external_id": "YGM0504",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Yoga Mat edition",
@@ -541,7 +541,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "NAMEONLY-05",
+    "external_id": "TST0505",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Toaster edition",
@@ -553,7 +553,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "NAMEONLY-06",
+    "external_id": "HPH0506",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Headphones edition",
@@ -565,7 +565,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "NAMEONLY-07",
+    "external_id": "LMP0507",
     "ean": "",
     "brand": "Petrichor",
     "name": "Petrichor Desk Lamp edition",
@@ -577,7 +577,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "NAMEONLY-08",
+    "external_id": "TST0508",
     "ean": "",
     "brand": "Anvora",
     "name": "Anvora Toaster edition",
@@ -589,7 +589,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "NAMEONLY-09",
+    "external_id": "BLN0509",
     "ean": "",
     "brand": "Anvora",
     "name": "Anvora Blender edition",
@@ -601,7 +601,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "PHOTO-00",
+    "external_id": "CHR0600",
     "ean": "5900010000616",
     "brand": "Boreal",
     "name": "Boreal Office Chair",
@@ -613,7 +613,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "PHOTO-01",
+    "external_id": "BLN0601",
     "ean": "5900010000630",
     "brand": "Halvorn",
     "name": "Halvorn Blender",
@@ -625,7 +625,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "PHOTO-02",
+    "external_id": "BPK0602",
     "ean": "5900010000654",
     "brand": "Sundrift",
     "name": "Sundrift Backpack",
@@ -637,7 +637,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "PHOTO-03",
+    "external_id": "TST0603",
     "ean": "5900010000678",
     "brand": "Northcraft",
     "name": "Northcraft Toaster",
@@ -649,7 +649,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "PHOTO-04",
+    "external_id": "BTL0604",
     "ean": "5900010000692",
     "brand": "Boreal",
     "name": "Boreal Water Bottle",
@@ -661,7 +661,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "PHOTO-05",
+    "external_id": "SPK0605",
     "ean": "5900010000715",
     "brand": "Ombrix",
     "name": "Ombrix Bluetooth Speaker",
@@ -673,7 +673,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "PHOTO-06",
+    "external_id": "CHR0606",
     "ean": "5900010000739",
     "brand": "Petrichor",
     "name": "Petrichor Office Chair",
@@ -685,7 +685,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "PHOTO-07",
+    "external_id": "TST0607",
     "ean": "5900010000753",
     "brand": "Halvorn",
     "name": "Halvorn Toaster",
@@ -697,7 +697,7 @@
   },
   {
     "source_idx": "atl-lookup-a",
-    "external_id": "PHOTO-08",
+    "external_id": "KTL0608",
     "ean": "5900010000777",
     "brand": "Petrichor",
     "name": "Petrichor Kettle",
@@ -709,7 +709,7 @@
   },
   {
     "source_idx": "atl-lookup-b",
-    "external_id": "PHOTO-09",
+    "external_id": "BLN0609",
     "ean": "5900010000791",
     "brand": "Northcraft",
     "name": "Northcraft Blender",

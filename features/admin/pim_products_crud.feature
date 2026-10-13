@@ -40,6 +40,7 @@ Feature: PIM Admin API -- Product CRUD
 
   # --- Product Detail (existing product from import) ---
 
+  @module-pim_csv
   Scenario: Product detail returns enriched fields
     And the CSV products are loaded for the primary channel
     When I GET the v2 admin endpoint for the first CSV product
@@ -219,9 +220,11 @@ Feature: PIM Admin API -- Product CRUD
     When I DELETE the v2 admin endpoint "pim/admin/{channel_idx}/products/DOES-NOT-EXIST-XYZ/"
     Then the response status should be 404
 
-  Scenario: Create product with invalid feature_set returns 404
+  # pim 3.3.0: an unknown channel or feature set on create answers the v2 400 envelope (was a bare 404)
+  Scenario: Create product with invalid feature_set returns the v2 validation error
     When I POST to the v2 admin endpoint "pim/admin/{channel_idx}/products/" with body
       """
       {"sku": "BDD-BAD-FS", "feature_set_idx": "nonexistent-fs", "visibility": 4, "is_enabled": true, "product_class": 1, "kind_of_product": 0}
       """
-    Then the response status should be 404
+    Then the response status should be 400
+    And the error response should have error code "VALIDATION_ERROR"

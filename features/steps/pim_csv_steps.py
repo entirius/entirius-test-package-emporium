@@ -12,6 +12,7 @@ from entirius_tests.assertions import extract_items
 from entirius_tests.csv_loader import (
     load_attributes,
     load_categories,
+    load_feature_positions,
     load_feature_sets,
     load_products,
 )
@@ -157,3 +158,37 @@ def step_feature_sets_include(context, idxs_str):
 def step_feature_set_count_matches(context):
     count = len(context.csv_feature_sets)
     assert count > 0, "No feature sets in CSV"
+
+
+def _api_set_features(context, set_idx):
+    url = context.api.url(f"api/pim/v2/admin/feature-sets/{set_idx}/features/")
+    resp = context.api.get(url, params={"limit": 500})
+    assert resp.status_code == 200, f"GET {url}: {resp.status_code} {resp.text[:200]}"
+    return {item["feature"]["idx"]: item["position"] for item in extract_items(resp)}
+
+
+@then("the features of every CSV feature set should match the API")
+def step_feature_set_members_match(context):
+    assert context.csv_feature_sets, "No feature sets in CSV"
+    for row in context.csv_feature_sets:
+        expected = {idx.strip() for idx in row["features"].split(",") if idx.strip()}
+        actual = set(_api_set_features(context, row["idx"]))
+        assert actual == expected, (
+            f"Set '{row['idx']}': missing {sorted(expected - actual)}, not in CSV {sorted(actual - expected)}"
+        )
+
+
+@given("the CSV feature positions are loaded")
+def step_load_csv_feature_positions(context):
+    context.csv_feature_positions = load_feature_positions(context.test_package_path)
+
+
+@then("the feature positions of every CSV feature set should match the API")
+def step_feature_positions_match(context):
+    expected = {}
+    for row in context.csv_feature_positions:
+        expected.setdefault(row["feature-set-idx"], {})[row["feature-idx"]] = int(row["position"])
+    assert expected, "No feature positions in CSV"
+    for set_idx, positions in expected.items():
+        actual = _api_set_features(context, set_idx)
+        assert actual == positions, f"Set '{set_idx}': expected {positions}, got {actual}"

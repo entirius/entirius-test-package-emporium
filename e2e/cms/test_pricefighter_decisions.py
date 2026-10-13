@@ -16,7 +16,7 @@ pytestmark = require_module("pricefighter")
 
 
 def test_pricefighter_decisions_visible(admin_page: Page):
-    admin_page.get_by_role("button", name="PriceFighter").click()
+    admin_page.get_by_role("main").get_by_role("button", name="PriceFighter").click()
     # The gap list computes live from seeded inputs — ENT-C002 competes at 287.00.
     expect(admin_page.get_by_text("ENT-C002").first).to_be_visible(timeout=15000)
     expect(admin_page.get_by_text("compete", exact=False).first).to_be_visible()

@@ -26,6 +26,7 @@ Feature: PIM Admin API -- Product Positions in Category
   # --- List ---
 
   @list
+  @module-pim_csv
   Scenario: List products in category returns positioned and unpositioned
     When I GET the v2 admin endpoint "pim/admin/{channel_idx}/categories/sofas/products/"
     Then the response status should be 200
@@ -34,6 +35,7 @@ Feature: PIM Admin API -- Product Positions in Category
     And the response field "unpositioned_count" should not be null
 
   @list
+  @module-pim_csv
   Scenario: Search products by SKU
     When I GET the v2 admin endpoint "pim/admin/{channel_idx}/categories/sofas/products/?search=NONEXISTENT-SKU-XYZ"
     Then the response status should be 200
@@ -47,6 +49,7 @@ Feature: PIM Admin API -- Product Positions in Category
   # --- Reorder ---
 
   @reorder
+  @module-pim_csv
   Scenario: Pin a product by setting position > 0
     # First get a product SKU from the category
     When I GET the v2 admin endpoint "pim/admin/{channel_idx}/categories/sofas/products/"

@@ -16,7 +16,7 @@ pytestmark = require_module("atlas")
 
 
 def test_atlas_sources_and_review_queue(admin_page: Page):
-    admin_page.get_by_role("button", name="Atlas").click()
+    admin_page.get_by_role("main").get_by_role("button", name="Atlas").click()
     # Sources list: the seeded procurement source is visible.
     expect(admin_page.get_by_text("NovaTrade Atlas").first).to_be_visible(timeout=10000)
 

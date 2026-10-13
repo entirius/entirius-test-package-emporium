@@ -5,7 +5,7 @@
 """CMS e2e fixtures. Shared constants/gating live in entirius_tests.cms_e2e."""
 
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, CMS_BASE_URL
 
@@ -17,4 +17,6 @@ def admin_page(page: Page) -> Page:
     page.get_by_role("textbox", name="Username").fill(ADMIN_USERNAME)
     page.get_by_role("textbox", name="Password").fill(ADMIN_PASSWORD)
     page.get_by_role("button", name="Log in").click()
+    # A goto right after the click would abort the login request.
+    expect(page.get_by_role("button", name="Log in")).to_be_hidden(timeout=15000)
     return page

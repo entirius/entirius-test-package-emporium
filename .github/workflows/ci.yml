@@ -25,6 +25,8 @@ jobs:
       - uses: astral-sh/setup-uv@v4
       - run: uv sync --frozen --all-extras
       - run: uv run behave --dry-run --tags=-@spec-first --tags=-@blocked-by-module --no-summary -f progress
+      # tests/ only — e2e/ needs a live storefront and is driven by the Makefile `e2e` target.
+      - run: uv run pytest tests/ -q
 
   secret-scan:
     runs-on: ubuntu-latest

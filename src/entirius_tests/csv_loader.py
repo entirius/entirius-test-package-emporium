@@ -38,6 +38,10 @@ def load_feature_sets(package_path: str) -> list[dict[str, str]]:
     return _load_csv(Path(package_path) / "volkanos-config" / "pim-features-sets.csv")
 
 
+def load_feature_positions(package_path: str) -> list[dict[str, str]]:
+    return _load_csv(Path(package_path) / "volkanos-config" / "pim-feature-position-in-features-sets.csv")
+
+
 def load_product_positions(package_path: str, channel: str) -> list[dict[str, str]]:
     return _load_csv(Path(package_path) / f"products-position--{channel}.csv")
 

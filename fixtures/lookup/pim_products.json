@@ -1,6 +1,6 @@
 [
   {
-    "sku": "LKP-PIM-EXACT-00",
+    "sku": "PET-CHR-1000",
     "ean": "5900010000005",
     "brand": "Petrichor",
     "name": "Petrichor Office Chair",
@@ -11,7 +11,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-01",
+    "sku": "HAL-BLN-1010",
     "ean": "5900010000012",
     "brand": "Halvorn",
     "name": "Halvorn Blender",
@@ -22,7 +22,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-02",
+    "sku": "ANV-YGM-1020",
     "ean": "5900010000029",
     "brand": "Anvora",
     "name": "Anvora Yoga Mat",
@@ -33,7 +33,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-03",
+    "sku": "CIN-CHR-1030",
     "ean": "5900010000036",
     "brand": "Cindra",
     "name": "Cindra Office Chair",
@@ -44,7 +44,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-04",
+    "sku": "TAL-BTL-1040",
     "ean": "5900010000043",
     "brand": "Talveri",
     "name": "Talveri Water Bottle",
@@ -55,7 +55,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-05",
+    "sku": "CIN-BLN-1050",
     "ean": "5900010000050",
     "brand": "Cindra",
     "name": "Cindra Blender",
@@ -66,7 +66,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-06",
+    "sku": "CIN-BTL-1060",
     "ean": "5900010000067",
     "brand": "Cindra",
     "name": "Cindra Water Bottle",
@@ -77,7 +77,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-07",
+    "sku": "PET-TST-1070",
     "ean": "5900010000074",
     "brand": "Petrichor",
     "name": "Petrichor Toaster",
@@ -88,7 +88,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-08",
+    "sku": "TAL-KTL-1080",
     "ean": "5900010000081",
     "brand": "Talveri",
     "name": "Talveri Kettle",
@@ -99,7 +99,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-EXACT-09",
+    "sku": "OMB-HPH-1090",
     "ean": "5900010000098",
     "brand": "Ombrix",
     "name": "Ombrix Headphones",
@@ -110,7 +110,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-VARIANT-00",
+    "sku": "TAL-BPK-2000",
     "ean": "5900010000104",
     "brand": "Talveri",
     "name": "Talveri Backpack black",
@@ -121,7 +121,7 @@
     "mpn": "MOD-00"
   },
   {
-    "sku": "LKP-PIM-VARIANT-01",
+    "sku": "OMB-SPK-2010",
     "ean": "5900010000128",
     "brand": "Ombrix",
     "name": "Ombrix Bluetooth Speaker white",
@@ -132,7 +132,7 @@
     "mpn": "MOD-01"
   },
   {
-    "sku": "LKP-PIM-VARIANT-02",
+    "sku": "ANV-BPK-2020",
     "ean": "5900010000142",
     "brand": "Anvora",
     "name": "Anvora Backpack red",
@@ -143,7 +143,7 @@
     "mpn": "MOD-02"
   },
   {
-    "sku": "LKP-PIM-VARIANT-03",
+    "sku": "SUN-YGM-2030",
     "ean": "5900010000166",
     "brand": "Sundrift",
     "name": "Sundrift Yoga Mat blue",
@@ -154,7 +154,7 @@
     "mpn": "MOD-03"
   },
   {
-    "sku": "LKP-PIM-VARIANT-04",
+    "sku": "BOR-CHR-2040",
     "ean": "5900010000180",
     "brand": "Boreal",
     "name": "Boreal Office Chair green",
@@ -165,7 +165,7 @@
     "mpn": "MOD-04"
   },
   {
-    "sku": "LKP-PIM-VARIANT-05",
+    "sku": "CIN-BPK-2050",
     "ean": "5900010000203",
     "brand": "Cindra",
     "name": "Cindra Backpack grey",
@@ -176,7 +176,7 @@
     "mpn": "MOD-05"
   },
   {
-    "sku": "LKP-PIM-VARIANT-06",
+    "sku": "NOR-HPH-2060",
     "ean": "5900010000227",
     "brand": "Northcraft",
     "name": "Northcraft Headphones black",
@@ -187,7 +187,7 @@
     "mpn": "MOD-06"
   },
   {
-    "sku": "LKP-PIM-VARIANT-07",
+    "sku": "KES-LMP-2070",
     "ean": "5900010000241",
     "brand": "Kestrel",
     "name": "Kestrel Desk Lamp white",
@@ -198,7 +198,7 @@
     "mpn": "MOD-07"
   },
   {
-    "sku": "LKP-PIM-VARIANT-08",
+    "sku": "BOR-TST-2080",
     "ean": "5900010000265",
     "brand": "Boreal",
     "name": "Boreal Toaster red",
@@ -209,7 +209,7 @@
     "mpn": "MOD-08"
   },
   {
-    "sku": "LKP-PIM-VARIANT-09",
+    "sku": "ANV-BTL-2090",
     "ean": "5900010000289",
     "brand": "Anvora",
     "name": "Anvora Water Bottle blue",
@@ -220,7 +220,7 @@
     "mpn": "MOD-09"
   },
   {
-    "sku": "LKP-PIM-MULTI-00",
+    "sku": "BOR-LMP-3000",
     "ean": "5900010000302",
     "brand": "Boreal",
     "name": "Boreal Desk Lamp",
@@ -231,7 +231,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-01",
+    "sku": "SUN-HPH-3010",
     "ean": "5900010000326",
     "brand": "Sundrift",
     "name": "Sundrift Headphones",
@@ -242,7 +242,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-02",
+    "sku": "SUN-LMP-3020",
     "ean": "5900010000340",
     "brand": "Sundrift",
     "name": "Sundrift Desk Lamp",
@@ -253,7 +253,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-03",
+    "sku": "BOR-BPK-3030",
     "ean": "5900010000364",
     "brand": "Boreal",
     "name": "Boreal Backpack",
@@ -264,7 +264,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-04",
+    "sku": "TAL-HPH-3040",
     "ean": "5900010000388",
     "brand": "Talveri",
     "name": "Talveri Headphones",
@@ -275,7 +275,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-05",
+    "sku": "HAL-BPK-3050",
     "ean": "5900010000401",
     "brand": "Halvorn",
     "name": "Halvorn Backpack",
@@ -286,7 +286,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-06",
+    "sku": "CIN-LMP-3060",
     "ean": "5900010000425",
     "brand": "Cindra",
     "name": "Cindra Desk Lamp",
@@ -297,7 +297,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-07",
+    "sku": "PET-SPK-3070",
     "ean": "5900010000449",
     "brand": "Petrichor",
     "name": "Petrichor Bluetooth Speaker",
@@ -308,7 +308,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-08",
+    "sku": "OMB-TST-3080",
     "ean": "5900010000463",
     "brand": "Ombrix",
     "name": "Ombrix Toaster",
@@ -319,7 +319,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-MULTI-09",
+    "sku": "HAL-SPK-3090",
     "ean": "5900010000487",
     "brand": "Halvorn",
     "name": "Halvorn Bluetooth Speaker",
@@ -330,7 +330,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-00",
+    "sku": "BOR-KTL-4000",
     "ean": "5900010000500",
     "brand": "Boreal",
     "name": "Boreal Kettle",
@@ -341,7 +341,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-01",
+    "sku": "HAL-HPH-4010",
     "ean": "5900010000517",
     "brand": "Halvorn",
     "name": "Halvorn Headphones",
@@ -352,7 +352,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-02",
+    "sku": "SUN-KTL-4020",
     "ean": "5900010000524",
     "brand": "Sundrift",
     "name": "Sundrift Kettle",
@@ -363,7 +363,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-03",
+    "sku": "PET-KTL-4030",
     "ean": "5900010000531",
     "brand": "Petrichor",
     "name": "Petrichor Kettle",
@@ -374,7 +374,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-04",
+    "sku": "PET-BPK-4040",
     "ean": "5900010000548",
     "brand": "Petrichor",
     "name": "Petrichor Backpack",
@@ -385,7 +385,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-05",
+    "sku": "TAL-LMP-4050",
     "ean": "5900010000555",
     "brand": "Talveri",
     "name": "Talveri Desk Lamp",
@@ -396,7 +396,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-06",
+    "sku": "SUN-TST-4060",
     "ean": "5900010000562",
     "brand": "Sundrift",
     "name": "Sundrift Toaster",
@@ -407,7 +407,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-07",
+    "sku": "NOR-BPK-4070",
     "ean": "5900010000579",
     "brand": "Northcraft",
     "name": "Northcraft Backpack",
@@ -418,7 +418,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-08",
+    "sku": "NOR-KTL-4080",
     "ean": "5900010000586",
     "brand": "Northcraft",
     "name": "Northcraft Kettle",
@@ -429,7 +429,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-DIRTY-09",
+    "sku": "NOR-SPK-4090",
     "ean": "5900010000593",
     "brand": "Northcraft",
     "name": "Northcraft Bluetooth Speaker",
@@ -440,7 +440,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-00",
+    "sku": "SUN-CHR-5000",
     "ean": "",
     "brand": "Sundrift",
     "name": "Sundrift Office Chair Edition",
@@ -451,7 +451,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-01",
+    "sku": "HAL-CHR-5010",
     "ean": "",
     "brand": "Halvorn",
     "name": "Halvorn Office Chair Edition",
@@ -462,7 +462,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-02",
+    "sku": "SUN-SPK-5020",
     "ean": "",
     "brand": "Sundrift",
     "name": "Sundrift Bluetooth Speaker Edition",
@@ -473,7 +473,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-03",
+    "sku": "KES-BPK-5030",
     "ean": "",
     "brand": "Kestrel",
     "name": "Kestrel Backpack Edition",
@@ -484,7 +484,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-04",
+    "sku": "CIN-YGM-5040",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Yoga Mat Edition",
@@ -495,7 +495,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-05",
+    "sku": "CIN-TST-5050",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Toaster Edition",
@@ -506,7 +506,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-06",
+    "sku": "CIN-HPH-5060",
     "ean": "",
     "brand": "Cindra",
     "name": "Cindra Headphones Edition",
@@ -517,7 +517,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-07",
+    "sku": "PET-LMP-5070",
     "ean": "",
     "brand": "Petrichor",
     "name": "Petrichor Desk Lamp Edition",
@@ -528,7 +528,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-08",
+    "sku": "ANV-TST-5080",
     "ean": "",
     "brand": "Anvora",
     "name": "Anvora Toaster Edition",
@@ -539,7 +539,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-NAMEONLY-09",
+    "sku": "ANV-BLN-5090",
     "ean": "",
     "brand": "Anvora",
     "name": "Anvora Blender Edition",
@@ -550,7 +550,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-00",
+    "sku": "SUN-BTL-6000",
     "ean": "5900010000609",
     "brand": "Sundrift",
     "name": "Sundrift Water Bottle",
@@ -561,7 +561,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-01",
+    "sku": "ANV-KTL-6010",
     "ean": "5900010000623",
     "brand": "Anvora",
     "name": "Anvora Kettle",
@@ -572,7 +572,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-02",
+    "sku": "HAL-YGM-6020",
     "ean": "5900010000647",
     "brand": "Halvorn",
     "name": "Halvorn Yoga Mat",
@@ -583,7 +583,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-03",
+    "sku": "OMB-CHR-6030",
     "ean": "5900010000661",
     "brand": "Ombrix",
     "name": "Ombrix Office Chair",
@@ -594,7 +594,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-04",
+    "sku": "SUN-BLN-6040",
     "ean": "5900010000685",
     "brand": "Sundrift",
     "name": "Sundrift Blender",
@@ -605,7 +605,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-05",
+    "sku": "PET-HPH-6050",
     "ean": "5900010000708",
     "brand": "Petrichor",
     "name": "Petrichor Headphones",
@@ -616,7 +616,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-06",
+    "sku": "KES-BTL-6060",
     "ean": "5900010000722",
     "brand": "Kestrel",
     "name": "Kestrel Water Bottle",
@@ -627,7 +627,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-07",
+    "sku": "ANV-CHR-6070",
     "ean": "5900010000746",
     "brand": "Anvora",
     "name": "Anvora Office Chair",
@@ -638,7 +638,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-08",
+    "sku": "KES-TST-6080",
     "ean": "5900010000760",
     "brand": "Kestrel",
     "name": "Kestrel Toaster",
@@ -649,7 +649,7 @@
     "mpn": ""
   },
   {
-    "sku": "LKP-PIM-PHOTO-09",
+    "sku": "OMB-KTL-6090",
     "ean": "5900010000784",
     "brand": "Ombrix",
     "name": "Ombrix Kettle",

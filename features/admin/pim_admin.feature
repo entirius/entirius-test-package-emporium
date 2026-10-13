@@ -58,6 +58,7 @@ Feature: PIM Admin API v2
     Then the response status should be 200
     And the results should contain at most 100 items
 
+  @module-pim_csv
   Scenario: Product detail returns expected fields
     Given the channel is the primary channel
     And I am authenticated as an admin user

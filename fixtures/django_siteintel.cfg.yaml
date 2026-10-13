@@ -1,0 +1,24 @@
+# =========================================================================
+# django_siteintel seed — dummy API keys for the PageSpeed Insights and urlscan.io sources.
+# zeno points both sources at the recordings in fixtures/siteintel/ (recording mode), so the keys
+# are never sent anywhere; they only prove a key row is read and never returned by the API.
+# Audits are not seeded — the @siteintel feature requests them. Expiry: SITEINTEL_EXPIRE_DAYS (90).
+# =========================================================================
+
+- model: django_siteintel.externalapikey
+  pk: 1
+  fields:
+    source: lighthouse
+    key: TEST-psi-key
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"
+
+- model: django_siteintel.externalapikey
+  pk: 2
+  fields:
+    source: urlscan
+    key: TEST-urlscan-key
+    is_active: true
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

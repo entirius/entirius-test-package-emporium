@@ -151,3 +151,16 @@
     recipient_email: ""
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
+
+# --- Lead creation (leads bridge, plan 09): channel-level rule on default-europe only ---
+# default-local keeps no rule — its submissions create no Lead and nothing in django_leads (L-19).
+- model: django_contact_forms.leadcreationrule
+  pk: 1
+  fields:
+    channel: 1
+    form_type: ""
+    slug: ""
+    enabled: true
+    source_type: form
+    created_at: "2025-01-01T00:00:00Z"
+    modified_at: "2025-01-01T00:00:00Z"

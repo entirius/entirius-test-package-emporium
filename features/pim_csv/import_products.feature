@@ -7,6 +7,7 @@ Feature: Product Import Verification
   Background:
     Given the test package has been imported
 
+  @module-matrix
   Scenario: All CSV products exist in primary channel API
     Given the channel is the primary channel
     And the CSV products are loaded for the primary channel
@@ -14,9 +15,11 @@ Feature: Product Import Verification
     Then the response status should be 200
     And every CSV product SKU should exist in the API response
 
+  @module-matrix
   Scenario: All CSV products exist in all configured channels
     Given for each configured channel the CSV products are verified against the API
 
+  @module-matrix
   Scenario: Product count matches CSV for primary channel
     Given the channel is the primary channel
     And the CSV products are loaded for the primary channel
@@ -24,6 +27,7 @@ Feature: Product Import Verification
     Then the response status should be 200
     And the API product count should be at least the CSV count
 
+  @module-matrix
   Scenario: Product names match CSV data
     Given the channel is the primary channel
     And the CSV products are loaded for the primary channel

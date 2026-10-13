@@ -73,6 +73,31 @@ CATEGORIES = [
     "Water Bottle",
     "Bluetooth Speaker",
 ]
+# Short codes for the merchant-style PIM SKUs and the suppliers' item codes on the atlas side.
+BRAND_CODE = {
+    "Kestrel": "KES",
+    "Boreal": "BOR",
+    "Anvora": "ANV",
+    "Petrichor": "PET",
+    "Cindra": "CIN",
+    "Halvorn": "HAL",
+    "Ombrix": "OMB",
+    "Talveri": "TAL",
+    "Sundrift": "SUN",
+    "Northcraft": "NOR",
+}
+CATEGORY_CODE = {
+    "Kettle": "KTL",
+    "Backpack": "BPK",
+    "Office Chair": "CHR",
+    "Desk Lamp": "LMP",
+    "Blender": "BLN",
+    "Headphones": "HPH",
+    "Toaster": "TST",
+    "Yoga Mat": "YGM",
+    "Water Bottle": "BTL",
+    "Bluetooth Speaker": "SPK",
+}
 COLORS = ["black", "white", "red", "blue", "green", "grey"]
 SHAPES = ["ellipse", "rectangle", "triangle"]
 PALETTE = [(214, 61, 61), (61, 122, 214), (67, 163, 89), (219, 168, 52), (142, 84, 199), (74, 74, 74)]
@@ -141,15 +166,16 @@ def atlas_ref(source_idx: str, external_id: str) -> str:
     return f"{source_idx}:{external_id}"
 
 
-def _draw_image(filename: str, template_key: str, text: str) -> None:
+def _draw_image(filename: str, template_key: str, text: str, *, watermark: str) -> None:
     """`template_key` picks the shape/colour combo — a plain per-pair index would let two classes
     that land on the same index *and* end up with the same text (e.g. `exact_dup`/`dirty_ean`/
     `multipack` all reuse `f"{brand} {category}"` for `i=0`) render byte-identical PNGs, tripping
     `Picture.sha1`'s unique constraint once seeded. Hashing the filename keeps every template
     distinct except where a class explicitly wants to share one (`photo_lookalike`) — and a tiny
-    filename watermark (top-left corner) guarantees every PNG is byte-unique even when two classes
-    coincidentally land on the same shape/colour/text combination (dirty_ean: text is identical by
-    design, only the corner watermark tells the files apart)."""
+    watermark (top-left corner: the item's own SKU or supplier item code, unique per product)
+    guarantees every PNG is byte-unique even when two classes coincidentally land on the same
+    shape/colour/text combination (dirty_ean: text is identical by design, only the corner
+    watermark tells the files apart)."""
     template_id = zlib.crc32(template_key.encode())
     shape = SHAPES[template_id % len(SHAPES)]
     color = PALETTE[template_id % len(PALETTE)]
@@ -164,7 +190,7 @@ def _draw_image(filename: str, template_key: str, text: str) -> None:
     else:
         draw.polygon([(IMG_SIZE / 2, pad), (pad, IMG_SIZE - pad), (IMG_SIZE - pad, IMG_SIZE - pad)], fill=color)
     draw.text((8, IMG_SIZE - 20), text[:28], fill=(20, 20, 20))
-    draw.text((4, 4), filename[:24], fill=(160, 160, 160))  # tiny watermark: guarantees a unique sha1 per file
+    draw.text((4, 4), watermark[:24], fill=(160, 160, 160))  # tiny watermark: guarantees a unique sha1 per file
     IMG_DIR.mkdir(parents=True, exist_ok=True)
     image.save(IMG_DIR / filename, format="PNG", optimize=True)
 
@@ -184,6 +210,20 @@ RNG.shuffle(_BRAND_CATEGORY_COMBOS)
 def _brand_category(class_index: int, i: int) -> tuple[str, str]:
     brand_idx, category_idx = _BRAND_CATEGORY_COMBOS[class_index * PAIRS_PER_CLASS + i]
     return BRANDS[brand_idx], CATEGORIES[category_idx]
+
+
+def _pair_number(class_index: int, i: int) -> int:
+    """The class in the hundreds, the pair in the units: 100..109 for the first class, 200.. for the next."""
+    return (class_index + 1) * 100 + i
+
+
+def _pim_sku(brand: str, category: str, number: int) -> str:
+    return f"{BRAND_CODE[brand]}-{CATEGORY_CODE[category]}-{number}0"
+
+
+def _external_id(category: str, number: int) -> str:
+    """Supplier item code of an atlas product — built from the atlas product's own category."""
+    return f"{CATEGORY_CODE[category]}{number:04d}"
 
 
 def _other_brand(brand: str) -> str:
@@ -209,32 +249,36 @@ def _source_for(i: int) -> str:
 def _make_exact_dup(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     ean = EANS.new()
     brand, category = _brand_category(class_index, i)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(category, number)
     name = f"{brand} {category}"
     weight = _weight(500, i)
     atlas_name = f"{name} ({brand})"
     pim_img, atl_img = f"exact_dup-{i:02d}-pim.png", f"exact_dup-{i:02d}-atlas.png"
-    _draw_image(pim_img, pim_img, name)
-    _draw_image(atl_img, atl_img, atlas_name)  # independently shot: different template AND text
-    pim = PimProduct(f"LKP-PIM-EXACT-{i:02d}", ean, brand, name, weight, pim_img, "exact_dup", i)
-    atlas = AtlasProduct(_source_for(i), f"EXACT-{i:02d}", ean, brand, atlas_name, weight, atl_img, "exact_dup", i)
+    _draw_image(pim_img, pim_img, name, watermark=sku)
+    _draw_image(atl_img, atl_img, atlas_name, watermark=ext)  # independently shot: different template AND text
+    pim = PimProduct(sku, ean, brand, name, weight, pim_img, "exact_dup", i)
+    atlas = AtlasProduct(_source_for(i), ext, ean, brand, atlas_name, weight, atl_img, "exact_dup", i)
     why = "Same GTIN, brand and name — canonical duplicate seen through two feeds, each with its own product shot."
     return pim, atlas, "match", why
 
 
 def _make_variant(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     """Same brand + MPN (the model number) on both sides — an `identifier_exact` signal — so the
-    colour conflict caps the verdict at `review` (research r02 §4) instead of falling all the way
+    colour conflict caps the verdict at `review` instead of falling all the way
     to `no_match` for lack of any other identifier. Mirrors `test_colour_variant_is_review_not_match`
     in the lookup module's own test suite."""
     brand, category = _brand_category(class_index, i)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(category, number)
     color, other_color = _color(i), _other_color(i)
     weight = _weight(600, i)
     mpn = f"MOD-{i:02d}"
     pim_img, atl_img = f"variant-{i:02d}-pim.png", f"variant-{i:02d}-atlas.png"
-    _draw_image(pim_img, pim_img, f"{category} {color}")
-    _draw_image(atl_img, atl_img, f"{category} {other_color}")
+    _draw_image(pim_img, pim_img, f"{category} {color}", watermark=sku)
+    _draw_image(atl_img, atl_img, f"{category} {other_color}", watermark=ext)
     pim = PimProduct(
-        f"LKP-PIM-VARIANT-{i:02d}",
+        sku,
         EANS.new(),
         brand,
         f"{brand} {category} {color}",
@@ -246,7 +290,7 @@ def _make_variant(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, s
     )
     atlas = AtlasProduct(
         _source_for(i),
-        f"VARIANT-{i:02d}",
+        ext,
         EANS.new(),
         brand,
         f"{brand} {category} {other_color}",
@@ -262,15 +306,17 @@ def _make_variant(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, s
 
 def _make_multipack(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     brand, category = _brand_category(class_index, i)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(category, number)
     name = f"{brand} {category}"
     weight = _weight(400, i)
     pim_img, atl_img = f"multipack-{i:02d}-pim.png", f"multipack-{i:02d}-atlas.png"
-    _draw_image(pim_img, pim_img, name)
-    _draw_image(atl_img, atl_img, f"{name} 3-pack")
-    pim = PimProduct(f"LKP-PIM-MULTI-{i:02d}", EANS.new(), brand, name, weight, pim_img, "multipack", i)
+    _draw_image(pim_img, pim_img, name, watermark=sku)
+    _draw_image(atl_img, atl_img, f"{name} 3-pack", watermark=ext)
+    pim = PimProduct(sku, EANS.new(), brand, name, weight, pim_img, "multipack", i)
     atlas = AtlasProduct(
         _source_for(i),
-        f"MULTI-{i:02d}",
+        ext,
         EANS.new(),
         brand,
         f"{name} 3-pack",
@@ -286,15 +332,15 @@ def _make_multipack(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct,
 def _make_dirty_ean(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     ean = EANS.new()
     brand, category = _brand_category(class_index, i)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(category, number)
     name = f"{brand} {category}"
     weight = _weight(700, i)
     pim_img, atl_img = f"dirty_ean-{i:02d}-pim.png", f"dirty_ean-{i:02d}-atlas.png"
-    _draw_image(pim_img, pim_img, name)
-    _draw_image(atl_img, atl_img, name)
-    pim = PimProduct(f"LKP-PIM-DIRTY-{i:02d}", ean, brand, name, weight, pim_img, "dirty_ean", i)
-    atlas = AtlasProduct(
-        _source_for(i), f"DIRTY-{i:02d}", ean, _other_brand(brand), name, weight, atl_img, "dirty_ean", i
-    )
+    _draw_image(pim_img, pim_img, name, watermark=sku)
+    _draw_image(atl_img, atl_img, name, watermark=ext)
+    pim = PimProduct(sku, ean, brand, name, weight, pim_img, "dirty_ean", i)
+    atlas = AtlasProduct(_source_for(i), ext, ean, _other_brand(brand), name, weight, atl_img, "dirty_ean", i)
     why = (
         "Same GTIN and product name; the atlas feed's brand field is corrupted (dirty data) — still one "
         "product (human ground truth). The engine currently CAPS this at review, not match — brand_conflict "
@@ -306,16 +352,16 @@ def _make_dirty_ean(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct,
 
 def _make_name_only(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     brand, category = _brand_category(class_index, i)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(category, number)
     weight = _weight(300, i)
     pim_img, atl_img = f"name_only-{i:02d}-pim.png", f"name_only-{i:02d}-atlas.png"
-    _draw_image(pim_img, pim_img, f"{category} Edition")
-    _draw_image(atl_img, atl_img, f"{category} edition")
-    pim = PimProduct(
-        f"LKP-PIM-NAMEONLY-{i:02d}", "", brand, f"{brand} {category} Edition", weight, pim_img, "name_only", i
-    )
+    _draw_image(pim_img, pim_img, f"{category} Edition", watermark=sku)
+    _draw_image(atl_img, atl_img, f"{category} edition", watermark=ext)
+    pim = PimProduct(sku, "", brand, f"{brand} {category} Edition", weight, pim_img, "name_only", i)
     atlas = AtlasProduct(
         _source_for(i),
-        f"NAMEONLY-{i:02d}",
+        ext,
         "",
         brand,
         f"{brand} {category} edition",
@@ -336,17 +382,17 @@ def _make_name_only(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct,
 def _make_photo_lookalike(class_index: int, i: int) -> tuple[PimProduct, AtlasProduct, str, str]:
     brand, category = _brand_category(class_index, i)
     other_brand, other_category = _other_brand(brand), _other_category(category)
+    number = _pair_number(class_index, i)
+    sku, ext = _pim_sku(brand, category, number), _external_id(other_category, number)
     weight_a, weight_b = _weight(450, i), _weight(900, i)
     shared_template = f"photo_lookalike-{i:02d}-shared"  # both sides render from the SAME template
     pim_img, atl_img = f"photo_lookalike-{i:02d}-pim.png", f"photo_lookalike-{i:02d}-atlas.png"
-    _draw_image(pim_img, shared_template, f"{brand} {category}")
-    _draw_image(atl_img, shared_template, f"{other_brand} {other_category}")
-    pim = PimProduct(
-        f"LKP-PIM-PHOTO-{i:02d}", EANS.new(), brand, f"{brand} {category}", weight_a, pim_img, "photo_lookalike", i
-    )
+    _draw_image(pim_img, shared_template, f"{brand} {category}", watermark=sku)
+    _draw_image(atl_img, shared_template, f"{other_brand} {other_category}", watermark=ext)
+    pim = PimProduct(sku, EANS.new(), brand, f"{brand} {category}", weight_a, pim_img, "photo_lookalike", i)
     atlas = AtlasProduct(
         _source_for(i),
-        f"PHOTO-{i:02d}",
+        ext,
         EANS.new(),
         other_brand,
         f"{other_brand} {other_category}",

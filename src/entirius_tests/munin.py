@@ -10,6 +10,7 @@ registry path/shape change is fixed in one place.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import PurePath
 
 MUNIN_REGISTRY_PATH = "api/munin/v2/"
@@ -21,6 +22,11 @@ MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers", "leads", "communi
 
 # A scenario tag `@module-<key>` names one more munin module that scenario needs.
 MODULE_TAG_PREFIX = "module-"
+
+# Modules the registry never lists. A tag that names one is decided by a registered module standing in for it:
+# omnibus by pricemanager (it needs its prices); reviews and vault by checkout, a convention of the suite and
+# not a rule of the registry (a stack that enables them without checkout skips their scenarios).
+UNREGISTERED_MODULES = {"omnibus": "pricemanager", "reviews": "checkout", "vault": "checkout"}
 
 # Feature directory -> the munin module keys its features need. A feature is skipped when the
 # backend does not report one of them, so the suite runs against any module subset. An empty set
@@ -124,6 +130,12 @@ def required_modules(path: str) -> frozenset[str]:
     if prefix not in ADMIN_FEATURE_PREFIXES:
         raise KeyError(path)
     return frozenset({prefix})
+
+
+def tagged_modules(tags: Iterable[str]) -> set[str]:
+    """Registry keys the `@module-<key>` tags need; an unregistered module is read through its stand-in."""
+    keys = (tag.removeprefix(MODULE_TAG_PREFIX) for tag in tags if tag.startswith(MODULE_TAG_PREFIX))
+    return {UNREGISTERED_MODULES.get(key, key) for key in keys}
 
 
 def missing_module(required: frozenset[str] | set[str], installed: set[str] | None) -> str | None:

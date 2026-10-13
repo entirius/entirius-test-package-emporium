@@ -23,36 +23,64 @@ Feature: Access security — public and key routes answer shoppers as before
 
     Examples: public lists and anonymous endpoints
       | module                   | caller     | method | path                                                    | key | body | status | absent |
-      | contentdb                | anonymous  | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
-      | contentdb                | customer   | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
-      | contentdb                | bad-bearer | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
-      | faq                      | anonymous  | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
-      | faq                      | customer   | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
-      | faq                      | bad-bearer | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
-      | deliverypoints           | anonymous  | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
-      | deliverypoints           | customer   | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
-      | deliverypoints           | bad-bearer | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
-      | agreements               | anonymous  | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 200    | -      |
-      | agreements               | customer   | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 200    | -      |
-      | agreements               | bad-bearer | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 401    | -      |
       | munin                    | anonymous  | GET    | api/munin/v2/                                           | -   | -    | 200    | -      |
       | munin                    | customer   | GET    | api/munin/v2/                                           | -   | -    | 200    | -      |
       | munin                    | bad-bearer | GET    | api/munin/v2/                                           | -   | -    | 401    | -      |
-      | matrix v2                | anonymous  | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | matrix v2                | customer   | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | matrix v2                | bad-bearer | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | matrix v1                | anonymous  | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | matrix v1                | customer   | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | matrix v1                | bad-bearer | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
-      | reviews                  | anonymous  | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
-      | reviews                  | customer   | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
-      | reviews                  | bad-bearer | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
       | staff login              | anonymous  | POST   | api/token/                                              | -   | {}   | 400    | -      |
       | staff login              | customer   | POST   | api/token/                                              | -   | {}   | 400    | -      |
       | staff login              | bad-bearer | POST   | api/token/                                              | -   | {}   | 400    | -      |
       | accounts                 | anonymous  | POST   | api/accounts/v1/{channel_idx}/customer/tokens/validate/ | -   | {}   | 200    | -      |
       | accounts                 | customer   | POST   | api/accounts/v1/{channel_idx}/customer/tokens/validate/ | -   | {}   | 200    | -      |
       | accounts                 | bad-bearer | POST   | api/accounts/v1/{channel_idx}/customer/tokens/validate/ | -   | {}   | 200    | -      |
+
+    @module-contentdb
+    Examples: public lists and anonymous endpoints, content
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | contentdb                | anonymous  | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
+      | contentdb                | customer   | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
+      | contentdb                | bad-bearer | GET    | api/contentdb/v1/channels/                              | -   | -    | 200    | -      |
+
+    @module-agreements
+    Examples: public lists and anonymous endpoints, agreements
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | agreements               | anonymous  | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 200    | -      |
+      | agreements               | customer   | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 200    | -      |
+      | agreements               | bad-bearer | GET    | api/agreements/v2/{channel_idx}/definitions/            | -   | -    | 401    | -      |
+
+    @module-matrix
+    Examples: public lists and anonymous endpoints, read model
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | matrix v2                | anonymous  | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
+      | matrix v2                | customer   | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
+      | matrix v2                | bad-bearer | GET    | api/matrix/v2/{channel_idx}/products/                   | -   | -    | 200    | -      |
+      | matrix v1                | anonymous  | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
+      | matrix v1                | customer   | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
+      | matrix v1                | bad-bearer | GET    | api/matrix/v1/{channel_idx}/products/                   | -   | -    | 200    | -      |
+
+    @module-faq
+    Examples: public lists and anonymous endpoints, faq
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | faq                      | anonymous  | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
+      | faq                      | customer   | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
+      | faq                      | bad-bearer | GET    | api/faq/v2/{channel_idx}/items/                         | -   | -    | 200    | -      |
+
+    @module-deliverypoints
+    Examples: public lists and anonymous endpoints, delivery points
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | deliverypoints           | anonymous  | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
+      | deliverypoints           | customer   | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
+      | deliverypoints           | bad-bearer | GET    | api/deliverypoints/v2/{channel_idx}/types/              | -   | -    | 200    | -      |
+
+    @module-reviews
+    Examples: public lists and anonymous endpoints, reviews
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
+      | reviews                  | anonymous  | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
+      | reviews                  | customer   | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
+      | reviews                  | bad-bearer | GET    | api/reviews/v1/{channel_idx}/reviews/                   | -   | -    | 400    | -      |
+
+    @module-checkout
+    Examples: public lists and anonymous endpoints, checkout
+      | module                   | caller     | method | path                                                    | key | body | status | absent |
       | checkout v1 countries    | anonymous  | GET    | api/checkout/v1/{channel_idx}/countries/                | -   | -    | 200    | -      |
       | checkout v1 countries    | customer   | GET    | api/checkout/v1/{channel_idx}/countries/                | -   | -    | 200    | -      |
       | checkout v1 countries    | bad-bearer | GET    | api/checkout/v1/{channel_idx}/countries/                | -   | -    | 200    | -      |
@@ -72,12 +100,16 @@ Feature: Access security — public and key routes answer shoppers as before
       | accounts         | anonymous  | GET    | api/accounts/v1/{channel_idx}/customer/me/ | -   | -    | 401    | -      |
       | accounts         | customer   | GET    | api/accounts/v1/{channel_idx}/customer/me/ | -   | -    | 401    | -      |
       | accounts         | bad-bearer | GET    | api/accounts/v1/{channel_idx}/customer/me/ | -   | -    | 401    | -      |
-      | matrix v2 prices | anonymous  | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 401    | -      |
-      | matrix v2 prices | customer   | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 200    | -      |
-      | matrix v2 prices | bad-bearer | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 401    | -      |
       | access me        | anonymous  | GET    | api/access/v2/me/                          | -   | -    | 401    | -      |
       | access me        | customer   | GET    | api/access/v2/me/                          | -   | -    | 200    | -      |
       | access me        | bad-bearer | GET    | api/access/v2/me/                          | -   | -    | 401    | -      |
+
+    @module-matrix
+    Examples: customer routes, read model
+      | module           | caller     | method | path                                       | key | body | status | absent |
+      | matrix v2 prices | anonymous  | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 401    | -      |
+      | matrix v2 prices | customer   | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 200    | -      |
+      | matrix v2 prices | bad-bearer | GET    | api/matrix/v2/{channel_idx}/prices/        | -   | -    | 401    | -      |
 
   Scenario Outline: PR-03 key routes — <module> as <caller>
     Given the caller is <caller>
@@ -88,9 +120,13 @@ Feature: Access security — public and key routes answer shoppers as before
 
     Examples: key routes with the right key
       | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
-      | checkout cart        | anonymous  | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 201    | -               |
-      | checkout cart        | customer   | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 201    | -               |
-      | checkout cart        | bad-bearer | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 401    | -               |
+      | reviews moderation   | anonymous  | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
+      | reviews moderation   | customer   | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
+      | reviews moderation   | bad-bearer | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
+
+    @module-contact_forms
+    Examples: key routes with the right key, contact forms
+      | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
       | contact form submit  | anonymous  | POST   | api/contact-forms/v2/{channel_idx}/submit/                                 | contact-forms fixture | {"email": "bdd-access-security@example.com", "body": {"name": "BDD access security"}} | 201    | -               |
       | contact form submit  | customer   | POST   | api/contact-forms/v2/{channel_idx}/submit/                                 | contact-forms fixture | {"email": "bdd-access-security@example.com", "body": {"name": "BDD access security"}} | 201    | -               |
       | contact form submit  | bad-bearer | POST   | api/contact-forms/v2/{channel_idx}/submit/                                 | contact-forms fixture | {"email": "bdd-access-security@example.com", "body": {"name": "BDD access security"}} | 201    | -               |
@@ -100,15 +136,31 @@ Feature: Access security — public and key routes answer shoppers as before
       | booking slots        | anonymous  | GET    | api/contact-forms/v2/{channel_idx}/bookings/slots/                         | contact_forms.booking | -                                                                                     | 400    | -               |
       | booking slots        | customer   | GET    | api/contact-forms/v2/{channel_idx}/bookings/slots/                         | contact_forms.booking | -                                                                                     | 400    | -               |
       | booking slots        | bad-bearer | GET    | api/contact-forms/v2/{channel_idx}/bookings/slots/                         | contact_forms.booking | -                                                                                     | 400    | -               |
+
+    @module-agreements
+    Examples: key routes with the right key, agreements
+      | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
       | agreements subscribe | anonymous  | POST   | api/agreements/v2/{channel_idx}/newsletter/subscribe/                      | agreements.subscribe  | {}                                                                                    | 400    | -               |
       | agreements subscribe | customer   | POST   | api/agreements/v2/{channel_idx}/newsletter/subscribe/                      | agreements.subscribe  | {}                                                                                    | 400    | -               |
       | agreements subscribe | bad-bearer | POST   | api/agreements/v2/{channel_idx}/newsletter/subscribe/                      | agreements.subscribe  | {}                                                                                    | 401    | -               |
-      | reviews moderation   | anonymous  | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
-      | reviews moderation   | customer   | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
-      | reviews moderation   | bad-bearer | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ | reviews.moderate      | {}                                                                                    | 404    | Invalid api key |
+
+    @module-checkout
+    Examples: key routes with the right key, checkout
+      | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
+      | checkout cart        | anonymous  | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 201    | -               |
+      | checkout cart        | customer   | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 201    | -               |
+      | checkout cart        | bad-bearer | POST   | api/checkout/v2/{channel_idx}/carts/                                       | checkout fixture      | {"items": [{"sku": "ENT-C003", "quantity": 1}], "currency_code": "EUR"}               | 401    | -               |
+
+    @module-returns
+    Examples: key routes with the right key, returns
+      | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
       | returns              | anonymous  | GET    | api/returns/v1/{channel_idx}/returns/                                      | returns.api           | -                                                                                     | 401    | Invalid api key |
       | returns              | customer   | GET    | api/returns/v1/{channel_idx}/returns/                                      | returns.api           | -                                                                                     | 401    | Invalid api key |
       | returns              | bad-bearer | GET    | api/returns/v1/{channel_idx}/returns/                                      | returns.api           | -                                                                                     | 401    | Invalid api key |
+
+    @module-vault
+    Examples: key routes with the right key, vault
+      | module               | caller     | method | path                                                                       | key                   | body                                                                                  | status | absent          |
       | vault                | anonymous  | GET    | api/vault/v1/{channel_idx}/payment_card/                                   | vault.api             | -                                                                                     | 401    | Invalid api key |
       | vault                | customer   | GET    | api/vault/v1/{channel_idx}/payment_card/                                   | vault.api             | -                                                                                     | 401    | Invalid api key |
       | vault                | bad-bearer | GET    | api/vault/v1/{channel_idx}/payment_card/                                   | vault.api             | -                                                                                     | 401    | Invalid api key |

@@ -7,6 +7,7 @@ Feature: Quantity / Stock Verification
   Background:
     Given the test package has been imported
 
+  @module-matrix
   Scenario: Stock data exists for products
     Given the channel is the primary channel
     And the CSV quantities are loaded

@@ -27,6 +27,7 @@ Feature: Access roles — what each staff role may read and write
     Then the response status should be 400
     And the response is not a gate refusal
 
+  @module-pricemanager
   Scenario: A-04 the editor cannot create a tax class
     Given I am authenticated as the editor staff user
     When I POST to the v2 admin endpoint "pricemanager/admin/tax-classes/" with body
@@ -138,9 +139,18 @@ Feature: Access roles — what each staff role may read and write
     Examples: SKU-deleting routes
       | route                      | method | path                                                  |
       | the legacy PIM root        | DELETE | api/pim/admin/{channel_idx}/products/BDD-NO-SUCH-SKU/ |
+
+    @module-atlas
+    Examples: SKU-deleting routes, atlas
+      | route                      | method | path                                                  |
       | the atlas merge-by-ean     | POST   | api/atlas/v2/admin/realproducts/merge-by-ean/         |
+
+    @module-suppliers
+    Examples: SKU-deleting routes, suppliers
+      | route                      | method | path                                                  |
       | the suppliers merge-by-ean | POST   | api/suppliers/v2/admin/realproducts/merge-by-ean/     |
 
+  @module-communicator
   Scenario: A-14 the viewer cannot start a paid AI test generation
     Given the channel is the primary channel
     And the caller is viewer

@@ -10,6 +10,7 @@ Feature: Access administration — catalogue, custom roles, grants and the audit
     Then the response status should be 200
     And the catalogue should offer 49 areas and 9 token scopes
 
+  @module-faq
   Scenario: AA-02 a custom role granted to the viewer opens FAQ writes until the grant is revoked
     Given the channel is the primary channel
     And a run-unique suffix is saved as "saved.run"

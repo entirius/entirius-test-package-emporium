@@ -11,6 +11,7 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
   Background:
     Given the channel is the primary channel
 
+  @module-contact_forms
   Scenario: TA-01 every token failure on the contact-form submit route answers the same
     Given an unknown token value "unknown"
     And a security token "revoked" with scope "contact_forms.submit" pinned to the first seed channel
@@ -27,6 +28,7 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
     Then every answer is the same 401
     And no answer carries a token secret
 
+  @module-reviews
   Scenario: TA-02 every token failure on the reviews moderation route answers the same
     Given an unknown token value "unknown"
     And a security token "revoked" with scope "reviews.moderate"
@@ -47,12 +49,14 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
     Then every answer is the same 401
     And no answer carries a token secret
 
+  @module-checkout
   Scenario: TA-04 an erase token does not open the storefront cart
     Given a security token "erase" with scope "checkout.erase"
     When the tokens "erase" are sent in "X-API-KEY" with GET to "api/checkout/v2/{channel_idx}/countries/"
     Then every answer is the same 401
     And no answer carries a token secret
 
+  @module-contact_forms
   Scenario: TA-05 a token in Authorization Bearer does not open a key route
     Given a security token "submit" with scope "contact_forms.submit" pinned to the first seed channel
     When the tokens "submit" are sent in "Authorization" with POST to "api/contact-forms/v2/{channel_idx}/submit/"
@@ -73,10 +77,12 @@ Feature: Access security — token abuse gets one answer, legacy keys keep worki
       | storefront cart    | GET    | api/checkout/v2/{channel_idx}/countries/                                   |
       | reviews moderation | PATCH  | api/reviews/v1/{channel_idx}/reviews/00000000-0000-4000-8000-000000000000/ |
 
+  @module-checkout
   Scenario: TA-07 the legacy checkout fixture key still opens the storefront cart and never expires by itself
     When I make a storefront checkout call on the first seed channel
     Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token pinned to the first seed channel without expiry, used just now
 
+  @module-checkout
   Scenario: TA-08 a team sets, refuses and clears an expiry on the legacy checkout token
     Given I save the id of the legacy "checkout.storefront" token of application "Legacy keys: django_checkout" pinned to the first seed channel as "saved.legacy"
     And the expiry of token "saved.legacy" is cleared when the scenario ends

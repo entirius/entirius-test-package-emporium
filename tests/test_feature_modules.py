@@ -88,3 +88,10 @@ def test_scenario_tagged_with_an_absent_module_is_skipped():
 @pytest.mark.parametrize("installed", [{"pim", "qms"}, None])
 def test_scenario_runs_with_its_module_or_without_a_registry(installed):
     _run_before_scenario(installed, {"module-qms"}).skip.assert_not_called()
+
+
+@pytest.mark.parametrize(("tag", "stand_in"), [("module-reviews", "checkout"), ("module-omnibus", "pricemanager")])
+def test_scenario_tagged_with_an_unregistered_module_follows_its_stand_in(tag, stand_in):
+    _run_before_scenario({"pim", stand_in}, {tag}).skip.assert_not_called()
+    scenario = _run_before_scenario({"pim"}, {tag})
+    scenario.skip.assert_called_once_with(reason=f"module '{stand_in}' not installed (munin registry)")

@@ -33,5 +33,7 @@ set whose apps are enabled); anything else fails at `init`. `SEED_APPS="<labels>
 the plan (`seed: plan <step> run` / `skip (<app> not enabled)`) without docker or a database. Features map to munin
 module keys by directory (`entirius_tests.munin.FEATURE_MODULES`, `required_modules(path)`; `features/admin/` by file
 prefix): `before_feature` skips a feature whose module the public registry does not list, with the reason `module
-'<key>' not installed (munin registry)`, and a scenario tag `@module-<key>` does the same for one scenario. A new
+'<key>' not installed (munin registry)`, and a scenario tag `@module-<key>` does the same for one scenario (on an `Examples:` table, for its rows). The
+registry does not list omnibus, reviews and vault: a tag naming one of them follows its stand-in
+(`UNREGISTERED_MODULES`: pricemanager, checkout, checkout). A new
 feature directory or admin prefix goes into the map (`tests/test_feature_modules.py` fails on an unmapped file).

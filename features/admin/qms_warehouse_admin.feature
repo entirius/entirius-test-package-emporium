@@ -36,6 +36,7 @@ Feature: QMS Warehouse Admin API v2
       | is_active | true  |
     Then the response status should be 200
 
+  @module-checkout
   Scenario: Search by code
     When I GET the v2 admin endpoint "qms/admin/warehouses/" with params
       | param    | value  |
@@ -45,6 +46,7 @@ Feature: QMS Warehouse Admin API v2
 
   # --- Warehouse Detail ---
 
+  @module-checkout
   Scenario: Retrieve warehouse by code
     When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/"
     Then the response status should be 200
@@ -59,11 +61,13 @@ Feature: QMS Warehouse Admin API v2
 
   # --- Stock List ---
 
+  @module-checkout
   Scenario: List stock for manual warehouse
     When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/"
     Then the response status should be 200
     And the response field "results" should be a list
 
+  @module-checkout
   Scenario: Search stock by SKU
     When I GET the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/" with params
       | param    | value   |
@@ -73,6 +77,7 @@ Feature: QMS Warehouse Admin API v2
 
   # --- Bulk Stock Edit ---
 
+  @module-checkout
   Scenario: Bulk edit creates and updates stock
     When I PATCH the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/edit/" with body
       """
@@ -85,6 +90,7 @@ Feature: QMS Warehouse Admin API v2
     Then the response status should be 200
     And the response field "count" should equal integer 1
 
+  @module-checkout
   Scenario: Bulk edit rejects negative quantity
     When I PATCH the v2 admin endpoint "qms/admin/warehouses/manual-{channel_idx}/stock/edit/" with body
       """
@@ -92,6 +98,7 @@ Feature: QMS Warehouse Admin API v2
       """
     Then the response status should be 400
 
+  @module-checkout
   Scenario: Bulk edit rejects integration warehouse
     When I PATCH the v2 admin endpoint "qms/admin/warehouses/main-{channel_idx}/stock/edit/" with body
       """
@@ -101,6 +108,7 @@ Feature: QMS Warehouse Admin API v2
 
   # --- Integration Warehouse ---
 
+  @module-checkout
   Scenario: Integration warehouse is read-only via source_type
     When I GET the v2 admin endpoint "qms/admin/warehouses/main-{channel_idx}/"
     Then the response status should be 200

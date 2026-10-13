@@ -25,14 +25,34 @@ Feature: Access security — sensitive routes need exactly their permission
       | DELETE | api/pim/v2/admin/feature-sets/bdd-no-such-set/                          | needs pim.product_delete:write   |
       | DELETE | api/pim/admin/feature-sets/bdd-no-such-set/                             | needs pim.product_delete:write   |
       | PATCH  | api/pim/v2/admin/feature-sets/bdd-no-such-set/                          | needs pim.schema:write           |
-      | POST   | api/atlas/v2/admin/realproducts/merge-by-ean/                           | needs pim.product_delete:write   |
-      | POST   | api/suppliers/v2/admin/realproducts/merge-by-ean/                       | needs pim.product_delete:write   |
-      | GET    | api/checkout/v2/admin/{channel_idx}/orders/                             | needs checkout.orders:read       |
       | GET    | api/agreements/v2/admin/marketing-subscribers/export/                   | needs agreements.consents:write  |
-      | POST   | api/leads/v2/admin/gdpr/export/                                         | needs leads.gdpr:write           |
       | GET    | api-admin/contentdb/v1/content/bdd-ct/bdd-uid/published/                | needs content.publish:write      |
       | POST   | api/access/v2/admin/roles/                                              | needs access.manage:write        |
       | POST   | api/access/v2/admin/grants/                                             | needs access.manage:write        |
       | POST   | api/access/v2/admin/staff/                                              | needs access.manage:write        |
       | GET    | admin/                                                                  | superuser only                   |
+
+    @module-atlas
+    Examples: sensitive routes, atlas
+      | method | path                                                                    | needs                            |
+      | POST   | api/atlas/v2/admin/realproducts/merge-by-ean/                           | needs pim.product_delete:write   |
+
+    @module-suppliers
+    Examples: sensitive routes, suppliers
+      | method | path                                                                    | needs                            |
+      | POST   | api/suppliers/v2/admin/realproducts/merge-by-ean/                       | needs pim.product_delete:write   |
+
+    @module-checkout
+    Examples: sensitive routes, checkout
+      | method | path                                                                    | needs                            |
+      | GET    | api/checkout/v2/admin/{channel_idx}/orders/                             | needs checkout.orders:read       |
+
+    @module-leads
+    Examples: sensitive routes, leads
+      | method | path                                                                    | needs                            |
+      | POST   | api/leads/v2/admin/gdpr/export/                                         | needs leads.gdpr:write           |
+
+    @module-communicator
+    Examples: sensitive routes, communicator
+      | method | path                                                                    | needs                            |
       | POST   | api/communicator/v2/admin/{channel_idx}/templates/999999/test-generate/ | needs communicator.content:write |

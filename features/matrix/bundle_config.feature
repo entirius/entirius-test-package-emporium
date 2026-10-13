@@ -46,6 +46,7 @@ Feature: Bundle Config API
     And the bundle config for "ENT-BND01" should have the field "max_limit"
     And the bundle config for "ENT-BND01" should have the field "min_limit"
 
+  @module-pricemanager
   Scenario: Sub_items include price data
     When I GET the Matrix endpoint "bundle-config/" with params
       | param | value     |

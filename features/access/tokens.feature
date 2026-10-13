@@ -38,10 +38,12 @@ Feature: Access tokens on the contact-forms key routes and legacy keys
     When I submit a contact form with the token "saved.new" on the second seed channel
     Then the response status should be 401
 
+  @module-checkout
   Scenario: T-05 the checkout fixture key lives on as a legacy token that never expires by itself
     When I make a storefront checkout call on the first seed channel
     Then the application "Legacy keys: django_checkout" holds a legacy "checkout.storefront" token pinned to the first seed channel without expiry, used just now
 
+  @module-checkout
   Scenario: TL-01 a storefront call on the second seed channel uses that channel's legacy token only
     # D2: the fixture checkout secret is set on both seed channels, so the import made one pinned token per channel.
     # last_used_at is written at most every 300 s: "used just now" is recent, never "changed by this call".

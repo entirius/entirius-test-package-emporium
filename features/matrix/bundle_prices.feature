@@ -8,6 +8,7 @@ Feature: Bundle Prices API
     Given the test package has been imported
     And the channel is the primary channel
 
+  @module-pricemanager
   Scenario: Bundle price endpoint returns data for bundle SKU
     When I GET the Matrix endpoint "prices-bundle/" with params
       | param | value    |
@@ -23,6 +24,7 @@ Feature: Bundle Prices API
     And each bundle price item should have the field "sku"
     And each bundle price item should have the field "price"
 
+  @module-pricemanager
   Scenario: Second bundle SKU also returns price data
     When I GET the Matrix endpoint "prices-bundle/" with params
       | param | value    |
@@ -30,6 +32,7 @@ Feature: Bundle Prices API
     Then the response status should be 200
     And the bundle price response should contain items
 
+  @module-pricemanager
   Scenario: Bundle price returns component items
     When I GET the Matrix endpoint "prices-bundle/" with params
       | param | value    |

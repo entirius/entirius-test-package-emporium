@@ -13,7 +13,6 @@ from pathlib import Path
 
 from entirius_tests.api_client import ApiClient
 from entirius_tests.munin import (
-    MODULE_TAG_PREFIX,
     MODULE_TAGS,
     MUNIN_REGISTRY_PATH,
     TOOLBOX_READY_STATE,
@@ -22,6 +21,7 @@ from entirius_tests.munin import (
     parse_modules,
     parse_toolbox_state,
     required_modules,
+    tagged_modules,
 )
 
 logger = logging.getLogger("entirius_tests")
@@ -137,10 +137,7 @@ def before_scenario(context, scenario):
     context.saved = {}
     context.raw_tokens = {}  # access token values: never printed, never in context.saved
     context.api.clear_auth_token()
-    tagged = {
-        tag.removeprefix(MODULE_TAG_PREFIX) for tag in scenario.effective_tags if tag.startswith(MODULE_TAG_PREFIX)
-    }
-    if key := missing_module(tagged, context.installed_modules):
+    if key := missing_module(tagged_modules(scenario.effective_tags), context.installed_modules):
         scenario.skip(reason=module_skip_reason(key))
         return
     state = context.toolbox_state

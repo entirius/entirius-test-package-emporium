@@ -31,6 +31,7 @@ Feature: Matrix v2 Product Detail & Data Validation
 
   # ── Price data validation ──────────────────────────────────
 
+  @module-pricemanager
   Scenario: Price has gross and net fields
     When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sku=ENT-S004"
     Then the response status is 200
@@ -41,6 +42,7 @@ Feature: Matrix v2 Product Detail & Data Validation
     And the first result price has key "tax_rate"
     And the first result price has key "is_range"
 
+  @module-pricemanager
   Scenario: Price currency matches request
     When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sku=ENT-S004"
     Then the response status is 200

@@ -28,6 +28,7 @@ Feature: Matrix v2 Products Listing
     And the first result has key "price"
     And the first result has key "categories"
 
+  @module-pricemanager
   Scenario: Price object has gross and net
     When I GET "/api/matrix/v2/default-europe/products/?language=en&currency=EUR&country=PL&sku=ENT-S004"
     Then the response status is 200

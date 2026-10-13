@@ -94,6 +94,7 @@ Feature: Matrix v2 Simple Endpoints
     Then the response status is 200
     And the response is a dict
 
+  @module-omnibus
   Scenario: Omnibus returns populated omnibus_gross for promo SKU
     When I GET "/api/matrix/v2/default-europe/omnibus/?sku=ENT-C004&currency=EUR&country=PL"
     Then the response status is 200

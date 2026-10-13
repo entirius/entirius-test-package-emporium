@@ -67,6 +67,7 @@ Feature: Access security — principal × route class × method
       | token-only  | POST    | api/pim/v2/admin/features/                     | 401    | -             |
       | token-only  | DELETE  | api/pim/v2/admin/features/bdd-no-such-feature/ | 401    | -             |
 
+  @module-checkout
   Scenario Outline: PM-02 PII area (checkout.orders) — <principal> <method>
     # Viewer and Editor read orders but never write them; Manager and up reach the view, which has no POST/DELETE (405).
     Given the caller is <principal>

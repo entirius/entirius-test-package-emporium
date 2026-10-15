@@ -7,7 +7,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
-from entirius_tests.ai_studio_e2e import AdminApi, service_api, toolbox_api
+from entirius_tests.ai_studio_e2e import AdminApi, service_api, toolbox_api, toolbox_has_seo
 from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, CMS_BASE_URL
 
 
@@ -33,3 +33,16 @@ def enrichment_api() -> AdminApi:
 def tracker_api() -> AdminApi:
     """The AI toolbox admin API (JWT) — its tracker usage records count the AI calls."""
     return toolbox_api()
+
+
+@pytest.fixture(scope="session")
+def toolbox_seo() -> bool:
+    """The AI toolbox serves the SEO app; asked once per session, at test time (never at collection)."""
+    return toolbox_has_seo()
+
+
+@pytest.fixture
+def require_toolbox_seo(toolbox_seo: bool) -> None:
+    """Skips a test that needs the toolbox SEO app (`/api/ai-seo/`) while the toolbox has none."""
+    if not toolbox_seo:
+        pytest.skip("the AI toolbox has no SEO app (/api/ai-seo/) yet")

@@ -9,12 +9,14 @@ draft → metadata (search preview) → document → "Open draft in ContentDB": 
 the run cost is shown. Every run is new (its own brief), so the test re-runs on one seed.
 The search-phrases step researches through the toolbox SEO app: without it (`/api/ai-seo/`, the local image before
 its rebuild) that step fails, so the test stops there with a skip after checking the questions part.
-The fake models mark every question optional, so the required-answer check runs only when a question is required.
+The fake models mark every question optional, so the required-answer check runs only when a question is required;
+otherwise the test warns that it was not exercised.
 """
 
 from __future__ import annotations
 
 import re
+import warnings
 
 import pytest
 from playwright.sync_api import Locator, Page, expect
@@ -54,12 +56,14 @@ def started_runs(enrichment_api: studio.AdminApi):
             enrichment_api.post(f"{studio.ENRICHMENT}/runs/{uid}/cancel/")
 
 
-def test_article_run_end_to_end(admin_page: Page, enrichment_api: studio.AdminApi, started_runs: list[str]):
+def test_article_run_end_to_end(
+    admin_page: Page, enrichment_api: studio.AdminApi, started_runs: list[str], toolbox_seo: bool
+):
     page = admin_page
     uid = _start_run(page)
     started_runs.append(uid)
     _answer_questions(page, enrichment_api, uid)
-    if not studio.toolbox_has_seo():
+    if not toolbox_seo:
         expect(page.get_by_test_id("step-panel-keywords").get_by_test_id("step-failed")).to_be_visible(
             timeout=pages.AI_TIMEOUT
         )
@@ -93,6 +97,8 @@ def _answer_questions(page: Page, api: studio.AdminApi, uid: str) -> None:
     if any(not question.get("optional") for question in questions):
         panel.get_by_role("button", name="Approve").click()
         expect(panel.get_by_text("An answer is required").first).to_be_visible()
+    else:
+        warnings.warn("required-answer check not exercised: the model marked every question optional", stacklevel=2)
     for index, question in enumerate(questions):
         _answer(panel.get_by_test_id(f"question-{index}"), question)
     panel.get_by_test_id("answers-save").click()

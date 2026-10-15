@@ -53,6 +53,10 @@ def spawn_on_product(api: studio.AdminApi, template: str, sku: str) -> int:
     return api.post(f"{studio.ENRICHMENT}/tasks/", body)["id"]
 
 
+ERROR_CODE = re.compile(r"[A-Z]{3,}_[A-Z_]+")
+
+
+@pytest.mark.xfail(strict=True, reason="entirius-pwa-cms: raw toolbox code and worker key in the failed task row")
 def test_toolbox_rejection_is_a_plain_failed_row(
     admin_page: Page, enrichment_api: studio.AdminApi, tracker_api: studio.AdminApi, broken_template: str
 ):
@@ -60,15 +64,17 @@ def test_toolbox_rejection_is_a_plain_failed_row(
     finished = studio.wait_task_finished(enrichment_api, task_id)
     assert finished["status"] == "failed"
     assert [error["code"] for error in finished["errors"]] == ["VALIDATION_ERROR"]
+    assert studio.task_calls(tracker_api, task_id) == []  # a rejected request is not billed
 
     admin_page.goto(f"{CMS_BASE_URL}/pim/products/{FAILING_SKU}")
     pages.open_drawer(admin_page)
     row = admin_page.get_by_test_id(f"ai-task-{task_id}")
     outcome = row.get_by_test_id("ai-task-outcome")
-    expect(outcome).to_have_text(re.compile(r"^Failed: \S.+"))
-    expect(outcome).not_to_contain_text("{")
     studio.shoot(admin_page, "07-failed-task", row)
-    assert studio.task_calls(tracker_api, task_id) == []  # a rejected request is not billed
+    expect(row).to_contain_text(BROKEN_TEMPLATE["label"])
+    expect(outcome).to_have_text(re.compile(r"^Failed: \S.+"))
+    expect(outcome).not_to_contain_text(ERROR_CODE)  # no toolbox error codes
+    expect(row).not_to_contain_text(BROKEN_TEMPLATE["worker_key"])  # no workers on the surface
 
 
 @pytest.fixture

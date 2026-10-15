@@ -21,11 +21,7 @@ from entirius_tests import ai_studio_e2e as studio
 from entirius_tests import ai_studio_pages as pages
 from entirius_tests.cms_e2e import CMS_BASE_URL, require_module
 
-pytestmark = [
-    require_module("enrichment"),
-    pytest.mark.desktop_only,
-    pytest.mark.skipif(not studio.toolbox_has_seo(), reason="the AI toolbox has no SEO app (/api/ai-seo/) yet"),
-]
+pytestmark = [require_module("enrichment"), pytest.mark.desktop_only, pytest.mark.usefixtures("require_toolbox_seo")]
 
 SKUS = ["ENT-B002", "ENT-B003"]  # one category in the Emporium catalogue
 RESEARCH_SELECTOR = "enrichment.seo_brief"

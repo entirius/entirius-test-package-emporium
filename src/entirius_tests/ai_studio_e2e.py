@@ -175,12 +175,13 @@ def _tags(record: dict) -> list[str]:
 
 
 def toolbox_has_seo() -> bool:
-    """The toolbox serves the SEO app (`/api/ai-seo/`) — the local image gets it only after a rebuild."""
-    try:
-        paths = requests.get(f"{TOOLBOX_URL}/api/schema/", params={"format": "json"}, timeout=_HTTP_TIMEOUT).json()
-    except (requests.RequestException, ValueError):
-        return False
-    return any("/api/ai-seo/" in path for path in paths.get("paths", {}))
+    """The toolbox serves the SEO app (`/api/ai-seo/`) — the local image gets it only after a rebuild.
+
+    Only a reachable toolbox whose schema lacks the app is "no SEO": a toolbox that is down or answers an error
+    raises, so the test fails with its real error instead of a silent skip."""
+    resp = requests.get(f"{TOOLBOX_URL}/api/schema/", params={"format": "json"}, timeout=_HTTP_TIMEOUT)
+    resp.raise_for_status()
+    return any("/api/ai-seo/" in path for path in resp.json().get("paths", {}))
 
 
 # --- gallery -------------------------------------------------------------------------------------------------------

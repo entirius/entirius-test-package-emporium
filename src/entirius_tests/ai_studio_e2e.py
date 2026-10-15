@@ -24,6 +24,7 @@ from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, API_BASE_URL
 
 CHANNEL = os.environ.get("E2E_CHANNEL", "default-europe")
 ENRICHMENT = "api/enrichment/v2/admin"
+CONTENTDB = "api-admin/contentdb/v1"
 PIM = f"api/pim/v2/admin/{CHANNEL}"
 TOOLBOX_URL = os.environ.get("TOOLBOX_URL", "http://localhost:8010")
 TOOLBOX_CHANNEL = os.environ.get("AI_TOOLBOX_CHANNEL", "zeno-test")
@@ -136,6 +137,26 @@ def profile(api: AdminApi, channel: str = "") -> dict:
 
 def put_profile(api: AdminApi, data: dict, note: str, channel: str = "") -> dict:
     return api.call("PUT", f"{ENRICHMENT}/profile/", params={"channel": channel}, json={"data": data, "note": note})
+
+
+def pictures(api: AdminApi, ref: str, module: str = "pim") -> list[dict]:
+    """The pictures the run dialog offers for one subject (a product SKU, or `image:<uid>` in the gallery)."""
+    return api.get(f"{ENRICHMENT}/subjects/pictures/", module=module, channel=CHANNEL, ref=ref)
+
+
+def undo_applied_pictures(api: AdminApi, module: str, search: str) -> None:
+    """Revert what an earlier run of a test applied: the applied picture proposals of `module` matching `search`."""
+    body = {"target_module": module, "target_kind": "picture", "search": search}
+    api.call("POST", f"{ENRICHMENT}/proposals/bulk-undo/", json=body)
+
+
+def gallery_images(api: AdminApi) -> list[dict]:
+    """Every image of the ContentDB gallery (newest last)."""
+    return api.get(f"{CONTENTDB}/images/", limit=500, page=1, sort="created_at")["data"]
+
+
+def delete_gallery_image(api: AdminApi, uid: str) -> None:
+    api.call("DELETE", f"{CONTENTDB}/images/{uid}/")
 
 
 def product(sku: str) -> dict:

@@ -24,7 +24,6 @@ pytestmark = [require_module("enrichment"), pytest.mark.desktop_only]
 LABEL = "BDD e2e template"
 KEY_PREFIX = "bdd-e2e-template"
 DRAWER_SKU = "ENT-S004"
-LAST_SEEDED = "Otaguj produkt"  # the last seeded product template (service fixtures)
 
 
 @pytest.fixture
@@ -56,20 +55,21 @@ def test_templates_create_reorder_deactivate(admin_page: Page, enrichment_api: s
     page = admin_page
     _create_template(page)
     expect(page.get_by_test_id("templates-table")).to_contain_text(LABEL)
-    assert table_labels(page)[-1] == LABEL
+    *_, last_seeded, created = table_labels(page)  # a new template comes last, after the last seeded one
+    assert created == LABEL
     studio.shoot(page, "05-templates-list")
 
     key = next(t["key"] for t in enrichment_api.get(f"{studio.ENRICHMENT}/templates/") if t["label"] == LABEL)
     page.get_by_test_id(f"template-up-{key}").click()
-    moved = studio.wait_for(lambda: _above(table_labels(page), LABEL, LAST_SEEDED), timeout=10, every=0.3)
+    moved = studio.wait_for(lambda: _above(table_labels(page), LABEL, last_seeded), timeout=10, every=0.3)
     assert moved, table_labels(page)
     offered = drawer_templates(page)
     expect(offered.filter(has_text=LABEL)).to_be_visible()
-    assert _above(offered.all_inner_texts(), LABEL, LAST_SEEDED), offered.all_inner_texts()
+    assert _above(offered.all_inner_texts(), LABEL, last_seeded), offered.all_inner_texts()
     studio.shoot(page, "05-templates-drawer", page.get_by_test_id("ai-results-drawer"))
 
     _deactivate(page, key)
-    expect(drawer_templates(page).filter(has_text=LAST_SEEDED)).to_be_visible()
+    expect(drawer_templates(page).filter(has_text=last_seeded)).to_be_visible()
     expect(drawer_templates(page).filter(has_text=LABEL)).to_have_count(0)
 
 

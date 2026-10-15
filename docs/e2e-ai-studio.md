@@ -17,6 +17,7 @@ E2E_CMS_URL=http://localhost:8080 uv run --extra e2e pytest -q e2e/cms/test_ai_s
 | `test_ai_studio_article.py` | 6 Studio article: brief → questions; not yet run (needs the toolbox SEO app): search phrases → outline (one correction) → draft → metadata → document → ContentDB draft, unpublished, run cost |
 | `test_ai_studio_errors.py` | 7 a toolbox 400 → failed task row with the template label, no error code, no worker key; an incomplete profile → Studio soft gate and config health |
 | `test_ai_studio_lanes.py` | 8 run lanes: one product "Run now" → done; a list selection "Add to queue" behind an API blocker run → "Queued" in Tasks → done; repeating a run in flight → "2 products skipped", then 409 "already in progress" |
+| `test_ai_studio_media.py` | 9 media (the toolbox media app with the `fake` image and video providers, and price rows for them): a video from the picture chosen in the run dialog → video proposal; a product packshot → Apply "Add next to the original" → one picture more, Review "Undo all" → as before; a gallery image → "AI: process images" → packshot → Apply add → a new gallery image tagged `ai`, Undo removes it |
 
 Shared code: `src/entirius_tests/ai_studio_e2e.py` (enrichment admin API, toolbox tracker, screenshot gallery) and
 `src/entirius_tests/ai_studio_pages.py` (product AI drawer, product-list AI bulk action).

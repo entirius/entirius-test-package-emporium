@@ -48,6 +48,16 @@ def run_template(page: Page, drawer: Locator, label: str, *, lane: str = RUN_NOW
     page.get_by_test_id("ai-task-dialog").get_by_test_id(lane).click()
 
 
+def open_guided(page: Page, label: str) -> Locator:
+    """Studio → "New" → the guided work `label` (e.g. "Article"); its brief dialog."""
+    page.goto(f"{CMS_BASE_URL}/enrichment/studio")
+    page.get_by_role("button", name="New").click()
+    page.get_by_test_id("start-work-guided").get_by_role("button", name=label, exact=True).click()
+    dialog = page.get_by_test_id("new-run-dialog")
+    expect(dialog).to_be_visible()
+    return dialog
+
+
 def proposal_card(page: Page, drawer: Locator, field: str, language: str) -> Locator:
     """The drawer card of one field in one language (`EN`, `PL`, …)."""
     return (

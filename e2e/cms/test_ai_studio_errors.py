@@ -86,9 +86,7 @@ def empty_profile(enrichment_api: studio.AdminApi):
 
 def test_incomplete_profile_soft_gate(admin_page: Page, empty_profile):
     page = admin_page
-    page.goto(f"{CMS_BASE_URL}/enrichment/studio")
-    page.get_by_role("button", name="New").click()
-    gate = page.get_by_test_id("new-run-dialog").get_by_test_id("profile-gate")
+    gate = pages.open_guided(page, "Article").get_by_test_id("profile-gate")
     expect(gate).to_be_visible()
     expect(gate).to_contain_text("Facts")
     studio.shoot(page, "07-profile-gate", gate)

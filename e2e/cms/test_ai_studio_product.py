@@ -76,8 +76,8 @@ def test_product_drawer_correct_restore_apply(
 
 
 def _card_id(card: Locator) -> int:
-    href = card.get_by_test_id("open-editor").get_attribute("href") or ""
-    return int(href.rstrip("/").rsplit("/", 1)[-1])
+    testid = card.get_attribute("data-testid") or ""  # proposal-panel-<id>
+    return int(testid.rsplit("-", 1)[-1])
 
 
 def _shorten_and_restore(page: Page, card: Locator) -> None:

@@ -23,7 +23,7 @@ from playwright.sync_api import Locator, Page, expect
 
 from entirius_tests import ai_studio_e2e as studio
 from entirius_tests import ai_studio_pages as pages
-from entirius_tests.cms_e2e import CMS_BASE_URL, require_module
+from entirius_tests.cms_e2e import require_module
 
 pytestmark = [require_module("enrichment"), pytest.mark.desktop_only]
 
@@ -80,9 +80,7 @@ def test_article_run_end_to_end(
 
 
 def _start_run(page: Page) -> str:
-    page.goto(f"{CMS_BASE_URL}/enrichment/studio")
-    page.get_by_role("button", name="New").click()
-    dialog = page.get_by_test_id("new-run-dialog")
+    dialog = pages.open_guided(page, "Article")
     dialog.get_by_role("textbox", name="Topic").fill(TOPIC)
     studio.shoot(page, "06-article-brief", dialog)
     dialog.get_by_role("button", name="Start").click()

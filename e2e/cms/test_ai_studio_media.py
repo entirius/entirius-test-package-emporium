@@ -182,7 +182,8 @@ def _apply_added(page: Page, card: Locator) -> None:
     mode.get_by_text("Add next to the original").click()
     expect(mode.get_by_test_id("proposal-apply-mode-add")).to_be_checked()
     card.get_by_test_id("proposal-accept").click()
-    expect(page.get_by_text("Proposal accepted.")).to_be_visible()
+    # A real model's picture is written with its thumbnails: allow the apply a few seconds.
+    expect(page.get_by_text("Proposal accepted.")).to_be_visible(timeout=30_000)
 
 
 def _undo_pictures(page: Page, search: str) -> None:

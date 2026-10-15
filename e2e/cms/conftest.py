@@ -7,6 +7,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
+from entirius_tests.ai_studio_e2e import AdminApi, service_api, toolbox_api
 from entirius_tests.cms_e2e import ADMIN_PASSWORD, ADMIN_USERNAME, CMS_BASE_URL
 
 
@@ -20,3 +21,15 @@ def admin_page(page: Page) -> Page:
     # A goto right after the click would abort the login request.
     expect(page.get_by_role("button", name="Log in")).to_be_hidden(timeout=15000)
     return page
+
+
+@pytest.fixture
+def enrichment_api() -> AdminApi:
+    """The service admin API (JWT) — setup and reset of the AI studio tests."""
+    return service_api()
+
+
+@pytest.fixture
+def tracker_api() -> AdminApi:
+    """The AI toolbox admin API (JWT) — its tracker usage records count the AI calls."""
+    return toolbox_api()

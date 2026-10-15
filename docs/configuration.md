@@ -39,7 +39,8 @@ Point `test_package_path` at any directory with the standard CSV layout to switc
 ## End-to-end suites
 
 `make e2e` reads `E2E_BASE_URL` (storefront, default `http://localhost:3100`, set in the Makefile) and `CMS_BASE_URL`
-(admin CMS, default `http://localhost:8180`, `src/entirius_tests/cms_e2e.py`); `API_BASE_URL` as above.
+(admin CMS, default `http://localhost:8180`, `src/entirius_tests/cms_e2e.py`; `E2E_CMS_URL` wins over it, e.g. the CMS
+dev server on `:8080`); `API_BASE_URL` as above. The AI studio tests add the toolbox settings — `docs/e2e-ai-studio.md`.
 
 ## Reports
 

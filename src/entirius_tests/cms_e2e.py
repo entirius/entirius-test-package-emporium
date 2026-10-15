@@ -13,7 +13,7 @@ import requests
 
 from entirius_tests.munin import MUNIN_REGISTRY_PATH, parse_modules
 
-CMS_BASE_URL = os.environ.get("CMS_BASE_URL", "http://localhost:8180")
+CMS_BASE_URL = os.environ.get("E2E_CMS_URL") or os.environ.get("CMS_BASE_URL", "http://localhost:8180")
 API_BASE_URL = os.environ.get("API_BASE_URL", "http://localhost:8100")
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")

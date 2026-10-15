@@ -93,6 +93,7 @@ not list (`entirius_tests.munin.FEATURE_MODULES`; `tests/test_feature_modules.py
 | Seed, harness targets, one-shot scenarios, module subsets | `docs/harness.md` |
 | Data package from your own catalog | `docs/data-package.md` |
 | Leads funnel end-to-end | `docs/e2e-leads-funnel.md` |
+| AI studio end-to-end (CMS, fake-model toolbox) | `docs/e2e-ai-studio.md` |
 | Emporium universe (brand, series, copy tone) | `docs/brandbook.md` |
 | Operator checklists | `docs/operator-atlas.md`, `docs/operator-pricefighter.md` |
 | Dataset details, discount rules | `package/README.md`, `DISCOUNT_RULES.md` |

@@ -23,6 +23,9 @@ SEO_RESEARCH = "SEO research (DataForSEO)"
 AI_TIMEOUT = 90_000
 # A "/" ends a regex in Playwright's selector syntax, so it is escaped.
 _AI_TRIGGER = re.compile(r"^AI \/ Enricher")
+# The run dialog's two actions: the express lane and the normal queue.
+RUN_NOW = "ai-task-run-now"
+ADD_TO_QUEUE = "ai-task-add-to-queue"
 
 
 def ai_trigger(page: Page) -> Locator:
@@ -37,10 +40,10 @@ def open_drawer(page: Page) -> Locator:
     return drawer
 
 
-def run_template(page: Page, drawer: Locator, label: str) -> None:
-    """Template button in the drawer → the run dialog with its presets → Run."""
+def run_template(page: Page, drawer: Locator, label: str, *, lane: str = RUN_NOW) -> None:
+    """Template button in the drawer → the run dialog with its presets → Run now (or Add to queue)."""
     drawer.get_by_role("button", name=label, exact=True).click()
-    page.get_by_test_id("ai-task-dialog").get_by_role("button", name="Run", exact=True).click()
+    page.get_by_test_id("ai-task-dialog").get_by_test_id(lane).click()
 
 
 def proposal_card(page: Page, drawer: Locator, field: str, language: str) -> Locator:
@@ -53,7 +56,18 @@ def proposal_card(page: Page, drawer: Locator, field: str, language: str) -> Loc
 
 
 def bulk_run(page: Page, skus: list[str], template: str, *, research: bool = False) -> int:
-    """Product list: select the products → AI → template (+ SEO research) → Run; the id of the created task."""
+    """Product list: select the products → AI → template (+ SEO research) → Add to queue; the created task's id."""
+    dialog = open_bulk_dialog(page, skus, template)
+    if research:
+        dialog.get_by_role("checkbox", name=SEO_RESEARCH).check()
+    dialog.get_by_test_id(ADD_TO_QUEUE).click()
+    review = dialog.get_by_role("link", name="Review its proposals")
+    expect(review).to_be_visible()
+    return int((review.get_attribute("href") or "").rsplit("=", 1)[-1])
+
+
+def open_bulk_dialog(page: Page, skus: list[str], template: str) -> Locator:
+    """Product list: select the products → AI → template; the run dialog."""
     page.goto(f"{CMS_BASE_URL}/pim/products")
     page.get_by_role("textbox", name="Start typing...").fill(_common_prefix(skus))
     for sku in skus:
@@ -62,12 +76,8 @@ def bulk_run(page: Page, skus: list[str], template: str, *, research: bool = Fal
     page.get_by_role("combobox", name="AI").click()
     page.get_by_role("option", name=template, exact=True).click()
     dialog = page.get_by_test_id("ai-task-dialog")
-    if research:
-        dialog.get_by_role("checkbox", name=SEO_RESEARCH).check()
-    dialog.get_by_role("button", name="Run", exact=True).click()
-    review = dialog.get_by_role("link", name="Review its proposals")
-    expect(review).to_be_visible()
-    return int((review.get_attribute("href") or "").rsplit("=", 1)[-1])
+    expect(dialog).to_be_visible()
+    return dialog
 
 
 def _common_prefix(skus: list[str]) -> str:

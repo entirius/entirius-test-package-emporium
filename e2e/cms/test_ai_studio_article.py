@@ -5,7 +5,7 @@
 """AI studio in the CMS, scenario 6: an article written step by step in Studio.
 
 New → brief → questions (answered, approved) → search phrases (primary picked) → outline (one AI correction) →
-draft → metadata (search preview) → document → "Open draft in ContentDB": the draft exists and is not published;
+draft → metadata (search preview) → document → "Open draft in Pages": the draft exists and is not published;
 the run cost is shown. Every run is new (its own brief), so the test re-runs on one seed.
 The search-phrases step researches through the toolbox SEO app: without it (`/api/ai-seo/`, the local image before
 its rebuild) that step fails, so the test stops there with a skip after checking the questions part.
@@ -34,16 +34,16 @@ CONTENT_ADMIN = "api-admin/contentdb/v1/content/blog-post"
 
 
 def step_panel(page: Page, key: str) -> Locator:
-    """The panel of a step once it waits for review (its output and Approve)."""
+    """The panel of a step once it waits for review (its output and the approve primary, named by its next step)."""
     page.get_by_test_id(f"step-{key}").click()
     panel = page.get_by_test_id(f"step-panel-{key}")
-    expect(panel.get_by_role("button", name="Approve")).to_be_visible(timeout=pages.AI_TIMEOUT)
+    expect(panel.get_by_test_id("step-approve")).to_be_visible(timeout=pages.AI_TIMEOUT)
     return panel
 
 
 def approve(panel: Locator) -> None:
-    panel.get_by_role("button", name="Approve").click()
-    expect(panel.get_by_role("button", name="Approve")).to_have_count(0, timeout=pages.AI_TIMEOUT)
+    panel.get_by_test_id("step-approve").click()
+    expect(panel.get_by_test_id("step-approve")).to_have_count(0, timeout=pages.AI_TIMEOUT)
 
 
 @pytest.fixture
@@ -91,17 +91,18 @@ def _start_run(page: Page) -> str:
 
 
 def _answer_questions(page: Page, api: studio.AdminApi, uid: str) -> None:
-    """Required answers are enforced on Approve; every question gets an answer, then Save and Approve."""
+    """Required answers are enforced on Approve; every question gets an answer, saved when the field is left."""
     panel = step_panel(page, "questions")
     questions = _questions(api, uid)
     if any(not question.get("optional") for question in questions):
-        panel.get_by_role("button", name="Approve").click()
+        panel.get_by_test_id("step-approve").click()
         expect(panel.get_by_text("An answer is required").first).to_be_visible()
     else:
         warnings.warn("required-answer check not exercised: the model marked every question optional", stacklevel=2)
     for index, question in enumerate(questions):
         _answer(panel.get_by_test_id(f"question-{index}"), question)
-    panel.get_by_test_id("answers-save").click()
+    panel.get_by_role("heading", name="Questions").click()  # leaving the field saves the answers
+    expect(panel.get_by_test_id("answers-saved")).to_be_visible()
     expect(panel.get_by_test_id("answers-dirty")).to_be_hidden()
     studio.shoot(page, "06-article-questions", panel)
     approve(panel)
@@ -127,7 +128,7 @@ def _answer(field: Locator, question: dict) -> None:
 def _pick_keywords(page: Page) -> None:
     panel = step_panel(page, "keywords")
     table = panel.get_by_test_id("keywords-table")
-    table.locator("tbody tr").first.get_by_test_id("keyword-primary").click()
+    table.get_by_test_id(re.compile(r"^keyword-row-")).first.get_by_test_id("keyword-primary").click()
     expect(table.get_by_test_id("keywords-primary")).not_to_have_text("—")
     studio.shoot(page, "06-article-keywords", table)
     approve(panel)
@@ -136,11 +137,10 @@ def _pick_keywords(page: Page) -> None:
 def _correct_outline(page: Page) -> None:
     panel = step_panel(page, "outline")
     panel.get_by_test_id("correction-toggle").click()
-    panel.get_by_test_id("correction-instruction").locator("input").fill(OUTLINE_INSTRUCTION)
+    panel.get_by_test_id("correction-instruction").locator("textarea").fill(OUTLINE_INSTRUCTION)
     panel.get_by_test_id("correction-send").click()
     expect(panel.get_by_test_id("correction-busy")).to_be_hidden(timeout=pages.AI_TIMEOUT)
-    panel.get_by_test_id("versions-toggle").click()
-    expect(panel.get_by_test_id("version-2").get_by_test_id("version-instruction")).to_have_text(OUTLINE_INSTRUCTION)
+    expect(panel.get_by_test_id("thread-ask-2").get_by_test_id("ask-text")).to_have_text(OUTLINE_INSTRUCTION)
     studio.shoot(page, "06-article-outline", panel)
     approve(panel)
 

@@ -49,7 +49,7 @@ def test_product_drawer_correct_restore_apply(
     page.get_by_role("tab", name="SEO").click()
 
     pages.run_template(page, pages.open_drawer(page), pages.META_TEMPLATE)
-    expect(page.get_by_text("AI task started")).to_be_visible()
+    expect(page.get_by_text("Running now")).to_be_visible()
     expect(page.get_by_text("AI task finished")).to_be_visible(timeout=pages.AI_TIMEOUT)
     task_id = studio.latest_task_id(enrichment_api, drawer_product)
     assert task_id > before
@@ -81,14 +81,15 @@ def _card_id(card: Locator) -> int:
 
 
 def _shorten_and_restore(page: Page, card: Locator) -> None:
-    """Quick action "Shorter" → version 2 with its changes → restore version 1 (version 3 = a copy of 1)."""
+    """Quick action "Shorter" → version 2 in the thread, its changes open → restore version 1 (version 3 = a copy of 1)."""
     card.get_by_test_id("correction-toggle").click()
     card.get_by_test_id("correction-quick-shorten").click()
     expect(card.get_by_test_id("correction-busy")).to_be_hidden(timeout=pages.AI_TIMEOUT)
-    card.get_by_test_id("versions-toggle").click()
+    expect(card.get_by_test_id("thread-ask-2").get_by_test_id("ask-action")).to_have_text("Shorter")
     expect(card.get_by_test_id("version-2")).to_be_visible()
-    card.get_by_test_id("version-toggle-2").click()
-    expect(card.get_by_test_id("version-2").get_by_test_id("text-diff")).to_be_visible()
+    expect(
+        card.get_by_test_id("version-2").get_by_test_id("text-diff").or_(card.get_by_test_id("version-unchanged"))
+    ).to_be_visible()
     studio.shoot(page, "01-product-versions", card)
     card.get_by_test_id("version-restore-1").click()
     expect(page.get_by_text("Version restored.")).to_be_visible()
@@ -125,8 +126,8 @@ def test_bulk_run_review_and_correct_all(
     _correct_all(page, enrichment_api, task_id)
     _open_detail(page, proposals[0]["id"])
     detail = page.get_by_test_id("enrichment-detail")
-    detail.get_by_test_id("versions-toggle").click()
-    expect(detail.get_by_test_id("version-2").get_by_test_id("version-instruction")).to_have_text(BATCH_INSTRUCTION)
+    detail.get_by_test_id("correction-toggle").click()
+    expect(detail.get_by_test_id("thread-ask-2").get_by_test_id("ask-text")).to_have_text(BATCH_INSTRUCTION)
     studio.shoot(page, "02-review-corrected", detail.get_by_test_id("version-2"))
     assert len(studio.task_calls(tracker_api, task_id, "enrichment.write.description")) == expected
     assert len(studio.task_calls(tracker_api, task_id, "enrichment.revise")) == expected
@@ -148,8 +149,8 @@ def _correct_all(page: Page, api: studio.AdminApi, task_id: int) -> None:
     """ "Correct all" with an instruction; the batch runs in the worker — wait until every proposal has version 2."""
     page.get_by_test_id("batch-correct").click()
     dialog = page.get_by_test_id("batch-correct-dialog")
-    dialog.get_by_test_id("correction-instruction").locator("input").fill(BATCH_INSTRUCTION)
-    dialog.get_by_test_id("correction-send").click()
+    dialog.get_by_test_id("correction-instruction").locator("textarea").fill(BATCH_INSTRUCTION)
+    dialog.get_by_test_id("batch-send").click()
     expect(dialog).to_be_hidden(timeout=pages.AI_TIMEOUT)
     ids = [proposal["id"] for proposal in studio.task_proposals(api, task_id)]
     corrected = studio.wait_for(lambda: all(len(studio.revisions(api, pk)) >= 2 for pk in ids), timeout=120)

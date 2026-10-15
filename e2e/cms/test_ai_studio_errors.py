@@ -99,6 +99,6 @@ def test_incomplete_profile_soft_gate(admin_page: Page, empty_profile):
     recheck = panel.get_by_test_id("config-health-recheck")
     if recheck.count():
         recheck.click()
-    row = panel.get_by_test_id("config-health-row").filter(has_text="Communication profile")
+    row = panel.get_by_test_id("config-health-row").filter(has_text="Company profile")
     expect(row).to_contain_text("incomplete")
     studio.shoot(page, "07-config-health", row)

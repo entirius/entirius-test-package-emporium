@@ -19,7 +19,7 @@ from entirius_tests.cms_e2e import CMS_BASE_URL
 # Seeded product template labels (service fixtures/common/enrichment_workers.json).
 META_TEMPLATE = "Meta opisy"
 DESCRIPTION_TEMPLATE = "Opis produktu"
-SEO_RESEARCH = "SEO research (DataForSEO)"
+SEO_RESEARCH = "Search research (what people search for, what ranks)"
 AI_TIMEOUT = 90_000
 # A "/" ends a regex in Playwright's selector syntax, so it is escaped.
 _AI_TRIGGER = re.compile(r"^AI \/ Enricher")

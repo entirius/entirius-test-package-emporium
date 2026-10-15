@@ -81,7 +81,7 @@ def test_selection_is_queued_then_done(admin_page: Page, enrichment_api: studio.
 
     task_id = int(re.search(r"task=(\d+)", page.url).group(1))
     _wait_all(enrichment_api, [*blockers, task_id])
-    expect(page.get_by_role("main").get_by_text("Done", exact=True)).to_be_visible(timeout=15_000)
+    expect(page.get_by_role("grid").get_by_text("Done", exact=True)).to_be_visible(timeout=15_000)
     assert len(studio.task_proposals(enrichment_api, task_id)) == len(QUEUE_SKUS) * len(studio.channel_languages())
 
 

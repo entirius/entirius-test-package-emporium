@@ -161,7 +161,7 @@ SCREENS = [
     Screen("studio", "/enrichment/studio", re.compile(r"^Studio$"), _via_menu("Studio"), _lit_entry),
     Screen("studio-run", "", re.compile(r"\S"), _studio_run, _back),
     Screen(
-        "drawer", f"/pim/products/{EMPTY_SKU}?ai=1", re.compile(rf"^AI for {EMPTY_SKU}$"), _open_drawer, _drawer_close
+        "drawer", f"/pim/products/{EMPTY_SKU}?ai=1", re.compile(rf"^AI for (?!{EMPTY_SKU}$).+$"), _open_drawer, _drawer_close
     ),
 ]
 DRAWERS = {"history", "drawer"}

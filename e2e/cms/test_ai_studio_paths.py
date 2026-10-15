@@ -139,9 +139,11 @@ def _studio_run(page: Page, phone: bool) -> None:
 
 
 def _lit_entry(page: Page, phone: bool) -> Locator:
-    """A list screen of the panel: its entry lit in the sidebar (desktop) or the tab bar (phone)."""
-    nav = _tab_bar(page) if phone else _sidebar(page)
-    return nav.locator("[aria-current='page']")
+    """A list screen of the panel: its entry lit in the tab bar (phone, always "page") or the sidebar (desktop:
+    "page" on the entry's own address, "true" on its tabs — Review → Runs, every Settings tab)."""
+    if phone:
+        return _tab_bar(page).locator("[aria-current='page']")
+    return _sidebar(page).locator("[aria-current]")
 
 
 def _back(page: Page, phone: bool) -> Locator:
@@ -234,7 +236,7 @@ def test_empty_states_say_what_to_do(admin_page: Page, viewport: str, nothing_pe
     expect(page.get_by_test_id("review-empty")).to_have_count(1)
     expect(empty.get_by_test_id("review-empty-clear")).to_be_visible()
     expect(empty.get_by_test_id("review-empty-applied")).to_be_visible()
-    expect(page.get_by_test_id("enrichment-task-filter-link")).to_have_text(f"Task #{GONE_ID}")
+    expect(page.get_by_test_id("enrichment-task-filter-link")).to_have_text("AI task")
     _assert_layout(page, phone)
     empty.get_by_test_id("review-empty-clear").click()
     expect(page).not_to_have_url(re.compile(r"task="))
@@ -285,4 +287,5 @@ def test_desktop_sidebar_shows_the_current_entry_after_a_deep_link(admin_page: P
     page = admin_page
     page.set_viewport_size({"width": 1280, "height": 600})
     page.goto(f"{CMS_BASE_URL}/enrichment/settings/memory")
-    expect(_sidebar(page).locator("[aria-current='page']")).to_be_in_viewport()
+    expect(_lit_entry(page, phone=False)).to_have_text(_entry_name("Settings"))
+    expect(_lit_entry(page, phone=False)).to_be_in_viewport()

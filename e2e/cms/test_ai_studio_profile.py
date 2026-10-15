@@ -59,7 +59,7 @@ def test_profile_rule_and_qa_warnings(
     studio.shoot(page, "04-profile-history", page.get_by_test_id("profile-history"))
 
     card = _edited_card(page, enrichment_api)
-    expect(card.get_by_test_id("qa-warning-rule")).to_be_visible()
+    expect(_rule_warning(card)).to_be_visible()
     number = card.get_by_test_id("qa-warning-NUMBER_NOT_IN_FACTS")
     expect(number).to_contain_text(UNKNOWN_NUMBER)
     studio.shoot(page, "04-qa-warnings", card)
@@ -74,6 +74,11 @@ def test_profile_rule_and_qa_warnings(
     _promote_suggestion(page, enrichment_api)
     promoted = studio.wait_for(lambda: _overlay_fact(enrichment_api, overlay + 1), timeout=10)
     assert promoted, "the promoted fact did not reach the channel profile"
+
+
+def _rule_warning(card: Locator) -> Locator:
+    """The warning of this test's rule; the profile may hold other checks on "e-commerce" (a spelling) too."""
+    return card.get_by_test_id("qa-warning-rule").filter(has_text=RULE["Message *"])
 
 
 def _overlay_fact(api: studio.AdminApi, version: int) -> bool:

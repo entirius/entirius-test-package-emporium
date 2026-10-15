@@ -56,7 +56,6 @@ def spawn_on_product(api: studio.AdminApi, template: str, sku: str) -> int:
 ERROR_CODE = re.compile(r"[A-Z]{3,}_[A-Z_]+")
 
 
-@pytest.mark.xfail(strict=True, reason="entirius-pwa-cms: raw toolbox code and worker key in the failed task row")
 def test_toolbox_rejection_is_a_plain_failed_row(
     admin_page: Page, enrichment_api: studio.AdminApi, tracker_api: studio.AdminApi, broken_template: str
 ):

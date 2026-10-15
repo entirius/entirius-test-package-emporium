@@ -55,7 +55,7 @@ def test_seo_research_runs_once_per_category(
     assert len(writes) == len(fresh_research) * len(languages)
 
     brief = enrichment_api.get(f"{studio.ENRICHMENT}/memory/", kind="seo_brief", page_size=1)["results"][0]
-    page.goto(f"{CMS_BASE_URL}/enrichment/memory")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/memory")
     entry = page.get_by_test_id(f"memory-entry-{brief['id']}")
     expect(entry.get_by_test_id("memory-brief-primary")).to_be_visible()
     expect(entry.get_by_test_id("memory-brief-expiry")).to_be_visible()

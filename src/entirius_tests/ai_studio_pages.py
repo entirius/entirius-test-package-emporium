@@ -34,8 +34,10 @@ def ai_trigger(page: Page) -> Locator:
 
 
 def open_drawer(page: Page) -> Locator:
-    ai_trigger(page).click()
+    """The product's AI drawer; a run started from it opens it again by itself (on that run)."""
     drawer = page.get_by_test_id("ai-results-drawer")
+    if not drawer.is_visible():
+        ai_trigger(page).click()
     expect(drawer).to_be_visible()
     return drawer
 
@@ -61,9 +63,9 @@ def bulk_run(page: Page, skus: list[str], template: str, *, research: bool = Fal
     if research:
         dialog.get_by_role("checkbox", name=SEO_RESEARCH).check()
     dialog.get_by_test_id(ADD_TO_QUEUE).click()
-    review = dialog.get_by_role("link", name="Review its proposals")
-    expect(review).to_be_visible()
-    return int((review.get_attribute("href") or "").rsplit("=", 1)[-1])
+    run = dialog.get_by_test_id("ai-task-link")
+    expect(run).to_have_attribute("href", re.compile(r"/enrichment/runs\?task=\d+$"))
+    return int(re.search(r"task=(\d+)", run.get_attribute("href") or "").group(1))
 
 
 def open_bulk_dialog(page: Page, skus: list[str], template: str) -> Locator:

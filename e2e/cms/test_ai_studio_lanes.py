@@ -59,8 +59,11 @@ def test_single_product_runs_now(admin_page: Page, enrichment_api: studio.AdminA
     studio.shoot(page, "lanes-01-toast-running-now")
     task_id = studio.latest_task_id(enrichment_api, NOW_SKU)
     assert task_id > before
+    drawer = page.get_by_test_id("ai-results-drawer")  # the drawer opens again on the run, its proposals land there
+    expect(drawer.get_by_test_id(f"ai-task-{task_id}")).to_be_visible()
     assert studio.wait_task_finished(enrichment_api, task_id)["status"] == "done"
     assert studio.task(enrichment_api, task_id)["lane"] == "now"
+    expect(drawer.locator("[data-testid^='proposal-panel-']").first).to_be_visible(timeout=pages.AI_TIMEOUT)
     expect(pages.ai_trigger(page)).to_have_accessible_name(re.compile(r"\d+ to review"), timeout=pages.AI_TIMEOUT)
 
 
@@ -75,6 +78,7 @@ def test_selection_is_queued_then_done(admin_page: Page, enrichment_api: studio.
     expect(page.get_by_text(re.compile(r"^Queued — "))).to_be_visible()
     studio.shoot(page, "lanes-02-toast-queued")
     dialog.get_by_test_id("ai-task-link").click()
+    expect(page).to_have_url(re.compile(r"/enrichment/runs\?task=\d+$"))
     queued = page.get_by_test_id("enrichment-task-queued")
     expect(queued).to_be_visible()
     studio.shoot(page, "lanes-02-tasks-queued", queued)
@@ -82,6 +86,9 @@ def test_selection_is_queued_then_done(admin_page: Page, enrichment_api: studio.
     task_id = int(re.search(r"task=(\d+)", page.url).group(1))
     _wait_all(enrichment_api, [*blockers, task_id])
     expect(page.get_by_role("grid").get_by_text("Done", exact=True)).to_be_visible(timeout=15_000)
+    # The finished run's proposals show under it, one card group per product.
+    groups = page.get_by_test_id("run-proposals").get_by_test_id("enrichment-product-group")
+    expect(groups).to_have_count(len(QUEUE_SKUS))
     assert len(studio.task_proposals(enrichment_api, task_id)) == len(QUEUE_SKUS) * len(studio.channel_languages())
 
 

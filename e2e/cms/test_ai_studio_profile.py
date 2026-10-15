@@ -93,7 +93,7 @@ def _fill_last_row(page: Page, table: str, values: dict[str, str]) -> None:
 
 
 def _edit_profile(page: Page) -> None:
-    page.goto(f"{CMS_BASE_URL}/enrichment/profile")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/profile")
     expect(page.get_by_test_id("profile-facts-row-0")).to_be_visible()
     _fill_last_row(page, "profile-facts", FACT)
     _fill_last_row(page, "profile-rules", RULE)
@@ -121,7 +121,7 @@ def _promote_suggestion(page: Page, api: studio.AdminApi) -> None:
     query = {"kind": "fact_suggestion", "status": "active", "page_size": 50}
     entries = api.get(f"{studio.ENRICHMENT}/memory/", **query)["results"]
     suggestion = max((e for e in entries if UNKNOWN_NUMBER in f"{e['title']} {e['text']}"), key=lambda e: e["id"])
-    page.goto(f"{CMS_BASE_URL}/enrichment/memory")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/memory")
     entry = page.get_by_test_id(f"memory-entry-{suggestion['id']}")
     expect(entry).to_be_visible()
     studio.shoot(page, "04-memory-suggestion", entry)

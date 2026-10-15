@@ -5,7 +5,8 @@
 """AI studio in the CMS, the "lost user" paths: every AI screen on a desktop (1280 × 800) and on a phone (390 × 844).
 
 For each screen the operator must be able to get there from the side menu (the phone: the menu, then the panel's
-tab bar) or from the product's AI drawer, see where they are (a title), see a way back or onwards, read an empty
+tab bar: Enrichment Review, Studio, Settings — runs and the setup screens are tabs of Review and Settings) or from the
+product's AI drawer, see where they are (a title), see a way back or onwards, read an empty
 state that says what to do next, and reload or share the URL without losing the screen. The layout checks: no
 horizontal page scroll on a phone and no floating label of a toolbar select overlapping another control.
 Read-only: no AI call, nothing created; the drawer's empty state comes from a product with nothing pending.
@@ -89,24 +90,30 @@ def _open_panel(page: Page, phone: bool) -> None:
         group.click()
 
 
+def _entry_name(label: str) -> re.Pattern[str]:
+    """A nav entry by its label; an entry's count badge sits after it (sidebar) or before it (phone tab bar)."""
+    return re.compile(rf"^\d*\s*{re.escape(label)}\s*\d*$")
+
+
 def _via_menu(label: str) -> Callable[[Page, bool], None]:
     """The panel's entry: the sidebar link on a desktop, the tab bar on a phone."""
 
     def reach(page: Page, phone: bool) -> None:
         _open_panel(page, phone)
         nav = _tab_bar(page) if phone else _sidebar(page)
-        nav.get_by_role("link", name=re.compile(rf"^{re.escape(label)}")).click()
+        nav.get_by_role("link", name=_entry_name(label)).click()
 
     return reach
 
 
-def _templates(page: Page, phone: bool) -> None:
-    """A setup screen: the sidebar on a desktop; on a phone the drawer's "Manage templates"."""
-    if not phone:
-        _via_menu("AI templates")(page, phone)
-        return
-    _open_drawer(page, phone)
-    page.get_by_test_id("ai-results-templates").click()
+def _via_tab(entry: str, tab: str) -> Callable[[Page, bool], None]:
+    """A tab of a panel entry: Review → Runs, Settings → Memory …"""
+
+    def reach(page: Page, phone: bool) -> None:
+        _via_menu(entry)(page, phone)
+        page.get_by_test_id(f"enrichment-tab-{tab}").click()
+
+    return reach
 
 
 def _open_drawer(page: Page, phone: bool) -> None:
@@ -116,7 +123,7 @@ def _open_drawer(page: Page, phone: bool) -> None:
 
 
 def _history(page: Page, phone: bool) -> None:
-    _via_menu("Company profile")(page, phone)
+    _via_tab("Settings", "profile")(page, phone)
     page.get_by_test_id("profile-history-open").click()
 
 
@@ -137,11 +144,6 @@ def _lit_entry(page: Page, phone: bool) -> Locator:
     return nav.locator("[aria-current='page']")
 
 
-def _panel_nav(page: Page, phone: bool) -> Locator:
-    """A desktop-only screen on a phone lights no tab, but the panel's tab bar stays there."""
-    return _tab_bar(page) if phone else _sidebar(page).locator("[aria-current='page']")
-
-
 def _back(page: Page, phone: bool) -> Locator:
     return page.get_by_role("main").get_by_role("button", name="Back", exact=True)
 
@@ -150,18 +152,23 @@ def _drawer_close(page: Page, phone: bool) -> Locator:
     return page.get_by_test_id("side-drawer-close")
 
 
+REVIEW = re.compile(r"^Enrichment Review$")
+SETTINGS = re.compile(r"^Settings$")
 SCREENS = [
-    Screen("review", "/enrichment", re.compile(r"^Enrichment Review$"), _via_menu("Enrichment Review"), _lit_entry),
-    Screen("templates", "/enrichment/templates", re.compile(r"^AI templates$"), _templates, _panel_nav),
-    Screen(
-        "profile", "/enrichment/profile", re.compile(r"^Company profile$"), _via_menu("Company profile"), _lit_entry
-    ),
-    Screen("history", "/enrichment/profile?history=1", re.compile(r"^History"), _history, _drawer_close),
-    Screen("memory", "/enrichment/memory", re.compile(r"^Memory$"), _via_menu("Memory"), _lit_entry),
+    Screen("review", "/enrichment", REVIEW, _via_menu("Enrichment Review"), _lit_entry),
+    Screen("runs", "/enrichment/runs", REVIEW, _via_tab("Enrichment Review", "runs"), _lit_entry),
+    Screen("templates", "/enrichment/settings/templates", SETTINGS, _via_tab("Settings", "templates"), _lit_entry),
+    Screen("profile", "/enrichment/settings/profile", SETTINGS, _via_tab("Settings", "profile"), _lit_entry),
+    Screen("history", "/enrichment/settings/profile?history=1", re.compile(r"^History"), _history, _drawer_close),
+    Screen("memory", "/enrichment/settings/memory", SETTINGS, _via_tab("Settings", "memory"), _lit_entry),
     Screen("studio", "/enrichment/studio", re.compile(r"^Studio$"), _via_menu("Studio"), _lit_entry),
     Screen("studio-run", "", re.compile(r"\S"), _studio_run, _back),
     Screen(
-        "drawer", f"/pim/products/{EMPTY_SKU}?ai=1", re.compile(rf"^AI for (?!{EMPTY_SKU}$).+$"), _open_drawer, _drawer_close
+        "drawer",
+        f"/pim/products/{EMPTY_SKU}?ai=1",
+        re.compile(rf"^AI for (?!{EMPTY_SKU}$).+$"),
+        _open_drawer,
+        _drawer_close,
     ),
 ]
 DRAWERS = {"history", "drawer"}
@@ -232,17 +239,18 @@ def test_empty_states_say_what_to_do(admin_page: Page, viewport: str, nothing_pe
     empty.get_by_test_id("review-empty-clear").click()
     expect(page).not_to_have_url(re.compile(r"task="))
 
-    _goto(page, viewport, "/enrichment/memory")
+    _goto(page, viewport, "/enrichment/settings/memory")
     page.get_by_test_id("memory-subject").locator("input").fill(NO_HITS)
     expect(page.get_by_test_id("memory-empty")).to_contain_text("Nothing matches these filters.")
     page.get_by_test_id("memory-clear-filters").click()
     expect(page.get_by_test_id("memory-subject").locator("input")).to_have_value("")
 
-    _goto(page, viewport, "/enrichment/templates/no-such-template-e2e")
+    _goto(page, viewport, "/enrichment/settings/templates/no-such-template-e2e")
     expect(page.get_by_test_id("template-missing")).to_contain_text("This template no longer exists")
     expect(page.get_by_test_id("template-delete")).to_have_count(0)
     page.get_by_test_id("template-missing-back").click()
-    expect(page.get_by_role("heading", level=1)).to_have_text("AI templates")
+    expect(page).to_have_url(re.compile(r"/enrichment/settings/templates$"))
+    expect(page.get_by_role("heading", level=1)).to_have_text("Settings")
 
     _goto(page, viewport, f"/enrichment/edit/{GONE_ID}")
     expect(page.get_by_test_id("editor-missing")).to_be_visible()
@@ -260,29 +268,21 @@ def test_empty_states_say_what_to_do(admin_page: Page, viewport: str, nothing_pe
     _assert_layout(page, phone)
 
 
-def test_phone_tab_bar_reaches_profile_and_memory_and_crumbs_name_their_parent(admin_page: Page):
+def test_phone_tab_bar_reaches_review_studio_and_settings_and_crumbs_name_their_parent(admin_page: Page):
     page = admin_page
     page.set_viewport_size(VIEWPORTS["phone"])
     _open_panel(page, phone=True)
     tabs = _tab_bar(page).get_by_role("link")
-    expect(tabs).to_have_text(
-        [
-            "Enrichment Review",
-            "Studio",
-            "Company profile",
-            re.compile(r"^Memory"),
-            "Tasks",
-        ]
-    )
+    expect(tabs).to_have_text(["Enrichment Review", "Studio", _entry_name("Settings")])
 
-    page.goto(f"{CMS_BASE_URL}/enrichment/templates/no-such-template-e2e")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/templates/no-such-template-e2e")
     crumbs = page.get_by_role("navigation", name=re.compile("readcrumb", re.I))
     expect(crumbs.get_by_role("link", name="AI templates")).to_be_visible()
-    expect(_tab_bar(page).locator("[aria-current='page']")).to_have_count(0)
+    expect(_tab_bar(page).locator("[aria-current='page']")).to_have_text(_entry_name("Settings"))
 
 
 def test_desktop_sidebar_shows_the_current_entry_after_a_deep_link(admin_page: Page):
     page = admin_page
     page.set_viewport_size({"width": 1280, "height": 600})
-    page.goto(f"{CMS_BASE_URL}/enrichment/memory")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/memory")
     expect(_sidebar(page).locator("[aria-current='page']")).to_be_in_viewport()

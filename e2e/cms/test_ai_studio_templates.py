@@ -74,7 +74,7 @@ def test_templates_create_reorder_deactivate(admin_page: Page, enrichment_api: s
 
 
 def _create_template(page: Page) -> None:
-    page.goto(f"{CMS_BASE_URL}/enrichment/templates")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/templates")
     page.get_by_role("button", name="Toggle menu").click()
     page.get_by_role("menuitem", name="New template").click()
     page.get_by_test_id("template-label").locator("input").fill(LABEL)
@@ -84,14 +84,14 @@ def _create_template(page: Page) -> None:
     page.get_by_role("option", name="Meta title", exact=True).click()
     page.keyboard.press("Escape")
     page.get_by_test_id("template-save").click()
-    expect(page).to_have_url(re.compile(r"/enrichment/templates$"))
+    expect(page).to_have_url(re.compile(r"/enrichment/settings/templates$"))
 
 
 def _deactivate(page: Page, key: str) -> None:
-    page.goto(f"{CMS_BASE_URL}/enrichment/templates/{key}")
+    page.goto(f"{CMS_BASE_URL}/enrichment/settings/templates/{key}")
     page.get_by_test_id("template-active").get_by_role("switch").click()
     page.get_by_test_id("template-save").click()
-    expect(page).to_have_url(re.compile(r"/enrichment/templates$"))
+    expect(page).to_have_url(re.compile(r"/enrichment/settings/templates$"))
     row = page.get_by_test_id("templates-table").get_by_role("row").filter(has_text=LABEL)
     expect(row).not_to_contain_text("Offered")
     studio.shoot(page, "05-templates-deactivated", row)

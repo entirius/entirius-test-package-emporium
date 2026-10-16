@@ -1,6 +1,6 @@
 [project]
 name = "entirius-test-package-emporium"
-version = "1.1.0"
+version = "1.2.0rc1"
 description = "Test package of Entirius: the Emporium demo dataset and the BDD and end-to-end suites that verify a backend"
 keywords = ["entirius", "ecommerce", "bdd", "behave", "testing", "demo-data", "playwright"]
 classifiers = [

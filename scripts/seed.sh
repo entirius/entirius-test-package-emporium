@@ -355,6 +355,13 @@ if guard "Step 6: ContentDB Syncs" django_contentdb; then
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py sync_contentdb_channels"
 fi
 
+# Accounts keep their own product list (SKU + name per channel) for wishlists; while it is empty every wishlist
+# add answers 400 "No SKUs in accounts product representation". Filled from each PIM shop whose idx is an
+# accounts channel; re-runnable (existing SKUs are updated).
+if guard "Step 6: Accounts Product Representation" django_accounts django_pim; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py fill-accounts-product-representation-from-pim"
+fi
+
 # Agreements module fixtures + sync + clause sets + publish
 if guard "Step 6: Agreements" django_agreements; then
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py loaddata default_agreements"

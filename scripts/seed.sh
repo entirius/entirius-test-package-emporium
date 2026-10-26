@@ -357,9 +357,13 @@ fi
 
 # Accounts keep their own product list (SKU + name per channel) for wishlists; while it is empty every wishlist
 # add answers 400 "No SKUs in accounts product representation". Filled from each PIM shop whose idx is an
-# accounts channel; re-runnable (existing SKUs are updated).
+# accounts channel; re-runnable (existing SKUs are updated). One call per channel: a single call without
+# --pim_shop_idx carries the first shop's products into the next channel (accounts 5.0.0 never resets its list).
 if guard "Step 6: Accounts Product Representation" django_accounts django_pim; then
-    docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py fill-accounts-product-representation-from-pim"
+    ACCOUNTS_CHANNELS=$(docker exec -w "$SVC_DIR" "$CONTAINER" bash -c 'python manage.py shell --no-imports -c "from django_accounts.models import Channel; print(\" \".join(Channel.objects.values_list(\"idx\", flat=True)))"')
+    for ch in $ACCOUNTS_CHANNELS; do
+        docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py fill-accounts-product-representation-from-pim --pim_shop_idx $ch"
+    done
 fi
 
 # Agreements module fixtures + sync + clause sets + publish

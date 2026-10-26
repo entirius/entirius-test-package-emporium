@@ -9,3 +9,4 @@ TEST_GRATIS_STEPPED,GRATIS_STEP,gratis_stepped,"{""EUR"": {""300"": 1, ""600"": 
 TEST_AUTO_APPLY,AUTO,percent_discount,5,1000,all,false,true,true,5% automatic discount at min 1000 EUR (combinable),5% automatyczny rabat przy min 1000 EUR (łączalny)
 TEST_FIRST_ORDER_LOGGED,FIRST_LOGGED,percent_discount,20,0,first_order_logged,false,false,false,20% discount for first order (logged users),20% rabatu dla pierwszego zamówienia (zalogowani)
 TEST_COMBINABLE,COMBINE50,price_discount,50,500,all,false,true,false,50 EUR discount (combinable) at min 500 EUR,50 EUR rabatu (łączalny z innymi) przy min 500 EUR
+TEST_PRIORITY_COMBINABLE,PRIORITY5,percent_discount,5,0,all,false,true,false,5% discount (combinable) that outranks exclusive codes,5% rabatu (łączalny) z pierwszeństwem przed kodami wyłącznymi

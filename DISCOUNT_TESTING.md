@@ -46,7 +46,7 @@ Fixture (YAML)
 
 ## Test Coverage
 
-### 10 Discount Rules
+### 11 Discount Rules
 
 | Rule Name | Code | Modifier | Coverage |
 |-----------|------|----------|----------|
@@ -60,6 +60,7 @@ Fixture (YAML)
 | TEST_AUTO_APPLY | AUTO | percent_discount (auto) | Automatic application |
 | TEST_FIRST_ORDER_LOGGED | FIRST_LOGGED | percent_discount (target) | User targeting |
 | TEST_COMBINABLE | COMBINE50 | price_discount (combinable) | Stackable discounts |
+| TEST_PRIORITY_COMBINABLE | PRIORITY5 | percent_discount (combinable, priority 5) | Blocks exclusive codes |
 
 ### 35+ Test Scenarios
 
@@ -311,7 +312,7 @@ assert rule["extra_value"] == "10"
 
 ```python
 rules = load_discount_rules(package_path)
-assert len(rules) == 10, f"Expected 10 rules, found {len(rules)}"
+assert len(rules) == 11, f"Expected 11 rules, found {len(rules)}"
 ```
 
 ## API Endpoint Patterns (TBD)

@@ -1002,7 +1002,7 @@
     extra_value: 5
     extension:
       description: "5% automatic discount at 1000 PLN (no code needed)"
-    priority: 5
+    priority: 20
     combine_with_other_rules: true
     automatic_applications: true
     is_active: true
@@ -1044,6 +1044,46 @@
   fields:
     rule: 171
     code: COMBINE50
+    max_used: 999999
+    max_uses_per_user: 999999
+    current_used: 0
+    active_from: null
+    active_to: null
+    max_products_qty: null
+
+# ─────────────────────────────────────────────────────────────────────────
+# 8.3 Combinable Discount That Outranks Exclusive Codes
+# Priority 5 beats every exclusive code (priority 10): entered together with one,
+# the exclusive code is blocked (DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE).
+# ─────────────────────────────────────────────────────────────────────────
+
+- model: django_checkout.discountrulecode
+  pk: 172
+  fields:
+    name: TEST_PRIORITY_COMBINABLE
+    free_shipping: false
+    min_order_amount: '0.00'
+    free_order: false
+    is_omnibus: false
+    target: all
+    modifier: percent_discount
+    extra_value: 5
+    extension:
+      description: "5% off, combinable, priority 5 (blocks exclusive codes)"
+    priority: 5
+    combine_with_other_rules: true
+    automatic_applications: false
+    is_active: true
+    show_when_invalid: true
+    channels: [2]
+    free_shipping_methods: []
+    currencies: [1]
+
+- model: django_checkout.discountcode
+  pk: 172
+  fields:
+    rule: 172
+    code: PRIORITY5
     max_used: 999999
     max_uses_per_user: 999999
     current_used: 0

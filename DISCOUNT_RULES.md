@@ -4,7 +4,7 @@ Comprehensive test discount rules for automated testing of the Volkanos checkout
 
 ## Overview
 
-The discount rules test package provides **10 discount rules** covering all major discount types and features:
+The discount rules test package provides **11 discount rules** covering all major discount types and features:
 
 - Percent discounts (simple and progressive)
 - Fixed price discounts
@@ -115,6 +115,7 @@ The fixture contains two model types:
 - **Min Order:** 1000 PLN
 - **Combinable:** Yes
 - **Automatic:** Yes
+- **Priority:** 20 (after the exclusive codes at 10, so it never blocks them)
 - **Description:** Automatic 5% discount at 1000 PLN, combinable with other discounts
 
 ### 9. TEST_FIRST_ORDER_LOGGED (Code: FIRST_LOGGED)
@@ -130,6 +131,15 @@ The fixture contains two model types:
 - **Min Order:** 500 PLN
 - **Combinable:** Yes
 - **Description:** Fixed 50 PLN discount, can be combined with other discounts
+
+### 11. TEST_PRIORITY_COMBINABLE (Code: PRIORITY5)
+- **Type:** percent_discount
+- **Value:** 5%
+- **Min Order:** 0 PLN
+- **Combinable:** Yes
+- **Priority:** 5 (wins arbitration over the exclusive codes at 10)
+- **Description:** Entered together with an exclusive code, it blocks that code (lowest priority wins; a
+  combinable winner keeps only combinable rules). Only in `django_checkout.discounts.comprehensive.yaml`.
 
 ## Usage
 

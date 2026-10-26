@@ -117,3 +117,25 @@ def step_every_country_has_shipping(context, currency):
         if not methods:
             missing.append(country_code)
     assert not missing, f"Countries without any shipping method: {missing}"
+
+
+@when('I apply the v2 discount codes "{codes}"')
+def step_apply_v2_discount_codes(context, codes):
+    body = {"codes": [{"code": code.strip()} for code in codes.split(",")]}
+    resp = context.api.patch(_v2_url(context, f"carts/{context.cart_id}/discounts/"), json=body)
+    assert resp.status_code == 200, f"Discounts patch failed: {resp.status_code} {resp.text[:300]}"
+    _store_response(context, resp)
+
+
+@then('the only code discount in the v2 cart should be "{code}"')
+def step_only_code_discount(context, code):
+    discounts = context.response_data.get("discounts") or []
+    entered = [d["code"] for d in discounts if not d.get("is_automatic") and d.get("status") == "valid"]
+    assert entered == [code], f"Expected only '{code}' applied, got: {discounts}"
+
+
+@then('the v2 response should report the discount error "{code}"')
+def step_v2_discount_error(context, code):
+    errors = context.response_data.get("_errors") or []
+    codes = [e.get("code") for e in errors if e.get("scope") == "discounts"]
+    assert code in codes, f"Expected discount error '{code}', got: {errors}"

@@ -14,7 +14,7 @@ Feature: Checkout API -- Discount Rules
 
   Scenario: Discount rules CSV exists and contains expected test rules
     When the CSV discount rules are loaded
-    Then the discount rules count should be 10
+    Then the discount rules count should be 11
     And the discount rules should contain rule with name "TEST_PERCENT_10"
     And the discount rules should contain rule with name "TEST_PRICE_50"
     And the discount rules should contain rule with name "TEST_CHEAPEST_GRATIS"
@@ -25,6 +25,7 @@ Feature: Checkout API -- Discount Rules
     And the discount rules should contain rule with name "TEST_AUTO_APPLY"
     And the discount rules should contain rule with name "TEST_FIRST_ORDER_LOGGED"
     And the discount rules should contain rule with name "TEST_COMBINABLE"
+    And the discount rules should contain rule with name "TEST_PRIORITY_COMBINABLE"
 
   # ─────────────────────────────────────────────────────────────────────
   # Simple Percent Discount (10%)
@@ -116,6 +117,23 @@ Feature: Checkout API -- Discount Rules
     And I add product "ENT-O003" with quantity 1 to cart
     When I apply discount code "COMBINE50"
     Then the discount should not be applied
+
+  # The lowest priority wins arbitration and a combinable winner keeps only combinable rules:
+  # PRIORITY5 (priority 5, combinable) blocks PERCENT10 (priority 10, exclusive). The v2 cart keeps
+  # the summary ONE_OR_MORE_DISCOUNT_INVALID and names the reason per rejected code.
+  Scenario: An exclusive code is blocked by a higher-priority combinable code
+    Given I create a v2 cart with product "ENT-S001" quantity 1 in currency "EUR"
+    When I apply the v2 discount codes "PRIORITY5, PERCENT10"
+    Then the only code discount in the v2 cart should be "PRIORITY5"
+    And the v2 response should report the discount error "ONE_OR_MORE_DISCOUNT_INVALID"
+    And the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE"
+    And the v2 rejection of discount code "PERCENT10" should name the blocking code "PRIORITY5"
+
+  Scenario: The same code sent twice applies once
+    Given I create a v2 cart with product "ENT-S001" quantity 1 in currency "EUR"
+    When I apply the v2 discount codes "PERCENT10, PERCENT10"
+    Then the only code discount in the v2 cart should be "PERCENT10"
+    And the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_DUPLICATE_RULE"
 
   # ─────────────────────────────────────────────────────────────────────
   # Progressive Gratis (Gratis Stepped)

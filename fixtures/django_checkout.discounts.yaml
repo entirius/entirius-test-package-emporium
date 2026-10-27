@@ -194,7 +194,7 @@
     modifier: percent_discount
     extra_value: 5
     extension: {}
-    priority: 5
+    priority: 20
     combine_with_other_rules: true
     automatic_applications: true
     is_active: false

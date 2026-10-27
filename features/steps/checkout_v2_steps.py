@@ -139,3 +139,23 @@ def step_v2_discount_error(context, code):
     errors = context.response_data.get("_errors") or []
     codes = [e.get("code") for e in errors if e.get("scope") == "discounts"]
     assert code in codes, f"Expected discount error '{code}', got: {errors}"
+
+
+def _rejection(context, code):
+    errors = context.response_data.get("_errors") or []
+    rejections = [e for e in errors if e.get("scope") == "discounts" and (e.get("meta") or {}).get("code") == code]
+    assert len(rejections) == 1, f"Expected one rejection of '{code}', got: {errors}"
+    return rejections[0]
+
+
+@then('the v2 response should reject discount code "{code}" at "{field}" with "{error}"')
+def step_v2_discount_rejected(context, code, field, error):
+    rejection = _rejection(context, code)
+    assert (rejection["field"], rejection["code"]) == (field, error), f"Unexpected rejection: {rejection}"
+
+
+@then('the v2 rejection of discount code "{code}" should name the blocking code "{blocking}"')
+def step_v2_rejection_blocking_code(context, code, blocking):
+    meta = _rejection(context, code)["meta"]
+    assert meta.get("blocking_code") == blocking, f"Unexpected meta: {meta}"
+    assert "blocking_priority" not in meta, f"Rule priority leaked: {meta}"

@@ -99,6 +99,10 @@ Fixture (YAML)
 - Stack with automatic discount
 - Non-combinable rejection
 
+**Rejection Reasons, v2** (2 scenarios)
+- PRIORITY5 blocks PERCENT10: `DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE` at `codes[1].code`, `blocking_code` PRIORITY5
+- The same code sent twice: `DISCOUNT_DUPLICATE_RULE` for the second copy
+
 **Edge Cases** (7 scenarios)
 - Invalid code
 - Expired code
@@ -222,6 +226,19 @@ Then the error message should indicate discounts cannot be combined
 Then the error message should indicate code not found
 Then the error message should indicate code expired
 Then the error message should indicate cart is empty
+```
+
+### Verification - v2 Rejection Reasons
+
+A v2 cart write keeps `ONE_OR_MORE_DISCOUNT_INVALID` in `_errors` and adds one detail per rejected code
+(`field` `codes[i].code`, a `DISCOUNT_*` code, `meta.code`); needs entirius-django-checkout 10.0.1.
+
+```gherkin
+When I apply the v2 discount codes "PRIORITY5, PERCENT10"
+Then the only code discount in the v2 cart should be "PRIORITY5"
+Then the v2 response should report the discount error "ONE_OR_MORE_DISCOUNT_INVALID"
+Then the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE"
+Then the v2 rejection of discount code "PERCENT10" should name the blocking code "PRIORITY5"
 ```
 
 ## Implementation Status

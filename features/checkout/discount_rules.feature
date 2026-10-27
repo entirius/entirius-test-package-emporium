@@ -119,14 +119,21 @@ Feature: Checkout API -- Discount Rules
     Then the discount should not be applied
 
   # The lowest priority wins arbitration and a combinable winner keeps only combinable rules:
-  # PRIORITY5 (priority 5, combinable) blocks PERCENT10 (priority 10, exclusive). The checkout
-  # rejects PERCENT10 as blocked_by_exclusive_rule; the v2 cart response reports invalid codes
-  # only as ONE_OR_MORE_DISCOUNT_INVALID so far (per-code reasons are not in `_errors` yet).
+  # PRIORITY5 (priority 5, combinable) blocks PERCENT10 (priority 10, exclusive). The v2 cart keeps
+  # the summary ONE_OR_MORE_DISCOUNT_INVALID and names the reason per rejected code.
   Scenario: An exclusive code is blocked by a higher-priority combinable code
     Given I create a v2 cart with product "ENT-S001" quantity 1 in currency "EUR"
     When I apply the v2 discount codes "PRIORITY5, PERCENT10"
     Then the only code discount in the v2 cart should be "PRIORITY5"
     And the v2 response should report the discount error "ONE_OR_MORE_DISCOUNT_INVALID"
+    And the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE"
+    And the v2 rejection of discount code "PERCENT10" should name the blocking code "PRIORITY5"
+
+  Scenario: The same code sent twice applies once
+    Given I create a v2 cart with product "ENT-S001" quantity 1 in currency "EUR"
+    When I apply the v2 discount codes "PERCENT10, PERCENT10"
+    Then the only code discount in the v2 cart should be "PERCENT10"
+    And the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_DUPLICATE_RULE"
 
   # ─────────────────────────────────────────────────────────────────────
   # Progressive Gratis (Gratis Stepped)

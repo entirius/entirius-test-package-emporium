@@ -46,7 +46,7 @@ Fixture (YAML)
 
 ## Test Coverage
 
-### 10 Discount Rules
+### 11 Discount Rules
 
 | Rule Name | Code | Modifier | Coverage |
 |-----------|------|----------|----------|
@@ -60,6 +60,7 @@ Fixture (YAML)
 | TEST_AUTO_APPLY | AUTO | percent_discount (auto) | Automatic application |
 | TEST_FIRST_ORDER_LOGGED | FIRST_LOGGED | percent_discount (target) | User targeting |
 | TEST_COMBINABLE | COMBINE50 | price_discount (combinable) | Stackable discounts |
+| TEST_PRIORITY_COMBINABLE | PRIORITY5 | percent_discount (combinable, priority 5) | Blocks exclusive codes |
 
 ### 35+ Test Scenarios
 
@@ -97,6 +98,10 @@ Fixture (YAML)
 - Apply combinable alone
 - Stack with automatic discount
 - Non-combinable rejection
+
+**Rejection Reasons, v2** (2 scenarios)
+- PRIORITY5 blocks PERCENT10: `DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE` at `codes[1].code`, `blocking_code` PRIORITY5
+- The same code sent twice: `DISCOUNT_DUPLICATE_RULE` for the second copy
 
 **Edge Cases** (7 scenarios)
 - Invalid code
@@ -223,6 +228,19 @@ Then the error message should indicate code expired
 Then the error message should indicate cart is empty
 ```
 
+### Verification - v2 Rejection Reasons
+
+A v2 cart write keeps `ONE_OR_MORE_DISCOUNT_INVALID` in `_errors` and adds one detail per rejected code
+(`field` `codes[i].code`, a `DISCOUNT_*` code, `meta.code`); needs entirius-django-checkout 10.0.1.
+
+```gherkin
+When I apply the v2 discount codes "PRIORITY5, PERCENT10"
+Then the only code discount in the v2 cart should be "PRIORITY5"
+Then the v2 response should report the discount error "ONE_OR_MORE_DISCOUNT_INVALID"
+Then the v2 response should reject discount code "PERCENT10" at "codes[1].code" with "DISCOUNT_BLOCKED_BY_EXCLUSIVE_RULE"
+Then the v2 rejection of discount code "PERCENT10" should name the blocking code "PRIORITY5"
+```
+
 ## Implementation Status
 
 ### ✅ Complete
@@ -311,7 +329,7 @@ assert rule["extra_value"] == "10"
 
 ```python
 rules = load_discount_rules(package_path)
-assert len(rules) == 10, f"Expected 10 rules, found {len(rules)}"
+assert len(rules) == 11, f"Expected 11 rules, found {len(rules)}"
 ```
 
 ## API Endpoint Patterns (TBD)

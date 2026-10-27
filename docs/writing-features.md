@@ -46,6 +46,12 @@ The shared step vocabulary and the checklist for a new feature file.
   the {first|second} seed channel`, `the caller presents the token "{alias}" in "{header}"`, `the customer account of
   user "{alias}" belongs to the {position} seed channel` (Django admin form — the signup is not available on zeno).
   Legacy keys are chosen by channel: `… legacy "{scope}" token pinned to the {first|second} seed channel …`.
+- Admin tokens (`@access-admin-tokens`, same file): `a token "{alias}" of application "{app}" with scopes "{a, b}"`,
+  `I issue a token of application "{app}" with scopes "{a, b}"` (an expected refusal; a token created anyway is
+  revoked at the end), `I exchange the token "{alias}"` (the JWT stays in `context.exchanged`, never in
+  `context.saved`), `the exchange answer is a Bearer JWT valid for {n} seconds`, `I send {METHOD} to "{path}" with the
+  exchanged JWT of "{alias}"`, `the service account of application "{app}" signs in with the password "{p}"`,
+  `the service account of application "{app}" is not in the staff list`.
 - Clock (`features/steps/clock.py`, needs the channel + admin auth): `the channel clock is {weekday} {time}`,
   `the beat send task has run`, `the IMAP poll task has run`.
 - Scenarios needing an empty mailbox purge in their own `Background` — never rely on order (`seed.sh` purges

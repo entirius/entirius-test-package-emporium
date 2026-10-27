@@ -4,11 +4,11 @@ Feature: Access administration — catalogue, custom roles, grants and the audit
   I want to compose roles from the catalogue and grant them to staff
   So that a permission is added and taken away by a grant, and every change is audited
 
-  Scenario: AA-01 the catalogue offers 49 areas and 9 token scopes
+  Scenario: AA-01 the catalogue offers 51 areas and 9 token scopes
     Given I am authenticated as an admin user
     When I GET the v2 admin endpoint "access/admin/catalogue/"
     Then the response status should be 200
-    And the catalogue should offer 49 areas and 9 token scopes
+    And the catalogue should offer 51 areas and 9 token scopes
 
   @module-faq
   Scenario: AA-02 a custom role granted to the viewer opens FAQ writes until the grant is revoked

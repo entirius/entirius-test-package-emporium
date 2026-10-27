@@ -27,7 +27,7 @@ from behave import given, step, then, when
 from entirius_tests.api_client import CONTACT_FORM_API_KEYS
 from entirius_tests.auth import obtain_jwt_token
 
-GATE_ISSUES = frozenset({"ACCESS_DENIED", "STAFF_ONLY", "UNMAPPED_ROUTE"})
+GATE_ISSUES = frozenset({"ACCESS_DENIED", "STAFF_ONLY", "UNMAPPED_ROUTE", "TOKEN_INACTIVE"})
 SEED_CHANNEL_POSITIONS = {"first": 0, "second": 1}
 # ACCESS_TOKEN_LAST_USED_INTERVAL_S (300 s) plus slack: a token used "just now" carries a recent last_used_at.
 LAST_USED_WINDOW = timedelta(minutes=10)
@@ -932,3 +932,69 @@ def step_customer_channel(context, alias, position):
     form["csrfmiddlewaretoken"] = session.cookies.get("csrftoken")
     response = session.post(url, data=form, headers={"Referer": url}, allow_redirects=False, timeout=30)
     assert response.status_code == 302, f"customer change form: HTTP {response.status_code} (a form error)"
+
+
+# --- Admin scopes: exchanged JWTs (access 1.1.0) ---
+
+EXCHANGE_PATH = "access/token/exchange/"
+EXCHANGE_TTL_S = 300  # ACCESS_TOKEN_EXCHANGE_TTL_S default
+
+
+def _scope_list(scopes: str) -> list[str]:
+    return [scope.strip() for scope in scopes.split(",") if scope.strip()]
+
+
+@given('a token "{alias}" of application "{application}" with scopes "{scopes}"')
+def step_token_scopes(context, alias, application, scopes):
+    _issue(context, alias, application, {"scopes": _scope_list(scopes)})
+
+
+@when('I issue a token of application "{application}" with scopes "{scopes}"')
+def step_issue_refused(context, application, scopes):
+    path = f"access/admin/applications/{context.saved[application]}/tokens/"
+    response = _admin(context, "POST", path, {"name": "bdd refused", "scopes": _scope_list(scopes)})
+    if response.status_code == 201:
+        context.add_cleanup(_cleanup, context, "POST", f"access/admin/tokens/{response.json()['id']}/revoke/")
+    _store(context, response)
+
+
+@when('I exchange the token "{alias}"')
+def step_exchange(context, alias):
+    url = context.api.url(api_path(EXCHANGE_PATH))
+    response = requests.post(url, headers={"X-API-KEY": context.raw_tokens[alias]}, timeout=30)
+    _store(context, response)
+    if response.status_code == 200:
+        context.exchanged = {**(getattr(context, "exchanged", None) or {}), alias: response.json()["access"]}
+        context.response_data = {key: value for key, value in response.json().items() if key != "access"}
+
+
+@then("the exchange answer is a Bearer JWT valid for {seconds:d} seconds")
+def step_exchange_answer(context, seconds):
+    assert context.response.headers.get("Cache-Control") == "no-store", context.response.headers
+    assert context.response_data == {"token_type": "Bearer", "expires_in": seconds}, context.response_data
+    assert seconds == EXCHANGE_TTL_S
+
+
+@when('I send {method:w} to "{path}" with the exchanged JWT of "{alias}"')
+def step_send_exchanged(context, method, path, alias):
+    url = context.api.url(api_path(resolve(path, context)))
+    headers = {"Authorization": f"Bearer {context.exchanged[alias]}"}
+    body = {} if method in ("POST", "PUT", "PATCH") else None
+    _store(context, requests.request(method, url, json=body, headers=headers, timeout=30))
+
+
+def _service_username(context, application: str) -> str:
+    return f"access-app-{context.saved[application]}"
+
+
+@when('the service account of application "{application}" signs in with the password "{password}"')
+def step_service_login(context, application, password):
+    body = {"username": _service_username(context, application), "password": password}
+    _store(context, requests.post(f"{context.api.base_url}/api/token/", json=body, timeout=30))
+
+
+@then('the service account of application "{application}" is not in the staff list')
+def step_service_not_staff_listed(context, application):
+    username = _service_username(context, application)
+    body = _admin(context, "GET", "access/admin/staff/", params={"search": username}).json()
+    assert [row for row in body["results"] if row["username"] == username] == [], body["results"]

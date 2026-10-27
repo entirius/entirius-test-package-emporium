@@ -34,6 +34,11 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   sensitive routes, a pinned erase token erases only in its channel, superuser `gate.bypass` audit,
   secret hygiene. Re-runnable on one database. Service/worker logs and the Redis key list of a run can be checked
   with `scripts/secret_scan.py --fixtures fixtures` (`docs/harness.md`).
+- `@access-admin-tokens` (`features/access/admin_tokens.feature`, also tagged `@access` and `@module-pim`; needs
+  entirius-django-access 1.1.0 or later): an application key with admin scopes exchanged for a short-lived admin JWT
+  at `access/token/exchange/` — reads and writes limited to the key's areas, revocation inside the JWT lifetime
+  (`TOKEN_INACTIVE`), refused scope mixes and `access.manage`, a key without admin scopes, no password sign-in for the
+  application's service account. Re-runnable on one database.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

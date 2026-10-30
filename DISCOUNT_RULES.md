@@ -98,6 +98,8 @@ The fixture contains two model types:
 - **Value:** Progressive (1 @ 300, 2 @ 600, 3 @ 1000 PLN)
 - **Min Order:** 0 PLN
 - **Description:** Progressive gratis products by cart value
+- **Combinable:** yes, so TEST_AUTO_APPLY does not block it on 1000+ carts
+- **Gift pool:** the `ottomans` category, set by `scripts/import-package.sh` (a gratis rule without a filter offers nothing)
 
 ```json
 {

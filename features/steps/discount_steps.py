@@ -433,7 +433,7 @@ def step_verify_gratis_available(context):
 def step_verify_gratis_count(context, count):
     """Verify exact number of gratis products available for GRATIS_STEP rule."""
     cart_section = context.cart_data.get("cart", {})
-    gratis_rules = cart_section.get("gratis_rules") or []
+    gratis_rules = cart_section.get("available_gratis_rules") or []
 
     # Find GRATIS_STEP rule (or rule matching last applied discount code)
     gratis_step_rules = [r for r in gratis_rules if "STEP" in str(r.get("code", ""))]
@@ -443,7 +443,7 @@ def step_verify_gratis_count(context, count):
         actual_count = gratis_step_rules[0].get("max_available_quantity", 0)
         assert actual_count == count, f"Expected {count} gratis products available for GRATIS_STEP, got {actual_count}"
     else:
-        assert False, f"Expected GRATIS_STEP rule with {count} gratis products, but not found in gratis_rules"
+        assert False, f"Expected GRATIS_STEP rule with {count} gratis products, but not found in available_gratis_rules"
 
 
 # ─────────────────────────────────────────────────────────────────────────

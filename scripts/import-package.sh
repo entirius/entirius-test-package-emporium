@@ -222,6 +222,20 @@ if guard "import 6 Product Positions" django_pim_csv; then
     done
 fi
 
+if guard "import 6b Gratis Pool" django_checkout django_pim; then
+    # A gratis rule without a product filter offers nothing, and a filter's categories cannot come from the fixture:
+    # they have no fixed pk. Only the EUR rule gets a pool: the package has no PLN prices, and the PLN rule under the
+    # same code GRATIS_STEP hides this one once it has a filter.
+    python manage.py shell --no-imports -c "
+from django_checkout.models import DiscountRuleCode
+from django_pim.models import ProductCategory
+
+rule = DiscountRuleCode.objects.get(name='TEST_GRATIS_STEPPED', currencies__iso3='EUR')
+pool, _ = rule.discount_mode_of_actions_rule.get_or_create(is_inclusion_or_exclusion='inclusion', take_common_part=False)
+pool.categories.set(ProductCategory.objects.filter(idx='ottomans', shop__idx__in=rule.channels.values_list('idx', flat=True)))
+"
+fi
+
 if guard "import 7 Prices" django_pricemanager; then
     for ch in "${CHANNEL_LIST[@]}"; do
         CSV="$PACKAGE_DIR/pricelist--${ch}.csv"

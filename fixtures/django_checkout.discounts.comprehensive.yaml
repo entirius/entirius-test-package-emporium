@@ -1084,7 +1084,9 @@
     show_when_invalid: true
     channels: [2]
     free_shipping_methods: []
-    currencies: [1]
+    # EUR too: the scenario that uses it ("An exclusive code is blocked by a higher-priority combinable code")
+    # runs on an EUR cart, and checkout honours a rule's currencies.
+    currencies: [1, 3]
 
 - model: django_checkout.discountcode
   pk: 172

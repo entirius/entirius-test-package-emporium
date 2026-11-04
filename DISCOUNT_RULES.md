@@ -159,6 +159,8 @@ A new rule that reuses a code takes the currencies the other one leaves out. Eve
 - **Min Order:** 0 PLN
 - **Combinable:** Yes
 - **Priority:** 5 (wins arbitration over the exclusive codes at 10)
+- **Currencies:** PLN and EUR (the scenario's cart is EUR; a rule outside the cart currency is refused as
+  `DISCOUNT_CURRENCY_NOT_SUPPORTED`)
 - **Description:** Entered together with an exclusive code, it blocks that code (lowest priority wins; a
   combinable winner keeps only combinable rules). Only in `django_checkout.discounts.comprehensive.yaml`.
 

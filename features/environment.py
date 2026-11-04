@@ -88,6 +88,12 @@ def before_all(context):
     context.test_username = os.environ.get("TEST_USERNAME", ud.get("test_username", "testuser"))
     context.test_password = os.environ.get("TEST_PASSWORD", ud.get("test_password", "testuser123"))
 
+    # X-API-KEY of the agreements public writes (scope agreements.subscribe): the service's AGREEMENTS_API_KEY,
+    # zeno's dev default unless its .env sets another.
+    context.agreements_api_key = os.environ.get(
+        "AGREEMENTS_API_KEY", ud.get("agreements_api_key", "zeno-dev-only-newsletter-subscribe-key")
+    )
+
     # Access role users of scripts/seed-access.py (dev defaults: <role> / <role>123)
     context.staff_users = {
         role: (

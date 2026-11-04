@@ -19,6 +19,7 @@ The discount rules test package provides **11 discount rules** covering all majo
 | File | Purpose |
 |------|---------|
 | `fixtures/django_checkout.discounts.yaml` | Django fixture (loaddata) -- discount rules and codes |
+| `fixtures/django_checkout.discounts.comprehensive.yaml` | the wider set (every modifier, filters, PLN copies); loaded first, so `discounts.yaml` replaces its pks 100-103 |
 | `package/discount-rules.csv` | CSV metadata for BDD test verification |
 
 ## Fixture Structure
@@ -35,7 +36,7 @@ The fixture contains two model types:
    - `combine_with_other_rules` -- Allow stacking with other discounts
    - `automatic_applications` -- Apply without code
    - `channels` -- List of channel PKs (2 = default-europe)
-   - `currencies` -- List of currency PKs (1 = PLN)
+   - `currencies` -- List of currency PKs (1 = PLN, 3 = EUR); empty = every currency
 
 2. **DiscountCode** -- User-facing discount code
    - `rule` -- FK to DiscountRuleCode
@@ -43,6 +44,26 @@ The fixture contains two model types:
    - `max_used` -- Usage limit (0 = unlimited)
    - `max_uses_per_user` -- Per-user limit (0 = unlimited)
    - `active_from` / `active_to` -- Date range (null = always active)
+
+## One Code per Channel and Currency
+
+Checkout refuses a code that another rule of the same channel already holds in an overlapping currency (a rule
+without currencies holds every currency), and `manage.py check --database default --tag checkout.discount_codes`
+lists the ones stored before. The same code on rules of disjoint currencies is fine, so the seed keeps one code per
+currency: the EUR rule in `discounts.yaml`, the PLN copy in `discounts.comprehensive.yaml`, both in
+`default-europe`. The BDD carts are EUR, so the scenarios run on the EUR rule.
+
+| Code | EUR rule (pk) | PLN rule (pk) |
+|------|---------------|---------------|
+| `CHEAPEST_FREE` | 102 | 130 |
+| `EXPENSIVE_FREE` | 103 | 131 |
+| `FREESHIP` | 104 | 150 |
+| `STEP_PRICE_PCT` | 105 | 120 |
+| `GRATIS_STEP` | 106 | 140 |
+| `FIRST_LOGGED` | 108 | 160 |
+| `COMBINE50` | 109 | 171 |
+
+A new rule that reuses a code takes the currencies the other one leaves out. Every other code sits on one rule.
 
 ## Test Rules Reference
 

@@ -46,19 +46,19 @@ menu-scrolling tests — see `categories--*.csv`.
      writes to ProductAttributeImage (variant swatches), not exposed through any
      public API (Matrix). No BDD coverage possible until an endpoint exists. -->
 
-## Import pipeline (11 steps)
+## Import pipeline (10 steps)
 
 1. **Fixtures** — `loaddata --format=yaml` (includes discount rules)
 2. **PIM config** — channels, features, feature-sets, feature positions
 3. **Attributes** — badge, brand, series, options
 4. **Categories** — per channel
 5. **Products** — 33 products per channel (with pictures if `../images/` exists)
-6. **Positions** — product ordering per channel
-7. **Gratis pool** — the `ottomans` category as the gift pool of `GRATIS_STEP` (EUR)
-8. **Prices** — USD + EUR + `manage-pricelists` + bundle component prices
-9. **Thumbnails** — `pim-thumbs-generate` per channel (WebP 90%, 5 square sizes: 160–1400px)
-10. **QMS** — quantities (requires Celery)
-11. **Matrix** — read model generation
+6. **Positions** — product ordering per channel; then `6b` **Gratis pool** — the `ottomans` category as the gift
+   pool of `GRATIS_STEP` (EUR)
+7. **Prices** — USD + EUR + `manage-pricelists` + bundle component prices
+8. **Thumbnails** — `pim-thumbs-generate` per channel (WebP 90%, 5 square sizes: 160–1400px)
+9. **QMS** — quantities (requires Celery)
+10. **Matrix** — read model generation
 
 Entry points: `../scripts/seed.sh` (host side) →
 `../scripts/import-package.sh` (container side).

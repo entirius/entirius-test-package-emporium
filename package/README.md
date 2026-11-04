@@ -73,4 +73,5 @@ See [`../devtools/README.md`](../devtools/README.md).
 
 Simple (percent, fixed), gratis products (cheapest, most expensive, progressive),
 free shipping, progressive steps, automatic application, combinable rules, user targeting.
+A code is unique per channel and currency: seven codes have an EUR rule and a PLN copy, none share a currency.
 See [`../DISCOUNT_RULES.md`](../DISCOUNT_RULES.md).

@@ -264,7 +264,8 @@ print(f'Created {count} bundle component prices')
 "
 fi
 
-if guard "import 7c Thumbnails" django_pim; then
+# The pictures come only from the product import: without it pim-thumbs-generate finds none and fails.
+if guard "import 7c Thumbnails" django_pim django_pim_csv; then
     if [ -z "$SKIP_PICS" ]; then
         echo "Generating thumbnails for imported images..."
         # Soft for one known cause only: a service without THUMBS_CONFIG has no resizer.

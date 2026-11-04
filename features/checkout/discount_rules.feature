@@ -137,20 +137,18 @@ Feature: Checkout API -- Discount Rules
 
   # ─────────────────────────────────────────────────────────────────────
   # Progressive Gratis (Gratis Stepped)
-  # TODO: Requires DiscountModeOfAction fixture records to define eligible
-  #       products for gratis selection. Re-enable when fixture is ready.
   # ─────────────────────────────────────────────────────────────────────
 
-  # Scenario: Progressive gratis at 300 PLN gives 1 item
-  #   Given I have an empty cart
-  #   And I add products totaling at least 300 PLN
-  #   When I apply discount code "GRATIS_STEP"
-  #   Then 1 gratis products should be available
+  Scenario: Progressive gratis at 300 PLN gives 1 item
+    Given I have an empty cart
+    And I add products totaling at least 300 PLN
+    When I apply discount code "GRATIS_STEP"
+    Then 1 gratis products should be available
 
-  # Scenario: Progressive gratis at 1000 PLN gives 3 items
-  #   Given I have an empty cart
-  #   And I add products totaling at least 1000 PLN
-  #   When I apply discount code "GRATIS_STEP"
-  #   Then 3 gratis products should be available
+  Scenario: Progressive gratis at 1000 PLN gives 3 items
+    Given I have an empty cart
+    And I add products totaling at least 1000 PLN
+    When I apply discount code "GRATIS_STEP"
+    Then 3 gratis products should be available
 
 

@@ -1431,7 +1431,8 @@
 #   ✓ Extension field for marketing data
 #
 # NOTE: M2M relationships (categories, products, attributes) for filters
-# need to be set via management command after loaddata, as they reference
-# idx values, not PKs.
+# need to be set after loaddata, as they reference idx values, not PKs.
+# scripts/import-package.sh sets only the pool of GRATIS_STEP in EUR (import 6b
+# Gratis Pool); the filters in this file stay empty.
 #
 # ═══════════════════════════════════════════════════════════════════════════

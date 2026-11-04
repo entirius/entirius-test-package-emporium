@@ -172,7 +172,7 @@
         '1000': 3
     extension: {}
     priority: 10
-    combine_with_other_rules: false
+    combine_with_other_rules: true
     automatic_applications: false
     is_active: true
     show_when_invalid: true

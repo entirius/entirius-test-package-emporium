@@ -53,7 +53,8 @@ menu-scrolling tests — see `categories--*.csv`.
 3. **Attributes** — badge, brand, series, options
 4. **Categories** — per channel
 5. **Products** — 33 products per channel (with pictures if `../images/` exists)
-6. **Positions** — product ordering per channel
+6. **Positions** — product ordering per channel; then `6b` **Gratis pool** — the `ottomans` category as the gift
+   pool of `GRATIS_STEP` (EUR)
 7. **Prices** — USD + EUR + `manage-pricelists` + bundle component prices
 8. **Thumbnails** — `pim-thumbs-generate` per channel (WebP 90%, 5 square sizes: 160–1400px)
 9. **QMS** — quantities (requires Celery)

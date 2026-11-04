@@ -68,19 +68,29 @@ def step_get_v2_no_auth(context, path):
     context.response_data = resp.json()
 
 
-@when('I POST to the v2 public endpoint "{path}" with body')
-def step_post_v2_no_auth(context, path):
+def _post_v2_public(context, path: str, headers: dict[str, str]) -> None:
     import json
 
     resolved = _resolve_v2_path(path, context)
     url = context.api.url(_convert_v2_url(resolved))
     body = json.loads(context.text)
-    resp = requests.post(url, json=body, timeout=30)
+    resp = requests.post(url, json=body, headers=headers, timeout=30)
     context.response = resp
     try:
         context.response_data = resp.json()
     except Exception:
         context.response_data = {}
+
+
+@when('I POST to the v2 public endpoint "{path}" with body')
+def step_post_v2_no_auth(context, path):
+    _post_v2_public(context, path, {})
+
+
+@when('I POST to the v2 public endpoint "{path}" with the storefront agreements key and body')
+def step_post_v2_agreements_key(context, path):
+    """The storefront's ``X-API-KEY`` (``AGREEMENTS_API_KEY``, scope ``agreements.subscribe``) and no JWT."""
+    _post_v2_public(context, path, {"X-API-KEY": context.agreements_api_key})
 
 
 @when('I GET the v2 admin endpoint "{path}"')

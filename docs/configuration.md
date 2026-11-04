@@ -22,6 +22,7 @@ auto-discovery (`discover_channels()` scans `products--{channel}.csv` filenames)
 | `admin_password` | `ADMIN_PASSWORD` | `admin123` | Admin password |
 | `test_username` | `TEST_USERNAME` | `testuser` | Regular (non-admin) user for auth tests |
 | `test_password` | `TEST_PASSWORD` | `testuser123` | Regular user password |
+| `agreements_api_key` | `AGREEMENTS_API_KEY` | `zeno-dev-only-newsletter-subscribe-key` | `X-API-KEY` of the agreements public writes (consent submit): the service's `AGREEMENTS_API_KEY`, imported as an `agreements.subscribe` token; the default is zeno's dev value, and zeno's `make bdd` passes the one its `.env` sets |
 | `viewer_username` / `viewer_password` | `VIEWER_USERNAME` / `VIEWER_PASSWORD` | `viewer` / `viewer123` | Access Viewer staff user (`@access`) |
 | `editor_username` / `editor_password` | `EDITOR_USERNAME` / `EDITOR_PASSWORD` | `editor` / `editor123` | Access Editor staff user (`@access`) |
 | `manager_username` / `manager_password` | `MANAGER_USERNAME` / `MANAGER_PASSWORD` | `manager` / `manager123` | Access Manager staff user (`@access`) |

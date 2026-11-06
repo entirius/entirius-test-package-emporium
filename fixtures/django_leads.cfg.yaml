@@ -57,6 +57,7 @@
     kind: open
     is_terminal: false
     on_reply: false
+    on_sent: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 

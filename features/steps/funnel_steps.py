@@ -148,7 +148,11 @@ def step_company_hooks(context, alias, count):
 @then('the sandbox mailbox receives a message with the subject "{subject}"')
 def step_mailbox_receives_subject(context, subject):
     """Escalation mail is sent by the worker, so the subject is awaited; the scoped count step asserts how many arrived."""
+    # the leads alert may end with the reply class in brackets, "Reply from Example Shop 1 (unclear)", once T4 classifies
+    def seen(subjects):
+        return any(s == subject or s.startswith(f"{subject} (") for s in subjects)
+
     deadline = time.monotonic() + MAIL_TIMEOUT_S
-    while subject not in (subjects := [m["subject"] for m in mail.list_messages()]) and time.monotonic() < deadline:
+    while not seen(subjects := [m["subject"] for m in mail.list_messages()]) and time.monotonic() < deadline:
         time.sleep(0.5)
-    assert subject in subjects, f"no sandbox message {subject!r}; subjects: {subjects}"
+    assert seen(subjects), f"no sandbox message {subject!r}; subjects: {subjects}"

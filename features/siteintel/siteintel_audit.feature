@@ -37,12 +37,18 @@ Feature: Siteintel — domain audits from recorded sources
     And the response field "id" should equal "{saved.s01}"
 
   Scenario: S-08 the heuristic source tells the three synthetic sites apart
+    # The three sites share one domain ("fixtures") and the module allows one pending/running audit per domain
+    # and channel: each audit is run to completion before the next is requested (else run-now answers 500).
+    Given no valid siteintel audit is cached
     When I POST to the v2 admin endpoint "siteintel/admin/default-europe/audits/" with body
       """
       {"domain_or_url": "http://fixtures:8000/fixtures/siteintel/sites/good/index.html", "requested_by": "bdd:s-08"}
       """
     Then the response status should be 201
     And I save the response field "id" as "saved.good"
+    When the audit test run of "saved.good" has completed
+    Then the report for source "heuristic" should have processed field "images_without_alt" equal to "0"
+    And the report for source "heuristic" should have processed field "has_viewport_meta" equal to "true"
     Given no valid siteintel audit is cached
     When I POST to the v2 admin endpoint "siteintel/admin/default-europe/audits/" with body
       """
@@ -50,6 +56,9 @@ Feature: Siteintel — domain audits from recorded sources
       """
     Then the response status should be 201
     And I save the response field "id" as "saved.slow"
+    When the audit test run of "saved.slow" has completed
+    Then the report for source "heuristic" should have processed field "images_without_alt" equal to "20"
+    And the report for source "heuristic" should have processed field "inline_script_count" equal to "6"
     Given no valid siteintel audit is cached
     When I POST to the v2 admin endpoint "siteintel/admin/default-europe/audits/" with body
       """
@@ -57,12 +66,6 @@ Feature: Siteintel — domain audits from recorded sources
       """
     Then the response status should be 201
     And I save the response field "id" as "saved.broken"
-    When the audit test run of "saved.good" has completed
-    Then the report for source "heuristic" should have processed field "images_without_alt" equal to "0"
-    And the report for source "heuristic" should have processed field "has_viewport_meta" equal to "true"
-    When the audit test run of "saved.slow" has completed
-    Then the report for source "heuristic" should have processed field "images_without_alt" equal to "20"
-    And the report for source "heuristic" should have processed field "inline_script_count" equal to "6"
     When the audit test run of "saved.broken" has completed
     Then the report for source "heuristic" should have processed field "title" equal to "null"
     And the report for source "heuristic" should have processed field "images_without_alt" equal to "0"

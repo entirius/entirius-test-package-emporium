@@ -29,6 +29,9 @@ and quantities so the API is immediately functional.
 | ENT-BND01–02 | bundles | bundle (min/max limits) |
 | ENT-CUS01 | custom | custom product |
 
+ENT-CFG01 has variants in stock and one sold out (ENT-S004, quantity 0): the `@stock-alerts` features and the
+storefront e2e ask for an alert on it.
+
 Attributes: 10 series, 8 options, 3 badges, 1 brand — see `attributes--*.csv`.
 PIM features: 13 system + 12 global (incl. DECIMAL, BOOL, TEXT, JSON types); 5 feature sets.
 Matrix config: filterable (series, options, badge, brand, is_handcrafted), searchable

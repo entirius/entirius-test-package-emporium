@@ -394,6 +394,15 @@ print(f\"Published {len(versions)} agreement versions\")
 "'
 fi
 
+# Back-in-stock alerts: the module's agreement definition (its consents are recorded in agreements) and the key the
+# storefront sends with a request.
+if guard "Step 6: Stock Alerts Agreement" django_stock_alerts django_agreements; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py loaddata stock_alerts_agreement
+fi
+if guard "Step 6: Stock Alerts Storefront Key" django_stock_alerts django_access; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-stock-alerts-key.py"
+fi
+
 # Populate CurrentPrice from legacy PriceList snapshots (PM v3 architecture)
 if guard "Step 6: CurrentPrice Migration" django_pricemanager; then
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate_to_current_price"

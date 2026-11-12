@@ -39,6 +39,13 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   at `access/token/exchange/` — reads and writes limited to the key's areas, revocation inside the JWT lifetime
   (`TOKEN_INACTIVE`), refused scope mixes and `access.manage`, a key without admin scopes, no password sign-in for the
   application's service account. Re-runnable on one database.
+- `@order-mail` (`features/checkout/order_confirmation_email.feature`, also `@module-email`): order confirmation
+  and cancellation e-mails delivered by the worker to GreenMail (in the entirius-zeno harness: `make mail`), read from
+  the buyer's own mailbox (`entirius_tests.order_mail`). Every scenario empties the mailbox and places its own order,
+  so the feature re-runs on one database; it orders high-stock SKUs (`ENT-O001`, `ENT-S005`, `ENT-B002`). An order
+  that is not canceled keeps its stock reservation: a run holds about ten units of `ENT-O001`, so after about ten
+  runs on one database the carts go `out_of_stock` and `make seed` resets the stock. The
+  rendering check of the same e-mails is `e2e/mail/test_order_mail_render.py` (screenshots into `MAIL_SHOTS_DIR`).
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

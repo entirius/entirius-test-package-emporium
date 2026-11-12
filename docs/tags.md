@@ -46,6 +46,14 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   that is not canceled keeps its stock reservation: a run holds about ten units of `ENT-O001`, so after about ten
   runs on one database the carts go `out_of_stock` and `make seed` resets the stock. The
   rendering check of the same e-mails is `e2e/mail/test_order_mail_render.py` (screenshots into `MAIL_SHOTS_DIR`).
+- `@stock-alerts` (`features/stock_alerts/stock_alerts.feature`; scenarios also `@module-checkout`, `@module-leads`,
+  `@module-agreements`): back-in-stock requests on the sold-out variant `ENT-S004` of `ENT-CFG01`, restocks through the
+  QMS manual warehouse, waves, cancel links, the admin API, GDPR erasure and the consent in agreements. The restock
+  check runs in the service container (`SERVICE_CONTAINER`, passed by zeno's `make bdd`) and expects
+  `STOCK_ALERTS_WAVE_FACTOR = 2`; e-mails are read from GreenMail (`make mail`). Every scenario empties the mailbox,
+  cancels the waiting requests of the variant, resets the module's throttles and sets the variant back to 0, so the
+  feature re-runs on one database. The rendering check of both e-mails and the storefront flow are
+  `e2e/storefront/test_stock_alert.py`.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

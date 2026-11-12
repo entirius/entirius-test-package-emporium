@@ -48,6 +48,7 @@ _SAME_NAME = (
     "pricemanager",
     "qms",
     "siteintel",
+    "stock_alerts",
     "suppliers",
 )
 FEATURE_MODULES: dict[str, frozenset[str]] = {

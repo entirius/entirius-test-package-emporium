@@ -127,8 +127,16 @@ def reply_alerts(context, role: str, alias: str) -> list[dict]:
     return [row for row in notifications(context, role) if row["subject_ref"] == ref and row["title"] == title]
 
 
+def read_all(context, role: str) -> None:
+    """An alert only its owner sees stays unread for everyone else's `read-all/` and would escalate later."""
+    with as_role(context, role):
+        response = context.api.post(url(context, NOTIFICATIONS, "notifications/read-all/"), json={})
+    ok(response)
+
+
 @then('the {role} staff user has the reply alert about the company "{alias}"')
 def step_notified(context, role, alias):
+    context.add_cleanup(read_all, context, role)
     found = poll(lambda: reply_alerts(context, role, alias))
     assert found, f"no reply alert about {context.saved[alias]} for {role}"
 

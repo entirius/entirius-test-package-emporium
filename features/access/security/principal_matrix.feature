@@ -451,7 +451,7 @@ Feature: Access security — principal × route class × method
       | token-only  | DELETE  | api/pim/v2/admin/bdd-no-such-route/ | 404    | -     |
 
   Scenario Outline: PM-09 Django admin with a session — <principal>
-    # D32 (replaces operator Q1): the admin site is for superusers only; the Administrator role signs in (staff baseline) but gets 403.
+    # D32 (replaces an earlier operator answer): the admin site is for superusers only; the Administrator role signs in (staff baseline) but gets 403.
     Given the caller has a Django admin session as <principal>
     When the caller sends GET to "admin/"
     Then the answer is <status> with "<issue>"

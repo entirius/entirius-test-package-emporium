@@ -4,7 +4,7 @@ Feature: Communicator — inbound replies, autoresponders, opt-outs and bounces
   I want mail that answers our outreach attached to the right thread and acted on
   So that replies stop the sequence, opt-outs wait for a human and bounces fail the message
 
-  Data: fixtures/django_communicator.cfg.yaml (channel in sandbox mode, MailboxConfig polling the GreenMail
+  Data: fixtures/django_communicator.cfg.yaml (channel in sandbox mode, the default Mailbox polling the GreenMail
   sandbox INBOX over IMAP) and fixtures/mail/*.eml. Each scenario sends one sandbox message on a fresh
   thread, injects a fixture mail whose threading headers point at our Message-ID (a fresh inbound Message-ID
   per run), and runs the poll through test/poll-now/. It sends on tuesday with the cap raised by what the

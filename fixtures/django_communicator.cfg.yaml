@@ -386,18 +386,7 @@
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
-# --- Inbound mailbox (GreenMail sandbox user; GreenMail runs without authentication) ---
-- model: django_communicator.mailboxconfig
-  pk: 1
-  fields:
-    channel: 1
-    imap_host: greenmail
-    imap_port: 3143
-    imap_use_ssl: false
-    imap_user: sandbox
-    imap_password: sandbox
-    folder: INBOX
-    last_uid: 0
+# Mailboxes (one per salesperson, GreenMail logins) need the staff users: scripts/seed-crm.py, Step 3f.
     is_active: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"

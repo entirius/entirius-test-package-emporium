@@ -122,9 +122,14 @@ def notifications(context, role: str) -> list[dict]:
 
 
 def reply_alerts(context, role: str, alias: str) -> list[dict]:
-    """The leads alert of a reply ("Reply from <company>"); communicator's own reply alert goes to the role."""
+    """The leads alert of a reply: "Reply from <company>", with " — <class>" for a classified reply. Communicator
+    raises none when leads alerted: one bell entry per reply."""
     ref, title = f"leads.Company:{context.saved[alias]}", f"Reply from {context.saved[f'{alias}.name']}"
-    return [row for row in notifications(context, role) if row["subject_ref"] == ref and row["title"] == title]
+    return [
+        row
+        for row in notifications(context, role)
+        if row["subject_ref"] == ref and (row["title"] == title or row["title"].startswith(f"{title} — "))
+    ]
 
 
 def read_all(context, role: str) -> None:
@@ -139,6 +144,19 @@ def step_notified(context, role, alias):
     context.add_cleanup(read_all, context, role)
     found = poll(lambda: reply_alerts(context, role, alias))
     assert found, f"no reply alert about {context.saved[alias]} for {role}"
+
+
+@then('the {role} staff user has one reply alert about the company "{alias}" titled with "{label}"')
+def step_notified_once(context, role, alias, label):
+    """Exactly one bell entry about the company (communicator's own reply alert is not raised) and its title in words."""
+    context.add_cleanup(read_all, context, role)
+    found = poll(lambda: reply_alerts(context, role, alias))
+    expected = f"Reply from {context.saved[f'{alias}.name']} — {label}"
+    assert [row["title"] for row in found] == [expected], f"bell of {role}: {found}"
+    assert not set("()[]_") & set(expected), expected
+    ref = f"leads.Company:{context.saved[alias]}"
+    rows = ok(context.api.get(url(context, NOTIFICATIONS, "notifications/"), params={"page_size": 100}))["results"]
+    assert not [row for row in rows if row["subject_ref"] == ref], f"a second alert about {ref}: {rows}"
 
 
 @then('the {role} staff user has no reply alert about the company "{alias}"')

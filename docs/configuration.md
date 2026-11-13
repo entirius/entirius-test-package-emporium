@@ -34,7 +34,10 @@ auto-discovery (`discover_channels()` scans `products--{channel}.csv` filenames)
 Access staff users (seeded only when `django_access` is installed, `ENVIRONMENT=development` only; dev defaults,
 never real): `viewer`/`viewer123` (Viewer), `editor`/`editor123` (Editor), `manager`/`manager123` (Manager),
 `accessadmin`/`accessadmin123` (Administrator role, not superuser), `norole`/`norole123` (staff without a role) —
-staff, not superuser, each with a `Customer` row so the CMS login works (`scripts/seed-access.py`).
+staff, not superuser, each with a `Customer` row so the CMS login works (`scripts/seed-access.py`). The CRM seed
+(`scripts/seed-crm.py`) gives them fictional first and last names (`manager` Anna Kowalska, `editor` Piotr Lis,
+`viewer` Ewa Zielinska, `accessadmin` Marek Lewandowski, `norole` Ola Wojcik), so owners and salespeople show as
+people; `admin` keeps none.
 
 Channel auto-discovery scans `test_package_path` for `products--{channel}.csv` filenames.
 Point `test_package_path` at any directory with the standard CSV layout to switch datasets.

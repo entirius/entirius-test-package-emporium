@@ -13,7 +13,8 @@ Rows that point at staff users or at config the YAML fixtures cannot express:
 - the event -> stage map: first mail sent -> contacted, a reply -> replied, an out-of-office reply keeps the stage;
 - custom fields: a `select` on companies, a `text` on contacts, a `number` on deals; a scoring profile;
 - the sales pipeline (three open stages, won, lost) and the channel's default currency;
-- owners on a few seeded companies.
+- owners on a few seeded companies;
+- first and last names of the role staff users (fictional), so owners and salespeople show as people; `admin` stays.
 
 The follow-up sequence is not the channel's autostart sequence here: every first mail of the other features would get
 follow-ups. The `@crm` scenarios switch `autostart` on and off again themselves. The seeded owners are all `manager`,
@@ -67,6 +68,13 @@ DEAL_STAGES = [
     ("won", "Won", "won"),
     ("lost", "Lost", "lost"),
 ]
+STAFF_NAMES = {
+    "manager": ("Anna", "Kowalska"),
+    "editor": ("Piotr", "Lis"),
+    "viewer": ("Ewa", "Zielinska"),
+    "accessadmin": ("Marek", "Lewandowski"),
+    "norole": ("Ola", "Wojcik"),
+}
 OWNERS = {"example-shop-2.test": "manager", "example-shop-3.test": "manager", "example-shop-4.test": "manager"}
 
 
@@ -110,6 +118,11 @@ def seed_owners(channel: LeadsChannel, users: dict) -> None:
         Company.objects.filter(channel=channel, domain=domain).update(owner=users[username])
 
 
+def seed_staff_names() -> None:
+    for username, (first_name, last_name) in STAFF_NAMES.items():
+        get_user_model().objects.filter(username=username).update(first_name=first_name, last_name=last_name)
+
+
 def main() -> None:
     if getattr(settings, "ENVIRONMENT", "") != "development":
         sys.exit("seed-crm: refusing outside ENVIRONMENT=development")
@@ -121,7 +134,8 @@ def main() -> None:
     seed_fields(leads)
     seed_deals(leads)
     seed_owners(leads, users)
-    print("CRM seeded: 2 mailboxes, event map, fields, scoring, deal stages, owners")
+    seed_staff_names()
+    print("CRM seeded: 2 mailboxes, event map, fields, scoring, deal stages, owners, staff names")
 
 
 main()

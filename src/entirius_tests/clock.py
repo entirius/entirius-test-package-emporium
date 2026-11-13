@@ -10,6 +10,7 @@ authenticates the client as an admin first.
 
 from __future__ import annotations
 
+import time
 from datetime import date, timedelta
 
 import requests
@@ -51,6 +52,17 @@ def clear_channel_clock(api: ApiClient, channel_idx: str) -> requests.Response:
 
 def run_beat_send(api: ApiClient, channel_idx: str) -> requests.Response:
     return _post(api, channel_idx, SEND_DUE_PATH)
+
+
+def run_beat_send_waiting(api: ApiClient, channel_idx: str, attempts: int = 60) -> requests.Response:
+    """`send-due` once; while the stack's own beat holds the lock (409 `ALREADY_RUNNING`) it waits and tries again."""
+    response = run_beat_send(api, channel_idx)
+    for _ in range(attempts):
+        if response.status_code != 409:
+            break
+        time.sleep(1)
+        response = run_beat_send(api, channel_idx)
+    return response
 
 
 def run_imap_poll(api: ApiClient, channel_idx: str) -> requests.Response:

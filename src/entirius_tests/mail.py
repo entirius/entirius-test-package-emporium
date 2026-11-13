@@ -48,8 +48,11 @@ def purge() -> None:
 
 
 def list_messages(user: str = SANDBOX_USER, folder: str = "INBOX") -> list[dict]:
-    """Messages of a user's folder, oldest first (`uid`, `messageId`, `subject`, `mimeMessage`)."""
+    """Messages of a user's folder, oldest first (`uid`, `messageId`, `subject`, `mimeMessage`). A mailbox that got no
+    mail yet does not exist after a purge: GreenMail answers 400, read here as an empty folder."""
     resp = requests.get(f"{GREENMAIL_API_URL}/api/user/{user}/messages/{folder}", timeout=TIMEOUT_S)
+    if resp.status_code == 400:
+        return []
     resp.raise_for_status()
     return sorted(resp.json(), key=lambda message: int(message["uid"]))
 

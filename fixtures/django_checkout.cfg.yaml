@@ -24,6 +24,8 @@
     - 2
     countries:
     - 30
+# Split purchases (@order-mail): a cart mixing handcrafted and other products becomes one order per group;
+# single-product carts are never split. MODIFY_AND_CREATE is the only mechanism the module implements.
 - model: django_checkout.channel
   pk: 2
   fields:
@@ -34,16 +36,16 @@
     default_country: 5
     discount_mode_of_action_price_restriction_type: brutto
     order_pretty_id_prefix: null
-    feature_idxs_for_split_order: ''
+    feature_idxs_for_split_order: is_handcrafted
     default_attr_split: ''
-    force_splitting_order_in_checkout: false
+    force_splitting_order_in_checkout: true
     split_order_shipping_cost_mechanism: attribute_based_shipping_cost_assignment
     default_attr_split_shipping: ''
     split_order_payment_fee_mechanism: attribute_based_payment_fee_assignment
     default_attr_split_payment_fee: ''
     min_order_price: 0
     discount_apply_type: after
-    split_order_mechanism: CLOSE_AND_SPLIT
+    split_order_mechanism: MODIFY_AND_CREATE
     languages:
     - 2
     - 4
@@ -126,6 +128,62 @@
     price_brutto: '39.99'
     new_price: '0.00'
     free_delivery_above_brutto: '500.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+# Order e-mail methods (@order-mail): a courier that takes cash on delivery and a pickup point. Their own methods,
+# so the COD fee never lands on a europe-standard order; shipping is never free here, so the COD fee applies.
+- model: django_checkout.shippingmethod
+  pk: 3
+  fields:
+    channel: 2
+    method_type: default
+    code: europe-cod
+    image: ''
+    name_t9n:
+      en: Courier, cash on delivery
+      pl: Kurier za pobraniem
+    description_t9n: null
+    price_type: fixed
+    max_weight: null
+    priority: 1
+- model: django_checkout.shippingoption
+  pk: 4
+  fields:
+    method: 3
+    country: null
+    country_code: ALL
+    currency: 3
+    tax_rate: '0.00'
+    price_brutto: '19.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '100000.00'
+    cash_on_delivery_available: true
+    cash_on_delivery_fee: '5.00'
+- model: django_checkout.shippingmethod
+  pk: 4
+  fields:
+    channel: 2
+    method_type: pickup_point
+    code: europe-pickup
+    image: ''
+    name_t9n:
+      en: Pickup point
+      pl: Punkt odbioru
+    description_t9n: null
+    price_type: fixed
+    max_weight: null
+    priority: 2
+- model: django_checkout.shippingoption
+  pk: 5
+  fields:
+    method: 4
+    country: null
+    country_code: ALL
+    currency: 3
+    tax_rate: '0.00'
+    price_brutto: '4.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '100000.00'
     cash_on_delivery_available: false
     cash_on_delivery_fee: null
 - model: django_checkout.orderstatuslabel
@@ -258,7 +316,10 @@
       de: Banküberweisung
       es: Transferencia bancaria
       pl: Przelew bankowy
-    description_t9n: null
+    # Transfer details of the order confirmation e-mail; synthetic account number.
+    description_t9n:
+      en: '<p>Account: PL00 0000 0000 0000 0000 0000 0001<br>Recipient: Emporium Demo Shop</p>'
+      pl: '<p>Numer konta: PL00 0000 0000 0000 0000 0000 0001<br>Odbiorca: Emporium Demo Shop</p>'
     additional_data: null
     countries:
     - 5
@@ -268,6 +329,53 @@
     currencies:
     - 3
     - 1
+# Cash on delivery (@order-mail); loaddata skips save(), so is_cash_on_delivery is set here.
+- model: django_checkout.paymentmethod
+  pk: 3
+  fields:
+    channel: 2
+    provider: cod
+    code: cod
+    is_cash_on_delivery: true
+    is_free_order: false
+    image: ''
+    name_t9n:
+      en: Cash on delivery
+      pl: Płatność przy odbiorze
+    description_t9n: null
+    additional_data: null
+    countries:
+    - 5
+    - 21
+    - 8
+    - 10
+    currencies:
+    - 3
+# Online gateway (@order-mail) with a placeholder key: the order is created unpaid and the provider call fails
+# (payment_error), so the confirmation waits for an admin status change. Never a real key here.
+- model: django_checkout.paymentmethod
+  pk: 4
+  fields:
+    channel: 2
+    provider: stripe
+    code: online-card
+    is_cash_on_delivery: false
+    is_free_order: false
+    image: ''
+    name_t9n:
+      en: Card (online)
+      pl: Karta (online)
+    description_t9n: null
+    additional_data:
+      api_key: bdd-placeholder-not-a-key
+      automatic_tax: false
+    countries:
+    - 5
+    - 21
+    - 8
+    - 10
+    currencies:
+    - 3
 - model: django_checkout.apikey
   pk: 1
   fields:

@@ -50,6 +50,7 @@ admin API (CRUD); runs as an external consumer against a running backend seeded 
 │   ├── csv_loader.py       # Parse CSV from package/
 │   ├── assertions.py       # Assert helpers + extract_items()
 │   ├── mail.py             # GreenMail sandbox: purge/count/read (REST), send (SMTP), inject (IMAP APPEND)
+│   ├── order_mail.py       # order e-mails: guest order via checkout v2, admin calls, the buyer's GreenMail mailbox
 │   ├── clock.py            # communicator dev-only test endpoints: channel clock, send-due, poll-now
 │   └── data_package/       # profile.yaml + catalog (JSON/CSV) -> package/, fixtures/, images/ (build, validate); no network
 ├── features/               # Behave BDD features
@@ -75,7 +76,7 @@ admin API (CRUD); runs as an external consumer against a running backend seeded 
 │   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
-├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
+├── e2e/                    # Playwright E2E (cms/, storefront/, mail/; conftest.py = E2E_DEVICE emulation)
 │                           # leads funnel (page objects, determinism, harness commands): docs/e2e-leads-funnel.md
 └── load/k6/                # placeholder for k6 load tests (empty)
 ```

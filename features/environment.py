@@ -11,7 +11,9 @@ import os
 import sys
 from pathlib import Path
 
+from entirius_tests import stock_alerts
 from entirius_tests.api_client import ApiClient
+from entirius_tests.auth import obtain_jwt_token
 from entirius_tests.munin import (
     MODULE_TAGS,
     MUNIN_REGISTRY_PATH,
@@ -94,6 +96,12 @@ def before_all(context):
         "AGREEMENTS_API_KEY", ud.get("agreements_api_key", "zeno-dev-only-newsletter-subscribe-key")
     )
 
+    # X-API-KEY of the back-in-stock requests (scope stock_alerts.subscribe): the service's STOCK_ALERTS_API_KEY, stored
+    # by scripts/seed-stock-alerts-key.py, zeno's dev default unless its .env sets another.
+    context.stock_alerts_api_key = os.environ.get(
+        "STOCK_ALERTS_API_KEY", ud.get("stock_alerts_api_key", "zeno-dev-only-stock-alerts-subscribe-key")
+    )
+
     # Access role users of scripts/seed-access.py (dev defaults: <role> / <role>123)
     context.staff_users = {
         role: (
@@ -152,10 +160,20 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
-    """A failed `@toolbox-down` step must not leave the toolbox outage switch on for the rest of the run."""
+    """A failed `@toolbox-down` step must not leave the toolbox outage switch on for the rest of the run; a failed
+    `@stock-alerts` order scenario must not leave its order."""
     if "toolbox-down" in scenario.effective_tags:
         url = context.api.url("api/communicator/v2/admin/default-europe/test/toolbox-outage/")
         context.api.post(url, json={"down": False})
+    if "stock-alerts" in scenario.effective_tags and "order" in context.saved:
+        release_stock_alerts_order(context)
+
+
+def release_stock_alerts_order(context):
+    """A failed `@stock-alerts` scenario must not leave its order holding the sold-out variant's piece."""
+    token = obtain_jwt_token(context.api.base_url, context.admin_username, context.admin_password)
+    headers = {"Authorization": f"Bearer {token}"}
+    stock_alerts.cancel_order(context.api, context.channel, headers, context.saved.pop("order").uid)
 
 
 def after_all(context):

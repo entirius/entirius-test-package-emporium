@@ -23,6 +23,8 @@ auto-discovery (`discover_channels()` scans `products--{channel}.csv` filenames)
 | `test_username` | `TEST_USERNAME` | `testuser` | Regular (non-admin) user for auth tests |
 | `test_password` | `TEST_PASSWORD` | `testuser123` | Regular user password |
 | `agreements_api_key` | `AGREEMENTS_API_KEY` | `zeno-dev-only-newsletter-subscribe-key` | `X-API-KEY` of the agreements public writes (consent submit): the service's `AGREEMENTS_API_KEY`, imported as an `agreements.subscribe` token; the default is zeno's dev value, and zeno's `make bdd` passes the one its `.env` sets |
+| `stock_alerts_api_key` | `STOCK_ALERTS_API_KEY` | `zeno-dev-only-stock-alerts-subscribe-key` | `X-API-KEY` of the back-in-stock requests: the service's `STOCK_ALERTS_API_KEY`, stored by the seed as a `stock_alerts.subscribe` token (`scripts/seed-stock-alerts-key.py`); same default and `.env` rule as above |
+| — | `SERVICE_CONTAINER` | — | The service container the `@stock-alerts` steps run the restock check in (`manage.py shell`); zeno's `make bdd` passes it |
 | `viewer_username` / `viewer_password` | `VIEWER_USERNAME` / `VIEWER_PASSWORD` | `viewer` / `viewer123` | Access Viewer staff user (`@access`) |
 | `editor_username` / `editor_password` | `EDITOR_USERNAME` / `EDITOR_PASSWORD` | `editor` / `editor123` | Access Editor staff user (`@access`) |
 | `manager_username` / `manager_password` | `MANAGER_USERNAME` / `MANAGER_PASSWORD` | `manager` / `manager123` | Access Manager staff user (`@access`) |

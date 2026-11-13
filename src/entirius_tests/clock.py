@@ -54,8 +54,9 @@ def run_beat_send(api: ApiClient, channel_idx: str) -> requests.Response:
     return _post(api, channel_idx, SEND_DUE_PATH)
 
 
-def run_beat_send_waiting(api: ApiClient, channel_idx: str, attempts: int = 60) -> requests.Response:
-    """`send-due` once; while the stack's own beat holds the lock (409 `ALREADY_RUNNING`) it waits and tries again."""
+def run_beat_send_waiting(api: ApiClient, channel_idx: str, attempts: int = 180) -> requests.Response:
+    """`send-due` once; while the stack's own beat holds the lock (409 `ALREADY_RUNNING`) it waits and tries again —
+    up to three minutes: right after a seed the beat's own run drains the seed's mail first."""
     response = run_beat_send(api, channel_idx)
     for _ in range(attempts):
         if response.status_code != 409:

@@ -30,6 +30,12 @@ Feature: CRM core — owners, custom fields, tasks, the today list and mail writ
     Then the editor staff user has the reply alert about the company "company"
     And the manager staff user has no reply alert about the company "company"
 
+  Scenario: A classified reply rings the owner's bell once, in words
+    Given a fresh company owned by the editor staff user is imported as "company"
+    And the company "company" is contacted with the static mail "reply.thanks"
+    When the contact of "company" replies "Not this quarter" with the class "not_now"
+    Then the editor staff user has one reply alert about the company "company" titled with "Not now"
+
   Scenario: A field is defined, read back and deleted while no company holds a value
     When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/attributes/" with body
       """

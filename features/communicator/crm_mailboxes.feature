@@ -48,6 +48,11 @@ Feature: CRM mailboxes, the approval inbox, one-click unsubscribe and do-not-con
     And the company "theirs" gets a draft of the static mail "reply.thanks"
     Then the approval inbox of the editor's mailbox holds the draft of "mine" and not the draft of "theirs"
 
+  Scenario: The approval row of a company's draft carries the company name
+    Given a fresh company is imported as "company"
+    When the company "company" gets a draft of the static mail "reply.thanks"
+    Then the approval row of the draft of "company" carries the company name
+
   Scenario: A paused mailbox holds its mail while another mailbox keeps sending; resuming needs a reason
     Given a fresh company owned by the editor staff user is imported as "held"
     And a fresh company owned by the manager staff user is imported as "sent"

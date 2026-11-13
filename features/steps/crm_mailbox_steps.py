@@ -204,6 +204,17 @@ def step_inbox_filter(context, role, mine, theirs):
     assert context.saved[f"{theirs}.message"] not in ids, f"approvals: {ids}"
 
 
+@then('the approval row of the draft of "{alias}" carries the company name')
+def step_approval_label(context, alias):
+    """Found by the company name: the search matches the thread's label too."""
+    name = context.saved[f"{alias}.name"]
+    params = {"search": name, "page_size": 100}
+    rows = ok(context.api.get(context.api.url(APPROVALS), params=params))["results"]
+    row = next((row for row in rows if row["id"] == context.saved[f"{alias}.message"]), None)
+    assert row is not None, f"no approval row of {name}: {[r['id'] for r in rows]}"
+    assert row["subject_label"] == name, f"subject_label {row['subject_label']!r}, expected {name!r}"
+
+
 def bulk(context, body: dict) -> None:
     context.response = context.api.post(context.api.url(f"{APPROVALS}bulk/"), json=body)
     context.response_data = context.response.json()

@@ -37,6 +37,7 @@ def upload(context, csv: str, form: dict[str, str]) -> None:
     if not form:
         batch = ok(context.api.post(url(context, LEADS, "test/import-now/"), files=files))
         assert batch["status"] == "done", f"import: {batch}"
+        context.saved["import_batch"] = batch
         return
     batch = ok(context.api.post(url(context, LEADS, "imports/"), files=files, data=form), 202)
     finished = {"done", "failed"}
@@ -89,6 +90,13 @@ def step_fresh_company_columns(context, alias):
     columns = {row["column"]: row["value"].replace("{unique}", token) for row in context.table}
     import_fresh(context, alias, columns, {})
     context.saved |= {f"{alias}.{name}": value for name, value in columns.items()}
+
+
+@then('the import report names the ignored column "{column}"')
+def step_ignored_column(context, column):
+    batch = context.saved["import_batch"]
+    assert column in batch["ignored_columns"], f"ignored columns: {batch['ignored_columns']}"
+    assert batch["automation_started_count"] == 0, f"automation started: {batch['automation_started_count']}"
 
 
 @given('a fresh company owned by the {role} staff user is imported as "{alias}"')

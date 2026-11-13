@@ -29,6 +29,12 @@ Feature: CRM outbound loop — import, first mail, follow-ups, replies with a cl
     Then the company "company" is in stage "new"
     And the company "company" has a rule run "fired"
 
+  Scenario: The import report names a column it did not read
+    When a fresh company is imported as "company" with the columns
+      | column  | value |
+      | bdd_fax | 123   |
+    Then the import report names the ignored column "bdd_fax"
+
   Scenario: The first sent mail moves the company to contacted
     Given a fresh company is imported as "company"
     When the company "company" is contacted with the static mail "reply.thanks"

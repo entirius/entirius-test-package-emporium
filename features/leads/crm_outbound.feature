@@ -209,3 +209,41 @@ Feature: CRM outbound loop — import, first mail, follow-ups, replies with a cl
       | column | value              |
       | origin | bdd-crm-{unique}   |
     Then the companies filtered by the origin of "company" are exactly "company"
+
+  Scenario: A draft whose company is marked do not contact is refused with one sentence everywhere until the mark is lifted
+    Given a fresh company is imported as "company"
+    When the company "company" gets a draft of the static mail "reply.thanks"
+    And the company "company" is marked do not contact
+    Then the approval row of the draft of "company" is blocked with "the recipient opted out or is on the do-not-contact list"
+    And approving the draft of "company" is refused with "the recipient opted out or is on the do-not-contact list"
+    And approving the draft of "company" in bulk is refused with "the recipient opted out or is on the do-not-contact list"
+    When the do-not-contact mark of the company "company" is lifted
+    Then approving the draft of "company" succeeds
+
+  Scenario: A draft whose contact lost its legal basis is refused with the outreach gate's sentence
+    Given a fresh company is imported as "company"
+    When the company "company" gets a draft of the static mail "reply.thanks"
+    And the contact of "company" loses its legal basis
+    Then the approval row of the draft of "company" is blocked with "the contact has no legal basis for mail"
+    And approving the draft of "company" is refused with "the contact has no legal basis for mail"
+    And approving the draft of "company" in bulk is refused with "the contact has no legal basis for mail"
+
+  Scenario: A confirmed opt-out withdraws the waiting draft of the address and the timeline shows why
+    Given a fresh company is imported as "company"
+    And the company "company" is contacted with the static mail "reply.thanks"
+    When the company "company" gets a draft of the static mail "reply.thanks"
+    And the contact of "company" replies "Please take me off" with the class "unsubscribe"
+    And the suspected opt-out of "company" is confirmed
+    Then the timeline shows the draft of "company" withdrawn with the reason "the recipient opted out"
+
+  Scenario: A skipped draft stays on the timeline with who skipped it and why
+    Given a fresh company is imported as "company"
+    When the company "company" gets a draft of the static mail "reply.thanks"
+    And the draft of "company" is skipped with the reason "bdd not this one"
+    Then the timeline shows the draft of "company" rejected by a person with the reason "bdd not this one"
+
+  Scenario: A company created in the first stage counts as entered there in the funnel
+    Given a fresh company is imported as "company" with the columns
+      | column | value            |
+      | origin | bdd-crm-{unique} |
+    Then the funnel report of the origin of "company" counts 1 company entered in the stage "new"

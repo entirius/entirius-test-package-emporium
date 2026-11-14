@@ -151,3 +151,7 @@ Feature: CRM mailboxes, the approval inbox, one-click unsubscribe and do-not-con
     And the health check of the channel in live mode has run
     Then the health of the manager's mailbox reports the state "paused"
     And the pause log starts with an automatic pause for "bounce"
+
+  Scenario: The login test of a seeded mailbox logs in the way a send does
+    Then the login test of the mailbox of the manager staff user answers "ok" for SMTP and IMAP
+    And the login test of the mailbox of the editor staff user answers "ok" for SMTP and IMAP

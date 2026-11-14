@@ -78,3 +78,50 @@ Feature: CRM deals — a sales pipeline on a company
     And the item with "title" equal to "BDD listed" should exist
     When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/{company}/"
     Then the nested response field "deals.open" should equal "1"
+
+  Scenario: A closed deal is archived out of the lists and the board, and restored
+    Given a deal "BDD archived" worth "700.00" is opened on the company "company"
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/archive/" with body
+      """
+      {}
+      """
+    Then the response status should be 409
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/transition/" with body
+      """
+      {"kind": "won"}
+      """
+    Then the response status should be 200
+    Given the board totals are remembered
+    And I am authenticated as the viewer staff user
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/archive/" with body
+      """
+      {}
+      """
+    Then the response status should be 403
+    Given I am authenticated as an admin user
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/archive/" with body
+      """
+      {}
+      """
+    Then the response status should be 200
+    And the response field "archived_at" should not be null
+    And the board count of the stage "won" grew by -1
+    And the company "company" has an activity "deal" containing "deal archived: BDD archived"
+    When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/{company}/deals/"
+    Then the results should not contain an item with "title" equal to "BDD archived"
+    When I GET the v2 admin endpoint "leads/admin/{channel_idx}/deals/?company={company}&archived=true"
+    Then the item with "title" equal to "BDD archived" should exist
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/transition/" with body
+      """
+      {"kind": "open"}
+      """
+    Then the response status should be 409
+    When I POST to the v2 admin endpoint "leads/admin/{channel_idx}/deals/{deal}/restore/" with body
+      """
+      {}
+      """
+    Then the response status should be 200
+    And the response field "archived_at" should be null
+    And the board count of the stage "won" grew by 0
+    When I GET the v2 admin endpoint "leads/admin/{channel_idx}/companies/{company}/deals/"
+    Then the item with "title" equal to "BDD archived" should exist

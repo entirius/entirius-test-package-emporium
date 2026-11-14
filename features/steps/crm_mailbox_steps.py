@@ -183,12 +183,45 @@ def unsuppress(context, address: str) -> None:
         ok(context.api.delete(url(context, COMMUNICATOR, f"suppressions/{row['id']}/")), 204)
 
 
-@given('the address of "{alias}" is on the do-not-contact list of the channel')
-def step_suppress(context, alias):
+def suppress(context, alias: str, scope: str) -> None:
+    """A do-not-contact entry of `scope` (`channel` · `install` = every channel), removed when the scenario ends."""
     address = context.saved[f"{alias}.email"]
     context.add_cleanup(unsuppress, context, address)
-    body = {"kind": "email", "value": address, "reason": "bdd do not contact"}
+    body = {"kind": "email", "value": address, "reason": "bdd do not contact", "scope": scope}
     ok(context.api.post(url(context, COMMUNICATOR, "suppressions/"), json=body), 201)
+
+
+@given('the address of "{alias}" is on the do-not-contact list of the channel')
+def step_suppress(context, alias):
+    suppress(context, alias, "channel")
+
+
+@given('the address of "{alias}" is on the do-not-contact list of all channels')
+def step_suppress_everywhere(context, alias):
+    suppress(context, alias, "install")
+
+
+@then('the do-not-contact list shows the address of "{alias}" for all channels')
+def step_listed_everywhere(context, alias):
+    params = {"value": context.saved[f"{alias}.email"]}
+    rows = ok(context.api.get(url(context, COMMUNICATOR, "suppressions/"), params=params))["results"]
+    assert [row["scope"] for row in rows] == ["install"], f"suppressions: {rows}"
+
+
+@when('a "{template_key}" message to the address of "{alias}" is requested')
+def step_request_message(context, template_key, alias):
+    address = context.saved[f"{alias}.email"]
+    body = {"template_key": template_key, "subject_ref": f"bdd:crm:{address}", "requires_review": False}
+    body |= {"recipient": {"email": address, "language": "pl", "legal_footer": LEGAL_FOOTER}, "context": CONTEXT}
+    context.saved[f"{alias}_requested"] = ok(
+        context.api.post(url(context, COMMUNICATOR, "test/communicate/"), json=body), 201
+    )
+
+
+@then('the requested message to "{alias}" has status "{status}"')
+def step_requested_status(context, alias, status):
+    requested = context.saved[f"{alias}_requested"]
+    assert requested["status"] == status, f"requested message: {requested}"
 
 
 # --- Approval inbox ---

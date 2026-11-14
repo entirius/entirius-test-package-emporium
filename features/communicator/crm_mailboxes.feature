@@ -139,6 +139,14 @@ Feature: CRM mailboxes, the approval inbox, one-click unsubscribe and do-not-con
     And the response field "reasons" should contain "suppressed"
     And the do-not-contact entry of "company" holds on the channel only
 
+  Scenario: A do-not-contact entry added for all channels is listed as global and refuses mail to the address
+    Given a fresh company is imported as "company"
+    And the address of "company" is on the do-not-contact list of all channels
+    Then the do-not-contact list shows the address of "company" for all channels
+    And the address of "company" is refused as "suppressed"
+    When a "followup" message to the address of "company" is requested
+    Then the requested message to "company" has status "suppressed"
+
   # Live sending exists only in production (`channel_service.live_allowed`), so the beat never judges a zeno channel.
   # The scenario runs the module's own health check once in the service container on the channel as it would be in
   # live mode (the mode is set in memory, never saved): real sent mail and a real hard bounce from the sandbox.

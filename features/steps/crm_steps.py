@@ -96,6 +96,8 @@ def step_fresh_company_columns(context, alias):
 def step_ignored_column(context, column):
     batch = context.saved["import_batch"]
     assert column in batch["ignored_columns"], f"ignored columns: {batch['ignored_columns']}"
+    rows = [entry for entry in batch["report"] if entry["reason"].startswith("ignored_column")]
+    assert not rows, f"the row report repeats ignored columns: {rows}"
     assert batch["automation_started_count"] == 0, f"automation started: {batch['automation_started_count']}"
 
 
@@ -249,6 +251,44 @@ def step_reply_review(context, alias):
 def step_wrong_person(context, alias):
     contact = ok(context.api.get(url(context, LEADS, f"contacts/{context.saved[f'{alias}.contact']}/")))
     assert contact["wrong_person_at"], f"contact: {contact}"
+
+
+@then('the contact of "{alias}" in the contact list has the mail block "{reason}" of its send check')
+def step_mail_block(context, alias, reason):
+    """The list row's `mail_block` is the first reason of the send check behind "Why no mail?" (`mailable/`)."""
+    contact = context.saved[f"{alias}.contact"]
+    params = {"company": context.saved[alias]}
+    rows = ok(context.api.get(url(context, LEADS, "contacts/"), params=params))["results"]
+    block = next(row["mail_block"] for row in rows if row["id"] == contact)
+    check = ok(context.api.get(url(context, LEADS, f"companies/{context.saved[alias]}/contacts/{contact}/mailable/")))
+    assert block == reason == check["reasons"][0], f"mail_block {block!r}, send check {check['reasons']}"
+
+
+# --- Conversations ---
+
+
+def review_conversations(context) -> dict:
+    params = {"needs_review": "true", "page_size": 100}
+    return ok(context.api.get(url(context, COMMUNICATOR, "conversations/"), params=params))
+
+
+@then('the conversations that need review list the company "{flagged}" and not the company "{calm}"')
+def step_needs_review(context, flagged, calm):
+    """Latest activity first: the scenario's conversations are on the first page when they are in the list."""
+    body = review_conversations(context)
+    refs = [row["subject_ref"] for row in body["results"]]
+    assert subject_ref(context, flagged) in refs, f"{subject_ref(context, flagged)} not in {refs}"
+    assert subject_ref(context, calm) not in refs, f"{subject_ref(context, calm)} needs no review: {refs}"
+    assert all(row["needs_review"] for row in body["results"]), body["results"]
+    assert body["counts"]["all"] == body["count"], f"counts do not follow the filter: {body['counts']}"
+
+
+@then('on the timeline of the company "{alias}" only the mail "{subject}" is written by hand')
+def step_composed(context, alias, subject):
+    entries = [entry for entry in thread(context, alias)["timeline"] if entry["kind"] == "message"]
+    composed = {entry["subject"] for entry in entries if entry["composed"]}
+    assert composed == {subject}, f"written by hand: {composed}"
+    assert len(entries) > 1, f"the static mail is missing from the timeline: {entries}"
 
 
 # --- Tasks ---

@@ -89,6 +89,13 @@ Feature: CRM core — owners, custom fields, tasks, the today list and mail writ
     When the beat send task has run
     Then the sandbox mail "BDD hand-written" to the contact of "company" is from "sales2@greenmail.test"
 
+  Scenario: A mail written by hand is marked as written by hand on the conversation timeline
+    Given a fresh company is imported as "company"
+    And the company "company" is contacted with the static mail "reply.thanks"
+    When a mail "BDD hand-written" is written by hand to the contact of "company"
+    Then the response status should be 201
+    And on the timeline of the company "company" only the mail "BDD hand-written" is written by hand
+
   Scenario: A mail written by hand to an opted-out contact is refused
     Given a fresh company is imported as "company"
     And the address of "company" is on the do-not-contact list of the channel

@@ -84,6 +84,21 @@ Feature: CRM outbound loop — import, first mail, follow-ups, replies with a cl
     And the last reply about the company "company" needs review
     And the company "company" has an open task "Read the reply"
 
+  Scenario: A contact flagged by a wrong-person reply reads blocked in the contact list, as in "Why no mail?"
+    Given a fresh company is imported as "company"
+    And the company "company" is contacted with the static mail "reply.thanks"
+    When the contact of "company" replies "I left the company" with the class "wrong_person"
+    Then the contact of "company" in the contact list has the mail block "wrong_person" of its send check
+
+  Scenario: The Inbox asks for the conversations that need a person
+    Given a fresh company is imported as "flagged"
+    And the company "flagged" is contacted with the static mail "reply.thanks"
+    And a fresh company is imported as "calm"
+    And the company "calm" is contacted with the static mail "reply.thanks"
+    When the contact of "flagged" replies "I left the company" with the class "wrong_person"
+    And the contact of "calm" replies "Call me tomorrow" with the class "interested"
+    Then the conversations that need review list the company "flagged" and not the company "calm"
+
   Scenario: An unsubscribe in unknown wording waits for a person before anybody is suppressed
     Given a fresh company is imported as "company"
     And the company "company" is contacted with the static mail "reply.thanks"

@@ -8,6 +8,8 @@ test. Builds on the `@crm` steps of `crm_steps.py`; every change to a company is
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from behave import then, when
 
 from entirius_tests.crm import COMMUNICATOR, LEADS, ok, staff_id, url
@@ -88,25 +90,27 @@ def step_confirm_optout(context, alias):
     ok(context.api.post(url(context, COMMUNICATOR, path), json={}))
 
 
-def timeline_entry(context, alias: str) -> dict:
-    """The draft's entry on the timeline of its own thread."""
+def rejected_entry(context, alias: str) -> dict:
+    """The rejected draft's entry on the timeline of its own thread, dated by its rejection."""
     message = ok(context.api.get(url(context, COMMUNICATOR, f"review/{draft_id(context, alias)}/")))
     thread = ok(context.api.get(url(context, COMMUNICATOR, f"threads/{message['thread']['id']}/")))
     entry = next((e for e in thread["timeline"] if e["message_id"] == draft_id(context, alias)), None)
     assert entry is not None, f"draft {draft_id(context, alias)} is not on the timeline: {thread['timeline']}"
+    rejected_at = datetime.fromisoformat(message["reviewed_at"])
+    assert datetime.fromisoformat(entry["at"]) == rejected_at, f"not dated by its rejection: {entry}, {message}"
     return entry
 
 
 @then('the timeline shows the draft of "{alias}" rejected by a person with the reason "{reason}"')
 def step_rejected_by_person(context, alias, reason):
-    entry = timeline_entry(context, alias)
+    entry = rejected_entry(context, alias)
     assert entry["status"] == "rejected" and entry["reject_reason"] == reason, f"entry: {entry}"
     assert entry["rejected_by"], f"no reviewer on a skipped draft: {entry}"
 
 
 @then('the timeline shows the draft of "{alias}" withdrawn with the reason "{reason}"')
 def step_withdrawn(context, alias, reason):
-    entry = timeline_entry(context, alias)
+    entry = rejected_entry(context, alias)
     assert (entry["status"], entry["rejected_by"], entry["reject_reason"]) == ("rejected", "", reason), entry
 
 

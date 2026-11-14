@@ -53,7 +53,7 @@ def step_reset_counters(context):
 @when("the beat send task has run")
 def step_beat_send(context):
     """Both beat tasks run in-process; the counts are kept as the response."""
-    context.response = clock.run_beat_send(context.api, context.channel)
+    context.response = clock.run_beat_send_waiting(context.api, context.channel)
     _assert_ok(context.response)
     context.response_data = context.response.json()
 

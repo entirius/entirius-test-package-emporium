@@ -39,6 +39,29 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   at `access/token/exchange/` — reads and writes limited to the key's areas, revocation inside the JWT lifetime
   (`TOKEN_INACTIVE`), refused scope mixes and `access.manage`, a key without admin scopes, no password sign-in for the
   application's service account. Re-runnable on one database.
+- `@order-mail` (`features/checkout/order_confirmation_email.feature`, also `@module-email`): order confirmation
+  and cancellation e-mails delivered by the worker to GreenMail (in the entirius-zeno harness: `make mail`), read from
+  the buyer's own mailbox (`entirius_tests.order_mail`). Every scenario empties the mailbox and places its own order,
+  so the feature re-runs on one database; it orders high-stock SKUs (`ENT-O001`, `ENT-S005`, `ENT-B002`). An order
+  that is not canceled keeps its stock reservation: a run holds about ten units of `ENT-O001`, so after about ten
+  runs on one database the carts go `out_of_stock` and `make seed` resets the stock. The
+  rendering check of the same e-mails is `e2e/mail/test_order_mail_render.py` (screenshots into `MAIL_SHOTS_DIR`).
+- `@stock-alerts` (`features/stock_alerts/stock_alerts.feature`; scenarios also `@module-checkout`, `@module-leads`,
+  `@module-agreements`): back-in-stock requests on the sold-out variant `ENT-S004` of `ENT-CFG01`, restocks through the
+  QMS manual warehouse, waves, cancel links, the admin API, GDPR erasure and the consent in agreements. The restock
+  check runs in the service container (`SERVICE_CONTAINER`, passed by zeno's `make bdd`) and expects
+  `STOCK_ALERTS_WAVE_FACTOR = 2`; e-mails are read from GreenMail (`make mail`). Every scenario empties the mailbox,
+  cancels the waiting requests of the variant, resets the module's throttles and sets the variant back to 0, so the
+  feature re-runs on one database. The rendering check of both e-mails and the storefront flow are
+  `e2e/storefront/test_stock_alert.py`.
+- `@crm` (`features/leads/crm_*.feature`, `features/communicator/crm_mailboxes.feature`, `features/todo/`), split
+  into `@crm-outbound` (import, first mail, follow-ups, reply classes, scoring, funnel, mailboxes, approvals,
+  one-click unsubscribe, do-not-contact, automatic pause), `@crm-core` (owners, custom fields, rule conditions, tasks,
+  the due reminder, mail written by hand) and `@crm-deals`. Needs the seed's CRM configuration (`scripts/seed-crm.py`:
+  the `manager` and `editor` mailboxes, the event map, fields, scoring, deal stages), GreenMail (`make mail`) and
+  `SERVICE_CONTAINER` (the due reminder and the automatic pause run in the service container). Replies get their class
+  through `test/ingest-reply/`, so no toolbox is needed. Every scenario imports its own company; configuration a
+  scenario changes is put back at its end, so the tag re-runs on one database.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

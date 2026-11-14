@@ -30,7 +30,6 @@
     order: 0
     kind: open
     is_terminal: false
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -43,7 +42,6 @@
     order: 10
     kind: open
     is_terminal: false
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -56,7 +54,6 @@
     order: 20
     kind: open
     is_terminal: false
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -69,7 +66,6 @@
     order: 30
     kind: open
     is_terminal: false
-    on_reply: true
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -82,7 +78,6 @@
     order: 40
     kind: open
     is_terminal: false
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -95,7 +90,6 @@
     order: 50
     kind: won
     is_terminal: true
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -108,7 +102,6 @@
     order: 60
     kind: lost
     is_terminal: true
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 
@@ -121,7 +114,6 @@
     order: 70
     kind: unresponsive
     is_terminal: false
-    on_reply: false
     created_at: "2025-01-01T00:00:00Z"
     modified_at: "2025-01-01T00:00:00Z"
 

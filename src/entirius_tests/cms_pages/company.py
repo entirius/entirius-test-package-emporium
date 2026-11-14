@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads company card on desktop (`/leads/companies/<id>?tab=`): header, actions, tabs."""
+"""Leads company card (`/leads/companies/<id>?tab=`): header, actions, tabs, the CRM tabs and the hand-written mail."""
 
 from __future__ import annotations
 
@@ -28,3 +28,21 @@ class CompanyPage:
 
     def create_customer_button(self) -> Locator:
         return self.page.get_by_test_id("company-create-customer")
+
+    def expect_open(self) -> None:
+        expect(self.page.get_by_test_id("company-actions")).to_be_visible(timeout=TIMEOUT_MS)
+
+    def timeline_entry(self, text: str) -> Locator:
+        return self.page.get_by_test_id("timeline-event").filter(has_text=text).first
+
+    def task(self, task_id: int) -> Locator:
+        return self.page.locator(f'[data-testid="task-row"][data-task="{task_id}"]')
+
+    def write_mail(self, subject: str, body: str) -> None:
+        """The hand-written mail of the company card: compose, send, the dialog closes."""
+        self.page.get_by_test_id("company-compose").click()
+        dialog = self.page.get_by_test_id("compose-dialog")
+        dialog.get_by_test_id("compose-subject").locator("input").fill(subject)
+        dialog.get_by_test_id("compose-body").locator("textarea").fill(body)
+        dialog.get_by_test_id("compose-send").click()
+        expect(dialog).to_be_hidden(timeout=TIMEOUT_MS)

@@ -18,7 +18,9 @@ MUNIN_REGISTRY_PATH = "api/munin/v2/"
 # Feature/module tags that map 1:1 onto munin module keys. A feature carrying one
 # of these tags is skipped when the backend does not report the module — the
 # suite stays green against environments that adopted fewer modules.
-MODULE_TAGS = frozenset({"atlas", "pricefighter", "suppliers", "leads", "communicator", "siteintel", "notifications"})
+MODULE_TAGS = frozenset(
+    {"atlas", "pricefighter", "suppliers", "leads", "communicator", "siteintel", "notifications", "todo"}
+)
 
 # A scenario tag `@module-<key>` names one more munin module that scenario needs.
 MODULE_TAG_PREFIX = "module-"
@@ -48,7 +50,9 @@ _SAME_NAME = (
     "pricemanager",
     "qms",
     "siteintel",
+    "stock_alerts",
     "suppliers",
+    "todo",
 )
 FEATURE_MODULES: dict[str, frozenset[str]] = {
     **{name: frozenset({name}) for name in _SAME_NAME},

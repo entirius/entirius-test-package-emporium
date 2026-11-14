@@ -108,7 +108,7 @@ Feature: PIM Admin API -- New Endpoints (Feature Set Edit)
     Then the response status should be 200
 
   # ==========================================================================
-  # T4: Reorder features in feature set
+  # Reorder features in feature set
   # ==========================================================================
 
   Scenario: Reorder features within a feature set

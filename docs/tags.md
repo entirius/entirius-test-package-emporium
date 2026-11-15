@@ -62,6 +62,12 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   `SERVICE_CONTAINER` (the due reminder and the automatic pause run in the service container). Replies get their class
   through `test/ingest-reply/`, so no toolbox is needed. Every scenario imports its own company; configuration a
   scenario changes is put back at its end, so the tag re-runs on one database.
+- `@ai-crm` (`features/leads/ai_crm.feature`, U10): the AI CRM agent of django-ai-crm — the day plan equals the today
+  list, "done" in the CMS conversation and the same over MCP close the task with the actor `<user> via ai-crm
+  (<source>)`, another salesperson's task is not found, a lost deal and Do not contact wait for a yes, a viewer never
+  writes. `@module-ai_crm`: skipped while munin does not list the module. Needs the seed's staff users and deal stages;
+  the agent's short commands need no toolbox. Every scenario imports its own company and cancels its open tasks, so
+  the tag re-runs on one database.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

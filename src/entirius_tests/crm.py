@@ -14,6 +14,7 @@ from entirius_tests import clock
 LEADS = "api/leads/v2/admin/{channel}/"
 COMMUNICATOR = "api/communicator/v2/admin/{channel}/"
 TODO = "api/todo/v2/admin/{channel}/"
+PROSPECTING = "api/prospecting/v2/admin/{channel}/"
 POLL_TIMEOUT_S = 60
 
 

@@ -198,7 +198,4 @@ def step_deal_open(context):
     assert deal["stage"]["kind"] == "open", deal["stage"]
 
 
-@then('the company "{alias}" is not marked do not contact')
-def step_not_dnc(context, alias):
-    company = ok(context.api.get(url(context, LEADS, f"companies/{context.saved[alias]}/")))
-    assert company["do_not_contact"] is False, company
+# `the company "{alias}" is not marked do not contact` lives in prospecting_steps.py (one definition per step).

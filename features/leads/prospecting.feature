@@ -49,11 +49,11 @@ Feature: U3 — another person to contact when the only one is the wrong person 
   Scenario: Only an accepted candidate becomes a contact that may be mailed
     Given a fresh company is imported as "company"
     And the company "company" is contacted with the static mail "reply.thanks"
-    And the contact of "company" replies "I left the company" with the class "wrong_person"
-    When the candidate "Zielińska" of the company "company" is accepted
+    When the contact of "company" replies "I left the company" with the class "wrong_person"
+    And the candidate "Zielińska" of the company "company" is accepted
     And the candidate "Wójcik" of the company "company" is rejected
     Then the company "company" has a contact "ewa.zielinska@" with the source "prospecting" and no mail block
-    And the company "company" has no contact "marek.wojcik@"
+    And the company "company" has no contact with the local part "marek.wojcik@"
     And the candidate "Wójcik" of the company "company" is "rejected"
     And accepting the candidate "Zielińska" of the company "company" again is refused
 

@@ -57,7 +57,8 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
 - `@crm` (`features/leads/crm_*.feature`, `features/communicator/crm_mailboxes.feature`, `features/todo/`), split
   into `@crm-outbound` (import, first mail, follow-ups, reply classes, scoring, funnel, mailboxes, approvals,
   one-click unsubscribe, do-not-contact, automatic pause), `@crm-core` (owners, custom fields, rule conditions, tasks,
-  the due reminder, mail written by hand) and `@crm-deals`. Needs the seed's CRM configuration (`scripts/seed-crm.py`:
+  the due reminder, mail written by hand), `@crm-deals` and `@crm-potential` (the potential dot of a company: rules,
+  manual colour, thresholds; the later-day rules are read in the service container, nothing stored). Needs the seed's CRM configuration (`scripts/seed-crm.py`:
   the `manager` and `editor` mailboxes, the event map, fields, scoring, deal stages), GreenMail (`make mail`) and
   `SERVICE_CONTAINER` (the due reminder and the automatic pause run in the service container). Replies get their class
   through `test/ingest-reply/`, so no toolbox is needed. Every scenario imports its own company; configuration a

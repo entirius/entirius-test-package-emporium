@@ -10,34 +10,14 @@ from __future__ import annotations
 
 import json
 import re
-from contextlib import contextmanager
 
-from behave import given, then, when
+from behave import then, when
 
-from entirius_tests.auth import obtain_jwt_token
-from entirius_tests.crm import LEADS, TODO, ok, poll, url
+from entirius_tests.crm import LEADS, TODO, as_role, ok, poll, url
 
 AI_CRM = "api/ai-crm/v2/admin/{channel}/"
+DAY_ZONE = "UTC"  # both the plan and the today list count the day in this zone, whatever the server's TIME_ZONE
 SAVED = re.compile(r"\{([\w.]+)\}")
-
-
-@contextmanager
-def as_role(context, role: str):
-    """Requests as the staff user of `role` with their own token; the admin login comes back whatever happens."""
-    username, password = context.staff_users[role]
-    context.api.set_auth_token(obtain_jwt_token(context.api.base_url, username, password))
-    try:
-        yield
-    finally:
-        context.api.set_auth_token(
-            obtain_jwt_token(context.api.base_url, context.admin_username, context.admin_password)
-        )
-
-
-def cancel_open(context, subject_ref: str) -> None:
-    params = {"subject_ref": subject_ref, "status": "open", "page_size": 100}
-    for row in ok(context.api.get(url(context, TODO, "tasks/"), params=params))["results"]:
-        ok(context.api.post(url(context, TODO, f"tasks/{row['id']}/cancel/"), json={"reason": "bdd cleanup"}))
 
 
 def fill(context, text: str) -> str:
@@ -52,21 +32,13 @@ def task(context, alias: str) -> dict:
     return ok(context.api.get(url(context, TODO, f"tasks/{context.saved[f'{alias}.task']}/")))
 
 
-# --- Setup ---
-
-
-@given('the open tasks of the company "{alias}" are cancelled when the scenario ends')
-def step_cancel_tasks_later(context, alias):
-    context.add_cleanup(lambda: cancel_open(context, f"leads.Company:{context.saved[alias]}"))
-
-
 # --- Plan ---
 
 
 @when("the {role} staff user asks the AI CRM agent for the day plan")
 def step_plan(context, role):
     with as_role(context, role):
-        context.saved["ai_crm.plan"] = ok(context.api.get(url(context, AI_CRM, "plan/")))
+        context.saved["ai_crm.plan"] = ok(context.api.get(url(context, AI_CRM, "plan/"), params={"tz": DAY_ZONE}))
 
 
 def plan_task_ids(context) -> list[int]:
@@ -86,7 +58,8 @@ def step_plan_lacks(context, alias):
 @then("the AI CRM day plan holds the same tasks as the today list of the {role} staff user")
 def step_plan_is_today(context, role):
     with as_role(context, role):
-        today = [row["id"] for row in ok(context.api.get(url(context, TODO, "today/")))["results"]]
+        today_url = url(context, TODO, "today/")
+        today = [row["id"] for row in ok(context.api.get(today_url, params={"tz": DAY_ZONE}))["results"]]
     assert plan_task_ids(context) == today, f"plan {plan_task_ids(context)} != today {today}"
 
 
@@ -106,6 +79,13 @@ def step_no_refusal(context):
     assert turn["results"] and all(result["status"] != "error" for result in turn["results"]), turn
 
 
+@then("the AI CRM agent dropped the proposal")
+def step_dropped(context):
+    turn = context.saved["ai_crm.turn"]
+    assert [result["status"] for result in turn["results"]] == ["rejected"], turn
+    assert not turn["proposals"], turn
+
+
 @then("the AI CRM agent proposes an action to confirm")
 def step_proposes(context):
     turn = context.saved["ai_crm.turn"]
@@ -121,6 +101,13 @@ def step_rest_tool(context, role, tool):
     body = {"arguments": json.loads(fill(context, context.text)), "source": "api"}
     with as_role(context, role):
         context.response = context.api.post(url(context, AI_CRM, f"tools/{tool}/"), json=body)
+
+
+@then("the AI CRM tool refused for the missing permission")
+def step_rest_refused(context):
+    assert context.response.status_code == 403 and "is needed" in context.response.text, (
+        f"{context.response.status_code}: {context.response.text[:300]}"
+    )
 
 
 @then("the AI CRM tool answered {status:d}")
@@ -170,7 +157,8 @@ def step_task_done_by(context, alias, role, source):
 
 @then('the task of the company "{alias}" is open')
 def step_task_open(context, alias):
-    assert task(context, alias)["status"] == "open"
+    row = task(context, alias)
+    assert row["status"] == "open", f"task {row['id']} is {row['status']!r}, not open"
 
 
 @then('the company "{alias}" has an activity "{kind}" by the {role} staff user via ai-crm "{source}"')

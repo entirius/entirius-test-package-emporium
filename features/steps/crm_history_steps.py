@@ -7,25 +7,11 @@ companies first, the channel history and its filters, a settings change in the h
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from datetime import date, timedelta
 
 from behave import then, when
 
-from entirius_tests.auth import obtain_jwt_token
-from entirius_tests.crm import LEADS, TODO, ok, poll, url
-
-
-@contextmanager
-def as_role(context, role: str):
-    """Requests as the staff user of `role`; the admin login comes back whatever happens (as in crm_core_steps)."""
-    username, password = context.staff_users[role]
-    context.api.set_auth_token(obtain_jwt_token(context.api.base_url, username, password))
-    try:
-        yield
-    finally:
-        token = obtain_jwt_token(context.api.base_url, context.admin_username, context.admin_password)
-        context.api.set_auth_token(token)
+from entirius_tests.crm import LEADS, TODO, as_role, ok, poll, url
 
 
 def history(context, **params) -> list[dict]:
@@ -56,7 +42,12 @@ def step_entry_reason(context, event, alias, reason, role):
 def step_cancelled_list(context, alias, role, reason):
     username = context.staff_users[role][0]
     with as_role(context, role):
-        params = {"owner": "me", "status": "cancelled", "page_size": 100}
+        params = {
+            "owner": "me",
+            "status": "cancelled",
+            "subject_ref": f"leads.Company:{context.saved[alias]}",
+            "page_size": 100,
+        }
         rows = ok(context.api.get(url(context, TODO, "tasks/"), params=params))["results"]
     task = next((row for row in rows if row["id"] == context.saved[f"{alias}.task"]), None)
     assert task, f"task {context.saved[f'{alias}.task']} not in the cancelled list of {role}"
@@ -106,6 +97,8 @@ def step_history_actors(context, role):
 def step_change_months(context):
     channel_url = url(context, LEADS, "channel/")
     before = ok(context.api.get(channel_url))["history_months"]
+    # earlier runs leave the same {"from": before, "to": after} entry: only an entry newer than this id counts
+    context.saved["history_settings_seen"] = max((row["id"] for row in history(context, kind="settings")), default=0)
     after = 23 if before != 23 else 24
     context.add_cleanup(context.api.patch, channel_url, json={"history_months": before})
     ok(context.api.patch(channel_url, json={"history_months": after}))
@@ -116,6 +109,7 @@ def step_change_months(context):
 def step_settings_entry(context):
     before, after = context.saved["history_months"]
     rows = history(context, kind="settings", actor=context.admin_username)
-    changes = [row["data"]["changes"].get("history_months") for row in rows]
-    assert {"from": before, "to": after} in changes, changes[:5]
+    fresh = [row for row in rows if row["id"] > context.saved["history_settings_seen"]]
+    changes = [row["data"]["changes"].get("history_months") for row in fresh]
+    assert {"from": before, "to": after} in changes, f"no new settings entry with {before} -> {after}: {changes[:5]}"
     assert all(row["company_id"] is None for row in rows), rows[:3]

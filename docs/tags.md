@@ -71,6 +71,13 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
   writes. `@module-ai_crm`: skipped while munin does not list the module. Needs the seed's staff users and deal stages;
   the agent's short commands need no toolbox. Every scenario imports its own company and cancels its open tasks, so
   the tag re-runs on one database.
+- `@prospecting` (`features/leads/prospecting.feature`, U3): another person to contact when the only one is the wrong
+  person or opted out — the search, its candidates and checks, the referral request to the wrong person. Not part of
+  `@crm`. `@module-prospecting`: skipped while munin does not list `prospecting`. Needs django-prospecting in the
+  service with `PROSPECTING_SEARCH_PROVIDER = "fixed"`, `PROSPECTING_ADDRESS_TESTER = "stub"` and a high
+  `PROSPECTING_DAILY_BUDGET` (zeno's `docker/settings_local.py`; a search spends three calls whatever it finds), and a
+  worker that consumes `prospecting_default`. Every scenario imports its own company; the referral draft a
+  wrong-person reply leaves in the review queue is skipped when the scenario ends.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

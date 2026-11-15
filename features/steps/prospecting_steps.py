@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from behave import then, when
 
-from entirius_tests.crm import COMMUNICATOR, LEADS, PROSPECTING, ok, poll, url
+from entirius_tests.crm import COMMUNICATOR, LEADS, PROSPECTING, ok, poll, referral_in_review, url
 
 SEARCH_TIMEOUT_S = 120
 LOOKING = "looking for another person"
@@ -176,26 +176,7 @@ def step_no_contact(context, alias, local):
 
 
 def referral(context, alias: str) -> dict | None:
-    """The newest review draft of the alias's address that is a referral request. The queue lists the oldest first
-    and a long run leaves more than one page in it, so the pages are read from the last one back."""
-    email = context.saved[f"{alias}.email"]
-    size = 100
-    params = {"status": "review_required", "page_size": size}
-    first = ok(context.api.get(url(context, COMMUNICATOR, "review/"), params=params))
-    pages = max(1, -(-first["count"] // size))
-    for page in range(pages, 0, -1):
-        rows = (
-            first["results"]
-            if page == 1
-            else ok(context.api.get(url(context, COMMUNICATOR, "review/"), params={**params, "page": page}))["results"]
-        )
-        for row in reversed(rows):
-            if row.get("referral_request") is False:
-                continue
-            detail = ok(context.api.get(url(context, COMMUNICATOR, f"review/{row['id']}/")))
-            if detail.get("referral_request") and detail["thread"]["recipient_email"] == email:
-                return detail
-    return None
+    return referral_in_review(context, context.saved[f"{alias}.email"])
 
 
 @then('the review queue has a referral request to the contact of "{alias}"')

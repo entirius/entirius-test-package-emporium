@@ -5,15 +5,16 @@ Feature: AI CRM — an agent leads the salesperson through the day and updates t
   So that the CRM is filled in for me — and nothing irreversible happens without my yes
 
   Data: the seed's staff users `manager`, `editor` and `viewer` (scripts/seed-access.py), the sales pipeline with the
-  lost stage `lost` (scripts/seed-crm.py). Every scenario imports its own company; the tasks it leaves open are
-  cancelled when it ends, so `make bdd TAGS=@ai-crm` can be re-run on one database. The agent's short commands need no
-  model, so the scenarios pass with the fake toolbox and with `AI_TOOLBOX_ENABLED=0`.
+  lost stage `lost` (scripts/seed-crm.py). Every scenario imports its own company; the import cancels the tasks
+  it leaves open when the scenario ends, so `make bdd TAGS=@ai-crm` can be re-run on one database. The day plan and the
+  today list are read in UTC and cut at 50 rows, oldest first: a manager with 50 older open tasks (a crm-walk-data
+  run) pushes the scenario's task off both. The agent's short commands need no model, so the scenarios pass with the
+  fake toolbox and with `AI_TOOLBOX_ENABLED=0`.
 
   Background:
     Given the channel is the primary channel
     And I am authenticated as an admin user
     And a fresh company owned by the manager staff user is imported as "company"
-    And the open tasks of the company "company" are cancelled when the scenario ends
     When a phone task "Call the buyer" due now is created about the company "company" for the manager staff user
 
   Scenario: The day plan of AI CRM is the same work as Today
@@ -45,7 +46,6 @@ Feature: AI CRM — an agent leads the salesperson through the day and updates t
 
   Scenario: The agent does not see another salesperson's work
     Given a fresh company owned by the editor staff user is imported as "foreign"
-    And the open tasks of the company "foreign" are cancelled when the scenario ends
     When a phone task "Not yours" due now is created about the company "foreign" for the editor staff user
     And the manager staff user asks the AI CRM agent for the day plan
     Then the AI CRM day plan does not list the task of the company "foreign"
@@ -69,12 +69,15 @@ Feature: AI CRM — an agent leads the salesperson through the day and updates t
     When the manager staff user says to the AI CRM agent from the CMS "dnc #{company}: asked to stop"
     Then the AI CRM agent proposes an action to confirm
     When the manager staff user says to the AI CRM agent from the CMS "no"
-    Then the company "company" is not marked do not contact
+    Then the AI CRM agent dropped the proposal
+    And the company "company" is not marked do not contact
 
   Scenario: A viewer reads the plan but never writes through the agent
-    When the viewer staff user calls the AI CRM tool "close_task" with
+    When the viewer staff user asks the AI CRM agent for the day plan
+    And the viewer staff user calls the AI CRM tool "close_task" with
       """
       {"task_id": {company.task}, "outcome": "x"}
       """
     Then the AI CRM tool answered 403
+    And the AI CRM tool refused for the missing permission
     And the task of the company "company" is open

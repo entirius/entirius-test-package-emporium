@@ -1,4 +1,4 @@
-@leads @communicator @prospecting
+@leads @communicator @prospecting @module-prospecting
 Feature: U3 — another person to contact when the only one is the wrong person or opted out
   As a salesperson
   I want the CRM to look for another person at a company whose only person is the wrong one or opted out

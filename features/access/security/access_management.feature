@@ -4,7 +4,7 @@ Feature: Access security — access management stays with the built-in Administr
   I want access.manage out of every custom role and every access write closed to the other roles
   So that nobody below Administrator can grant themselves more, and no request smuggles fields past the API
 
-  Operator Q2: access.manage (read and write) is never part of a custom role. D31 (replaces Q5's 365-day cap): a token
+  Operator decision: access.manage (read and write) is never part of a custom role. D31 (replaces the earlier 365-day cap): a token
   with a secret scope needs no expiry and has no maximum lifetime. Every role, grant and token created here is removed
   or revoked at the end.
 

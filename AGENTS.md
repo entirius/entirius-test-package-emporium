@@ -50,7 +50,9 @@ admin API (CRUD); runs as an external consumer against a running backend seeded 
 │   ├── csv_loader.py       # Parse CSV from package/
 │   ├── assertions.py       # Assert helpers + extract_items()
 │   ├── mail.py             # GreenMail sandbox: purge/count/read (REST), send (SMTP), inject (IMAP APPEND)
+│   ├── order_mail.py       # order e-mails: guest order via checkout v2, admin calls, the buyer's GreenMail mailbox
 │   ├── clock.py            # communicator dev-only test endpoints: channel clock, send-due, poll-now
+│   ├── crm.py / crm_e2e.py # CRM BDD helpers (admin API roots, send beat with lock retry); CRM e2e API setup
 │   └── data_package/       # profile.yaml + catalog (JSON/CSV) -> package/, fixtures/, images/ (build, validate); no network
 ├── features/               # Behave BDD features
 │   ├── environment.py      # before_all: API client + channels; before_scenario: reset + clear auth
@@ -72,10 +74,11 @@ admin API (CRUD); runs as an external consumer against a running backend seeded 
 │   ├── generate-lookup-fixtures.py  # deterministic (fixed seed) — regenerate + commit, not run at seed time
 │   ├── installed-apps.py            # enabled app labels, one per line — the one app list of a seed run
 │   ├── seed-access.py               # seed.sh Step 3e — role staff users (docs/configuration.md); Step 4b imports legacy keys
+│   ├── seed-crm.py                  # seed.sh Step 4c — CRM config: mailboxes of manager/editor, event map, fields, deals
 │   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
-├── e2e/                    # Playwright E2E (cms/, storefront/; conftest.py = E2E_DEVICE emulation)
+├── e2e/                    # Playwright E2E (cms/, storefront/, mail/; conftest.py = E2E_DEVICE emulation)
 │                           # leads funnel (page objects, determinism, harness commands): docs/e2e-leads-funnel.md
 └── load/k6/                # placeholder for k6 load tests (empty)
 ```

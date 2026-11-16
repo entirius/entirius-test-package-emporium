@@ -38,7 +38,7 @@ def test_guest_completes_order(page: Page):
     # Header cart icon has no accessible name (storefront a11y gap) — enter checkout directly.
     page.goto("/checkout")
     for label, value in BILLING.items():
-        page.get_by_label(label).fill(value)
+        page.get_by_label(label, exact=True).fill(value)
     page.get_by_role("button", name="Continue to shipping").click()
 
     page.get_by_role("radio", name="Europe Standard").check()
@@ -48,7 +48,10 @@ def test_guest_completes_order(page: Page):
     page.get_by_role("button", name="Continue to review").click()
 
     expect(page.get_by_role("heading", name="Shipping method")).to_be_visible()
-    page.get_by_role("button", name="Place order").click()
+    # The channel's mandatory agreements (terms, privacy) enable the button that names the obligation to pay.
+    for agreement in ("terms-of-service", "privacy-policy"):
+        page.locator(f'[data-agreement="{agreement}"]').get_by_role("checkbox").click()
+    page.get_by_role("button", name="Order with obligation to pay").click()
 
     expect(page).to_have_url(re.compile(r"/checkout/success\?ref=\d+"))
     expect(page.get_by_role("heading", name="Order placed")).to_be_visible()

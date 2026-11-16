@@ -18,8 +18,8 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
   heuristic source fetches the live site, and the funnel domain has no synthetic site, so it fails by design and
   the audit ends `partially_completed`. No notification is raised for a new draft (the review queue is the
   signal). T-07: the CSV gives the company two eligible contacts, so the `ai_pick` rule asks the fake model, which
-  picks the first candidate (anna). A reply raises two `high` notifications (communicator and leads), both
-  escalate by email. Step 8 expects 409 because the outreach gate refuses manual outreach to a `do_not_contact`
+  picks the first candidate (anna). A reply raises one `high` notification (leads; communicator raises none when
+  leads alerted), it escalates by email. Step 8 expects 409 because the outreach gate refuses manual outreach to a `do_not_contact`
   company. The tracker entries are not asserted here — the toolbox runs outside zeno.
 
   Background:
@@ -118,11 +118,11 @@ Feature: Leads funnel — a CSV row to a reply in the notification bar
     Given the sent message about the company "company_id" is saved as "outreach"
     Then the company "company_id" is in stage "replied"
     And the company "company_id" has an activity "reply" containing "reply received"
-    And the thread of "outreach" has 2 "high" notifications
+    And the thread of "outreach" has 1 "high" notifications
     When I run the notifications escalation 2 minutes from now
     Then the response status should be 200
     And the sandbox mailbox receives a message with the subject "Reply from Example Shop 1"
-    And the scoped sandbox mailbox count is the remembered count plus 2
+    And the scoped sandbox mailbox count is the remembered count plus 1
 
   Scenario: Funnel 8 a blocked contact gets no draft and no mail
     Given the leads contact "blocked@example-shop-9.test" of the company "example-shop-7.test" is saved as "blocked"

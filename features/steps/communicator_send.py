@@ -42,7 +42,7 @@ def step_channel_mode(context, mode):
 @given("the beat has drained every due message")
 def step_drain(context):
     """Delivers (or records, in dry_run) whatever earlier features left due at the current channel clock."""
-    response = clock.run_beat_send(context.api, context.channel)
+    response = clock.run_beat_send_waiting(context.api, context.channel)
     assert response.status_code == 200, f"send-due: {response.status_code} {response.text}"
 
 

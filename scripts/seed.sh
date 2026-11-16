@@ -328,13 +328,18 @@ fi
 SKIP_FILE="/tmp/seed-skipped-$$"
 if guard "Step 4: Import Package Data"; then
     docker exec -e SVC_DIR="$SVC_DIR" -e SEED_APPS="$APPS" -e SEED_SKIP_FILE="$SKIP_FILE" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
-    mapfile -t IMPORT_NOTES < <(docker exec "$CONTAINER" bash -c "cat $SKIP_FILE 2>/dev/null; rm -f $SKIP_FILE")
-    NOTES+=("${IMPORT_NOTES[@]}")
+    # A read loop, not mapfile: /bin/bash on macOS is 3.2.
+    while IFS= read -r note; do NOTES+=("$note"); done < <(docker exec "$CONTAINER" bash -c "cat $SKIP_FILE 2>/dev/null; rm -f $SKIP_FILE")
 fi
 if [ "$DRY_RUN" = "1" ]; then
     SEED_APPS="$APPS" bash "$SCRIPT_DIR/import-package.sh" --dry-run
 fi
 
+if guard "Step 4c: CRM Configuration" django_leads django_communicator django_access; then
+    # After the package import, which reloads every fixture: mailboxes of manager/editor, event map,
+    # fields, scoring, deal stages, owners.
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-crm.py"
+fi
 if guard "Step 4b: Access Legacy Keys" django_access; then
     # Every fixture key (loaded above) becomes a legacy token; --check fails the seed on a key the import missed.
     docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py access_import_legacy_keys --report
@@ -394,6 +399,15 @@ print(f\"Published {len(versions)} agreement versions\")
 "'
 fi
 
+# Back-in-stock alerts: the module's agreement definition (its consents are recorded in agreements) and the key the
+# storefront sends with a request.
+if guard "Step 6: Stock Alerts Agreement" django_stock_alerts django_agreements; then
+    docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py loaddata stock_alerts_agreement
+fi
+if guard "Step 6: Stock Alerts Storefront Key" django_stock_alerts django_access; then
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-stock-alerts-key.py"
+fi
+
 # Populate CurrentPrice from legacy PriceList snapshots (PM v3 architecture)
 if guard "Step 6: CurrentPrice Migration" django_pricemanager; then
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py migrate_to_current_price"
@@ -423,7 +437,7 @@ fi
 if guard "Step 6: Module Registry" django_munin; then
     docker exec -w "$SVC_DIR" "$CONTAINER" bash -c "python manage.py discover_modules --verbosity 0"
     EXPECTED_MODULES=""
-    for key in leads communicator siteintel notifications; do
+    for key in leads communicator siteintel notifications todo; do
         if app_installed "django_$key"; then EXPECTED_MODULES="$EXPECTED_MODULES $key"; fi
     done
     echo "Checking leads platform modules in the registry:${EXPECTED_MODULES:- none enabled}"

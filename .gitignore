@@ -31,3 +31,6 @@ coverage.xml
 behave.ini
 reports/
 pretty.output
+
+# Playwright e2e output (traces, e-mail screenshots)
+test-results/

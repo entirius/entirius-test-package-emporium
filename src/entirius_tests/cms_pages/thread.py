@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads company thread (`/leads/companies/<id>`): chat timeline with sent mail, replies and notes."""
+"""CRM company thread (`/crm/companies/<id>`): chat timeline with sent mail, replies and notes."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class ThreadPage:
 
     def open(self, company_id: int) -> None:
         # The desktop company card opens on its timeline tab; a phone gets the thread alone either way.
-        self.page.goto(f"{CMS_BASE_URL}/leads/companies/{company_id}?tab=timeline")
+        self.page.goto(f"{CMS_BASE_URL}/crm/companies/{company_id}?tab=timeline")
         # `.first` = the newest thread; an older thread with a reply expands "Earlier threads" with its own timeline.
         expect(self.page.get_by_test_id("thread-timeline").first).to_be_visible(timeout=TIMEOUT_MS)
 

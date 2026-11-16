@@ -2,8 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads deals: the deal dialog on the company card, the deal card (`/leads/deals/<id>`) and the board
-(`/leads/deals/board`, desktop) with one column per stage (`data-stage`)."""
+"""CRM deals: the deal dialog on the company card, the deal card (`/crm/deals/<id>`) and the board
+(`/crm/deals/board`, desktop) with one column per stage (`data-stage`)."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ class DealsBoardPage:
         self.page = page
 
     def open(self) -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/deals/board")
+        self.page.goto(f"{CMS_BASE_URL}/crm/deals/board")
         expect(self.page.get_by_test_id("deals-board-columns")).to_be_visible(timeout=TIMEOUT_MS)
 
     def column(self, stage_key: str) -> Locator:

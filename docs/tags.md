@@ -57,27 +57,14 @@ Which tag selects what (`make bdd TAGS=@tag`), and which tags need more than a s
 - `@crm` (`features/leads/crm_*.feature`, `features/communicator/crm_mailboxes.feature`, `features/todo/`), split
   into `@crm-outbound` (import, first mail, follow-ups, reply classes, scoring, funnel, mailboxes, approvals,
   one-click unsubscribe, do-not-contact, automatic pause), `@crm-core` (owners, custom fields, rule conditions, tasks,
-  the due reminder, mail written by hand), `@crm-deals`, `@crm-history` (the channel history and its filters,
+  the due reminder, mail written by hand), `@crm-deals` and `@crm-history` (the channel history and its filters,
   cancelled tasks with reason and author, the company list with the caller's companies first, a settings change in
-  the history) and `@crm-potential` (the potential dot of a company: rules, manual colour, thresholds; the later-day
-  rules are read in the service container, nothing stored). Needs the seed's CRM configuration (`scripts/seed-crm.py`:
+  the history). Needs the seed's CRM configuration (`scripts/seed-crm.py`:
   the `manager` and `editor` mailboxes, the event map, fields, scoring, deal stages), GreenMail (`make mail`) and
   `SERVICE_CONTAINER` (the due reminder and the automatic pause run in the service container). Replies get their class
   through `test/ingest-reply/`, so no toolbox is needed. Every scenario imports its own company; configuration a
-  scenario changes is put back at its end, so the tag re-runs on one database.
-- `@ai-crm` (`features/leads/ai_crm.feature`, U10): the AI CRM agent of django-ai-crm — the day plan equals the today
-  list, "done" in the CMS conversation and the same over MCP close the task with the actor `<user> via ai-crm
-  (<source>)`, another salesperson's task is not found, a lost deal and Do not contact wait for a yes, a viewer never
-  writes. `@module-ai_crm`: skipped while munin does not list the module. Needs the seed's staff users and deal stages;
-  the agent's short commands need no toolbox. Every scenario imports its own company and cancels its open tasks, so
-  the tag re-runs on one database.
-- `@prospecting` (`features/leads/prospecting.feature`, U3): another person to contact when the only one is the wrong
-  person or opted out — the search, its candidates and checks, the referral request to the wrong person. Not part of
-  `@crm`. `@module-prospecting`: skipped while munin does not list `prospecting`. Needs django-prospecting in the
-  service with `PROSPECTING_SEARCH_PROVIDER = "fixed"`, `PROSPECTING_ADDRESS_TESTER = "stub"` and a high
-  `PROSPECTING_DAILY_BUDGET` (zeno's `docker/settings_local.py`; a search spends three calls whatever it finds), and a
-  worker that consumes `prospecting_default`. Every scenario imports its own company; the referral draft a
-  wrong-person reply leaves in the review queue is skipped when the scenario ends.
+  scenario changes is put back at its end, and the referral request a wrong-person reply leaves in the review queue
+  is skipped, so the tag re-runs on one database.
 - `@harness` (`features/harness/mail_roundtrip.feature`): harness plumbing only — no module,
   no API; needs GreenMail (in the entirius-zeno harness: `make mail`).
 - `@needs-toolbox` (scenario level; the outage feature as a whole): the scenario needs a live AI completion — an AI

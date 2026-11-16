@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads Inbox and Review screens (`/leads/inbox`, `/leads/inbox/<id>`)."""
+"""CRM Inbox and Review screens (`/crm/inbox`, `/crm/inbox/<id>`)."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class InboxPage:
 
     def open(self) -> None:
         """Navigation into the Inbox — not a tap."""
-        self.page.goto(f"{CMS_BASE_URL}/leads/inbox")
+        self.page.goto(f"{CMS_BASE_URL}/crm/inbox")
         # The summary line only exists while drafts wait; an empty queue shows the empty state instead.
         expect(self.page.get_by_test_id("inbox-summary").or_(self.page.get_by_test_id("inbox-empty"))).to_be_visible(
             timeout=TIMEOUT_MS

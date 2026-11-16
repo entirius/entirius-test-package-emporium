@@ -37,5 +37,5 @@ Feature: CRM history — the journal of every change, cancelled tasks and the ta
     And the manager staff user is among the people of the history
 
   Scenario: A change of the channel settings is in the history with the old and the new value
-    When the months the history is kept are changed for this scenario
-    Then the history has a settings entry by the admin user with the old and the new months
+    When the days until a "not now" company comes back are changed for this scenario
+    Then the history has a settings entry by the admin user with the old and the new days

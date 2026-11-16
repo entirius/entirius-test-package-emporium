@@ -73,11 +73,7 @@ def step_history_today(context, role, kind, alias):
     rows = history(context, actor=username, kind=kind, **days)
     assert rows, f"no {kind} entry of {username} today"
 
-    # the person's filter takes their own actions and those through the AI CRM ("<username> via ai-crm (…)")
-    def mine(actor):
-        return actor == username or actor.startswith(f"{username} via ")
-
-    assert all(mine(row["actor"]) and row["kind"] == kind for row in rows), rows[:3]
+    assert all(row["actor"] == username and row["kind"] == kind for row in rows), rows[:3]
     assert any(row["company_id"] == context.saved[alias] and row["company_name"] for row in rows), rows[:3]
 
 
@@ -93,23 +89,26 @@ def step_history_actors(context, role):
     assert context.staff_users[role][0] in actors, actors
 
 
-@when("the months the history is kept are changed for this scenario")
-def step_change_months(context):
+@when('the days until a "not now" company comes back are changed for this scenario')
+def step_change_days(context):
     channel_url = url(context, LEADS, "channel/")
-    before = ok(context.api.get(channel_url))["history_months"]
-    # earlier runs leave the same {"from": before, "to": after} entry: only an entry newer than this id counts
+    before = ok(context.api.get(channel_url))["resume_days"]
+    # earlier runs leave the same change behind: only an entry newer than this id counts
     context.saved["history_settings_seen"] = max((row["id"] for row in history(context, kind="settings")), default=0)
-    after = 23 if before != 23 else 24
-    context.add_cleanup(context.api.patch, channel_url, json={"history_months": before})
-    ok(context.api.patch(channel_url, json={"history_months": after}))
-    context.saved["history_months"] = (before, after)
+    after = 31 if before["not_now"] != 31 else 32
+    # the stored days are not readable apart from the defaults: the effective ones are written back
+    context.add_cleanup(context.api.patch, channel_url, json={"resume_days": before})
+    ok(context.api.patch(channel_url, json={"resume_days": {**before, "not_now": after}}))
+    context.saved["not_now_days"] = (before["not_now"], after)
 
 
-@then("the history has a settings entry by the admin user with the old and the new months")
+@then("the history has a settings entry by the admin user with the old and the new days")
 def step_settings_entry(context):
-    before, after = context.saved["history_months"]
+    before, after = context.saved["not_now_days"]
     rows = history(context, kind="settings", actor=context.admin_username)
     fresh = [row for row in rows if row["id"] > context.saved["history_settings_seen"]]
-    changes = [row["data"]["changes"].get("history_months") for row in fresh]
-    assert {"from": before, "to": after} in changes, f"no new settings entry with {before} -> {after}: {changes[:5]}"
+    changes = [change for row in fresh if (change := row["data"]["changes"].get("resume_days"))]
+    # a channel that never stored the days has none in "from": the default was in force
+    moved = [(change["from"].get("not_now", before), change["to"].get("not_now")) for change in changes]
+    assert (before, after) in moved, f"no new settings entry with not_now {before} -> {after}: {changes[:5]}"
     assert all(row["company_id"] is None for row in rows), rows[:3]

@@ -16,7 +16,6 @@ from entirius_tests.auth import obtain_jwt_token
 LEADS = "api/leads/v2/admin/{channel}/"
 COMMUNICATOR = "api/communicator/v2/admin/{channel}/"
 TODO = "api/todo/v2/admin/{channel}/"
-PROSPECTING = "api/prospecting/v2/admin/{channel}/"
 POLL_TIMEOUT_S = 60
 
 

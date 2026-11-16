@@ -168,7 +168,7 @@
     code: europe-pickup
     image: ''
     name_t9n:
-      en: Pickup point
+      en: Pickup Point
       pl: Punkt odbioru
     description_t9n: null
     price_type: fixed

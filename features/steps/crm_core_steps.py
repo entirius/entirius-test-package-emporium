@@ -7,29 +7,15 @@ A scenario that logs in as a staff user keeps that login: later steps run as tha
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from datetime import UTC, datetime
 
 from behave import given, then, when
 
-from entirius_tests.auth import obtain_jwt_token
-from entirius_tests.crm import LEADS, TODO, ok, poll, staff_id, url
+from entirius_tests.crm import LEADS, TODO, as_role, ok, poll, staff_id, url
 from entirius_tests.stock_alerts import service_shell
 
 NOTIFICATIONS = "api/notifications/v2/admin/{channel}/"
 REMIND = "from django_todo.tasks.remind import remind_due\nprint('REMINDED', remind_due())\n"
-
-
-@contextmanager
-def as_role(context, role: str):
-    """Requests as the staff user of `role`; the admin login comes back whatever happens."""
-    username, password = context.staff_users[role]
-    context.api.set_auth_token(obtain_jwt_token(context.api.base_url, username, password))
-    try:
-        yield
-    finally:
-        token = obtain_jwt_token(context.api.base_url, context.admin_username, context.admin_password)
-        context.api.set_auth_token(token)
 
 
 def company_ids(context, params: dict) -> list[int]:

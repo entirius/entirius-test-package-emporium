@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads stages admin (`/leads/stages`): ordered rows, delete refused inline while companies sit in a stage."""
+"""CRM stages admin (`/crm/stages`): ordered rows, delete refused inline while companies sit in a stage."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ class StagesPage:
         self.taps = 0
 
     def open(self) -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/stages")
+        self.page.goto(f"{CMS_BASE_URL}/crm/stages")
         expect(self.page.get_by_test_id("stage-row").first).to_be_visible(timeout=TIMEOUT_MS)
 
     def row(self, key: str) -> Locator:

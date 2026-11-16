@@ -46,6 +46,58 @@ def step_upload_package_file(context, name, path):
     context.response_data = context.response.json()
 
 
+def _post_file_with_mapping(context, name: str, mapping: str, path: str) -> None:
+    file_path = Path(context.test_package_path) / name
+    with file_path.open("rb") as handle:
+        files = {"file": (name, handle, "application/octet-stream")}
+        context.response = context.api.post(_v2_url(context, path), files=files, data={"mapping": mapping})
+    context.response_data = context.response.json()
+
+
+@when('I import the package file "{name}" with the mapping "{mapping}" through "{path}"')
+def step_upload_package_file_with_mapping(context, name, mapping, path):
+    """U17: a file with its own headers; `mapping` is sent as written: a JSON object {column: field | "ignore"},
+    or anything else for a refusal (the server takes no `auto`)."""
+    _post_file_with_mapping(context, name, mapping, path)
+
+
+@when('I import the package file "{name}" with the proposed mapping through "{path}"')
+def step_upload_package_file_with_proposal(context, name, path):
+    """Sends back the proposal of the `imports/preview/` answer in the context, as the CMS does on Import."""
+    columns = context.response_data.get("columns")
+    assert columns, f"no preview in the context: {context.response_data}"
+    mapping = {column["name"]: column["field"] for column in columns}
+    _post_file_with_mapping(context, name, json.dumps(mapping), path)
+
+
+@then('the import column "{column}" should go to "{field}"')
+def step_import_column_field(context, column, field):
+    columns = {item["name"]: item for item in context.response_data["columns"]}
+    assert column in columns, f"columns: {sorted(columns)}"
+    assert columns[column]["field"] == field, f"{column}: {columns[column]}"
+
+
+@then('the import column "{column}" should be ignored as "{reason}"')
+def step_import_column_ignored(context, column, reason):
+    columns = {item["name"]: item for item in context.response_data["columns"]}
+    assert (columns[column]["field"], columns[column]["reason"]) == ("ignore", reason), f"{column}: {columns[column]}"
+
+
+@then('the import column "{column}" should be ignored as "{reason}" or go to a custom field')
+def step_import_column_ignored_or_custom(context, column, reason):
+    """A column without a built-in field: a channel whose custom fields name the same idea (a NIP field added
+    by hand) takes it, any other channel ignores it with `reason`."""
+    item = {entry["name"]: entry for entry in context.response_data["columns"]}[column]
+    if item["source"] == "custom_field" and item["field"] != "ignore":
+        return
+    assert (item["field"], item["reason"]) == ("ignore", reason), f"{column}: {item}"
+
+
+@then('the response count should equal the saved "{alias}"')
+def step_count_equals_saved(context, alias):
+    assert context.response_data["count"] == context.saved[alias], f"count: {context.response_data['count']}"
+
+
 @then('the import batch "{alias}" has finished')
 def step_import_batch_finished(context, alias):
     url = _v2_url(context, f"leads/admin/{{channel_idx}}/imports/{context.saved[alias]}/")

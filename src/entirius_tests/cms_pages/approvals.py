@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads approvals (`/leads/approvals`, desktop): drafts of every channel, one row per draft (`data-approval`),
+"""CRM approvals (`/crm/approvals`, desktop): drafts of every channel, one row per draft (`data-approval`),
 bulk approve and reject."""
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ class ApprovalsPage:
         self.page = page
 
     def open(self, search: str) -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/approvals")
+        self.page.goto(f"{CMS_BASE_URL}/crm/approvals")
         expect(self.page.get_by_test_id("leads-approvals")).to_be_visible(timeout=TIMEOUT_MS)
         self.page.get_by_test_id("approvals-search").locator("input").fill(search)
 

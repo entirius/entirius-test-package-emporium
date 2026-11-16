@@ -17,7 +17,7 @@ from datetime import UTC, datetime
 
 from behave import given, then, when
 
-from entirius_tests.crm import COMMUNICATOR, LEADS, TODO, ok, poll, send_due, staff_id, url
+from entirius_tests.crm import COMMUNICATOR, LEADS, TODO, ok, poll, referral_in_review, send_due, staff_id, url
 
 WORKER_TIMEOUT_S = 300
 HEADER = "company_name,domain,website,lead_type,industry,first_name,last_name,email,job_title,language,legal_basis"
@@ -211,6 +211,30 @@ def ingest(context, alias: str, body: dict) -> None:
     body = {"thread_id": thread(context, alias)["id"], **body}
     reply = ok(context.api.post(url(context, COMMUNICATOR, "test/ingest-reply/"), json=body), 201)
     context.saved[f"{alias}.reply"] = reply["id"]
+    if body.get("intent") == "wrong_person":
+        context.add_cleanup(skip_referral, context, context.saved[f"{alias}.email"])
+
+
+def skip_referral(context, email: str) -> None:
+    """A wrong-person reply drafts a referral request; one the scenario left in review is skipped."""
+    if draft := referral_in_review(context, email):
+        skip_if_waiting(context, draft["id"])
+
+
+@then('the review queue has a referral request to the contact of "{alias}"')
+def step_referral(context, alias):
+    email = context.saved[f"{alias}.email"]
+    draft = poll(lambda: referral_in_review(context, email))
+    assert draft, f"no referral request to {email}"
+    assert draft["status"] == "review_required" and draft["subject"].lower().startswith("re:"), f"draft: {draft}"
+    context.saved[f"{alias}.referral"] = draft["id"]
+
+
+@then('approving the referral request of "{alias}" succeeds')
+def step_approve_referral(context, alias):
+    path = f"review/{context.saved[f'{alias}.referral']}/accept/"
+    message = ok(context.api.post(url(context, COMMUNICATOR, path), json={}))
+    assert message["status"] == "approved", f"message: {message}"
 
 
 @when('the contact of "{alias}" replies "{text}" with the class "{intent}"')

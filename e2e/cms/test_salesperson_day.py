@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""A salesperson's day in the CMS Leads panel, on a phone and on a desktop (`E2E_DEVICE`): Today -> the task's
+"""A salesperson's day in the CMS CRM panel, on a phone and on a desktop (`E2E_DEVICE`): Today -> the task's
 company -> read the reply -> write a mail by hand -> close the task with an outcome -> open a deal -> move it. The
 desktop adds the bulk approval of two drafts and a drag on the deal board.
 

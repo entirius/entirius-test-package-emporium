@@ -46,6 +46,30 @@ def step_upload_package_file(context, name, path):
     context.response_data = context.response.json()
 
 
+@when('I import the package file "{name}" with the mapping "{mapping}" through "{path}"')
+def step_upload_package_file_with_mapping(context, name, mapping, path):
+    """U17: a file with its own headers; `mapping` is `auto` or a JSON object {column: field}."""
+    url = _v2_url(context, path)
+    file_path = Path(context.test_package_path) / name
+    with file_path.open("rb") as handle:
+        files = {"file": (name, handle, "application/octet-stream")}
+        context.response = context.api.post(url, files=files, data={"mapping": mapping})
+    context.response_data = context.response.json()
+
+
+@then('the import column "{column}" should go to "{field}"')
+def step_import_column_field(context, column, field):
+    columns = {item["name"]: item for item in context.response_data["columns"]}
+    assert column in columns, f"columns: {sorted(columns)}"
+    assert columns[column]["field"] == field, f"{column}: {columns[column]}"
+
+
+@then('the import column "{column}" should be ignored as "{reason}"')
+def step_import_column_ignored(context, column, reason):
+    columns = {item["name"]: item for item in context.response_data["columns"]}
+    assert (columns[column]["field"], columns[column]["reason"]) == ("ignore", reason), f"{column}: {columns[column]}"
+
+
 @then('the import batch "{alias}" has finished')
 def step_import_batch_finished(context, alias):
     url = _v2_url(context, f"leads/admin/{{channel_idx}}/imports/{context.saved[alias]}/")

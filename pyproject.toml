@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff", "pre-commit", "Pillow>=10", "holidays>=0.50", "pytest>=8"]
+dev = ["ruff", "pre-commit", "Pillow>=13.0.0", "holidays>=0.50", "pytest>=8"]
 e2e = ["pytest>=8", "pytest-playwright>=0.5"]
 data = ["pyyaml>=6"]
 

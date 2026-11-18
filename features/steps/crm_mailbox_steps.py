@@ -248,6 +248,39 @@ def step_approval_label(context, alias):
     assert row["subject_label"] == name, f"subject_label {row['subject_label']!r}, expected {name!r}"
 
 
+def approval_counts_mailbox(context, alias: str, role: str) -> dict:
+    """The entry of the role's mailbox in `counts.mailboxes`, the list filtered to the draft of `alias`."""
+    params = {"search": context.saved[f"{alias}.email"], "page_size": 100}
+    counts = ok(context.api.get(context.api.url(APPROVALS), params=params))["counts"]
+    box_id = mailbox_of(context, role)["id"]
+    entry = next((box for box in counts.get("mailboxes", []) if box["id"] == box_id), None)
+    assert entry is not None, f"no mailbox {box_id} in counts: {counts}"
+    return entry
+
+
+@then('the approval row of the draft of "{alias}" leaves from the {role}\'s mailbox')
+def step_approval_row_mailbox(context, alias, role):
+    params = {"search": context.saved[f"{alias}.email"], "page_size": 100}
+    rows = ok(context.api.get(context.api.url(APPROVALS), params=params))["results"]
+    row = next((row for row in rows if row["id"] == context.saved[f"{alias}.message"]), None)
+    assert row is not None, f"no approval row of {alias}: {[r['id'] for r in rows]}"
+    assert row.get("mailbox_id") == mailbox_of(context, role)["id"], f"approval row: {row}"
+
+
+@then('the approval counts of the draft of "{alias}" label the {role}\'s mailbox by its address and owner')
+def step_approval_counts_label(context, alias, role):
+    entry = approval_counts_mailbox(context, alias, role)
+    assert entry["address"] == mailbox_of(context, role)["address"], f"counts mailbox: {entry}"
+    assert entry["user_name"], f"counts mailbox without its owner: {entry}"
+    assert entry["hold"] is None, f"counts mailbox: {entry}"
+
+
+@then('the approval counts of the draft of "{alias}" show the {role}\'s mailbox on hold as "{hold}"')
+def step_approval_counts_hold(context, alias, role, hold):
+    entry = approval_counts_mailbox(context, alias, role)
+    assert entry["hold"] == hold, f"counts mailbox: {entry}"
+
+
 def bulk(context, body: dict) -> None:
     context.response = context.api.post(context.api.url(f"{APPROVALS}bulk/"), json=body)
     context.response_data = context.response.json()
@@ -263,6 +296,19 @@ def step_bulk_answer(context, alias):
     answer = ok(context.response)
     assert context.saved[f"{alias}.message"] in answer["done"], f"bulk: {answer}"
     assert str(MISSING_ID) in {str(key) for key in answer["failed"]}, f"bulk: {answer}"
+
+
+@when('the draft of "{alias}" is approved in bulk')
+def step_bulk_approve_one(context, alias):
+    bulk(context, {"action": "approve", "ids": [context.saved[f"{alias}.message"]], "reason": ""})
+    ok(context.response)
+
+
+@then('the bulk answer lists the draft of "{alias}" as failed')
+def step_bulk_failed(context, alias):
+    answer = ok(context.response)
+    assert context.saved[f"{alias}.message"] not in answer["done"], f"bulk: {answer}"
+    assert str(context.saved[f"{alias}.message"]) in {str(key) for key in answer["failed"]}, f"bulk: {answer}"
 
 
 @when('the draft of "{alias}" is rejected in bulk with the reason "{reason}"')

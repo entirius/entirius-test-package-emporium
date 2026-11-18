@@ -48,6 +48,23 @@ Feature: CRM mailboxes, the approval inbox, one-click unsubscribe and do-not-con
     And the company "theirs" gets a draft of the static mail "reply.thanks"
     Then the approval inbox of the editor's mailbox holds the draft of "mine" and not the draft of "theirs"
 
+  # U13: the Mailbox filter of Approvals shows addresses, not ids (communicator `counts.mailboxes`)
+  Scenario: The approval inbox names the mailbox of a draft by its address and owner
+    Given a fresh company owned by the editor staff user is imported as "mine"
+    When the company "mine" gets a draft of the static mail "reply.thanks"
+    Then the approval row of the draft of "mine" leaves from the editor's mailbox
+    And the approval counts of the draft of "mine" label the editor's mailbox by its address and owner
+
+  # U14: Approvals warns before an approval that a draft of a paused mailbox will not go out
+  Scenario: A draft of a paused mailbox shows the hold before the approval and is refused at it
+    Given a fresh company owned by the editor staff user is imported as "held"
+    When the company "held" gets a draft of the static mail "reply.thanks"
+    And the mailbox of the editor staff user is paused with the reason "bdd hold"
+    Then the approval counts of the draft of "held" show the editor's mailbox on hold as "paused"
+    When the draft of "held" is approved in bulk
+    Then the bulk answer lists the draft of "held" as failed
+    And the mail of the company "held" has status "review_required"
+
   Scenario: The approval row of a company's draft carries the company name
     Given a fresh company is imported as "company"
     When the company "company" gets a draft of the static mail "reply.thanks"

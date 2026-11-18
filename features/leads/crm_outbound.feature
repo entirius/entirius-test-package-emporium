@@ -84,6 +84,13 @@ Feature: CRM outbound loop — import, first mail, follow-ups, replies with a cl
     And the last reply about the company "company" needs review
     And the company "company" has an open task "Read the reply"
 
+  Scenario: A wrong-person reply gets a draft asking for the right person, approved like every draft
+    Given a fresh company is imported as "company"
+    And the company "company" is contacted with the static mail "reply.thanks"
+    When the contact of "company" replies "I left the company" with the class "wrong_person"
+    Then the review queue has a referral request to the contact of "company"
+    And approving the referral request of "company" succeeds
+
   Scenario: A contact flagged by a wrong-person reply reads blocked in the contact list, as in "Why no mail?"
     Given a fresh company is imported as "company"
     And the company "company" is contacted with the static mail "reply.thanks"

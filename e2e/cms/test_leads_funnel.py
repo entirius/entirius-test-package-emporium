@@ -202,7 +202,7 @@ def _steps_3_to_7(page: Page, api: ApiClient, company: dict) -> None:
     before = bar.unread()
     bar.open()
     bar.open_row(f"Reply from {company['name']}")
-    expect(page).to_have_url(re.compile(rf"/leads/companies/{company['id']}(\?|$)"))
+    expect(page).to_have_url(re.compile(rf"/crm/companies/{company['id']}(\?|$)"))
     expect(page.get_by_test_id("thread-company")).to_have_text(company["name"], timeout=15000)
     thread.expect_reply("can we talk on Thursday")
     bar.expect_unread_count(before - 1)

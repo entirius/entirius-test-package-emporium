@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads company card (`/leads/companies/<id>?tab=`): header, actions, tabs, the CRM tabs and the hand-written mail."""
+"""CRM company card (`/crm/companies/<id>?tab=`): header, actions, tabs, the CRM tabs and the hand-written mail."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ class CompanyPage:
         self.taps = 0
 
     def open(self, company_id: int, tab: str = "overview") -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/companies/{company_id}?tab={tab}")
+        self.page.goto(f"{CMS_BASE_URL}/crm/companies/{company_id}?tab={tab}")
         expect(self.page.get_by_test_id("company-actions")).to_be_visible(timeout=TIMEOUT_MS)
 
     def open_tab(self, tab: str) -> None:

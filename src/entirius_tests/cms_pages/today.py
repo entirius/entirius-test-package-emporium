@@ -2,7 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-"""Leads Today (`/leads/today`): the caller's open tasks, one row per task (`data-task`), and the task dialog."""
+"""CRM Today (`/crm/today`): the caller's open tasks, one row per task (`data-task`), and the task dialog."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ class TodayPage:
         self.page = page
 
     def open(self) -> None:
-        self.page.goto(f"{CMS_BASE_URL}/leads/today")
+        self.page.goto(f"{CMS_BASE_URL}/crm/today")
         expect(self.page.get_by_test_id("leads-today")).to_be_visible(timeout=TIMEOUT_MS)
 
     def task(self, task_id: int) -> Locator:

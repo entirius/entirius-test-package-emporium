@@ -146,6 +146,7 @@
     price_type: fixed
     max_weight: null
     priority: 1
+    position: 2
 - model: django_checkout.shippingoption
   pk: 4
   fields:
@@ -173,6 +174,7 @@
     price_type: fixed
     max_weight: null
     priority: 2
+    position: 3
 - model: django_checkout.shippingoption
   pk: 5
   fields:
@@ -184,6 +186,52 @@
     price_brutto: '4.99'
     new_price: '0.00'
     free_delivery_above_brutto: '100000.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+# Delivery to a point of django_deliverypoints: method_type tells a storefront to ask for one
+# (inpost → InPost lockers). position keeps europe-standard first in the list, then the locker, then the order
+# e-mail methods. Options mirror europe-standard: ALL in EUR, PL in PLN.
+- model: django_checkout.shippingmethod
+  pk: 5
+  fields:
+    channel: 2
+    method_type: inpost
+    code: inpost-locker
+    image: ''
+    name_t9n:
+      en: InPost Parcel Locker
+      de: InPost Paketstation
+      es: Taquilla InPost
+      pl: Paczkomat InPost
+    description_t9n: null
+    price_type: fixed
+    max_weight: null
+    priority: 0
+    position: 1
+- model: django_checkout.shippingoption
+  pk: 6
+  fields:
+    method: 5
+    country: null
+    country_code: ALL
+    currency: 3
+    tax_rate: '0.00'
+    price_brutto: '4.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '150.00'
+    cash_on_delivery_available: false
+    cash_on_delivery_fee: null
+- model: django_checkout.shippingoption
+  pk: 7
+  fields:
+    method: 5
+    country: 21
+    country_code: PL
+    currency: 1
+    tax_rate: '0.00'
+    price_brutto: '14.99'
+    new_price: '0.00'
+    free_delivery_above_brutto: '300.00'
     cash_on_delivery_available: false
     cash_on_delivery_fee: null
 - model: django_checkout.orderstatuslabel

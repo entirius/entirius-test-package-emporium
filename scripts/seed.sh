@@ -328,8 +328,8 @@ fi
 SKIP_FILE="/tmp/seed-skipped-$$"
 if guard "Step 4: Import Package Data"; then
     docker exec -e SVC_DIR="$SVC_DIR" -e SEED_APPS="$APPS" -e SEED_SKIP_FILE="$SKIP_FILE" "$CONTAINER" bash /entirius/test-package/scripts/import-package.sh "$PACKAGE_DIR"
-    mapfile -t IMPORT_NOTES < <(docker exec "$CONTAINER" bash -c "cat $SKIP_FILE 2>/dev/null; rm -f $SKIP_FILE")
-    NOTES+=("${IMPORT_NOTES[@]}")
+    # A read loop, not mapfile: /bin/bash on macOS is 3.2.
+    while IFS= read -r note; do NOTES+=("$note"); done < <(docker exec "$CONTAINER" bash -c "cat $SKIP_FILE 2>/dev/null; rm -f $SKIP_FILE")
 fi
 if [ "$DRY_RUN" = "1" ]; then
     SEED_APPS="$APPS" bash "$SCRIPT_DIR/import-package.sh" --dry-run

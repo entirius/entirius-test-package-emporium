@@ -116,3 +116,29 @@
     confirm_button: null
     thank_you: null
     help: null
+
+# Email templates — order confirmation and cancellation: empty wording, so mails keep the default texts
+# and the CMS has a template to open and preview (one per language).
+- model: django_email.checkoutorderconfirmation
+  pk: 1
+  fields:
+    channel: 1
+    language: 2
+
+- model: django_email.checkoutorderconfirmation
+  pk: 2
+  fields:
+    channel: 1
+    language: 1
+
+- model: django_email.checkoutordercanceled
+  pk: 1
+  fields:
+    channel: 1
+    language: 2
+
+- model: django_email.checkoutordercanceled
+  pk: 2
+  fields:
+    channel: 1
+    language: 1

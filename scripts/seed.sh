@@ -340,6 +340,11 @@ if guard "Step 4c: CRM Configuration" django_leads django_communicator django_ac
     # fields, scoring, deal stages, owners.
     docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-crm.py"
 fi
+if guard "Step 4d: Enricher Picture Checks Demo" django_enrichment django_pim; then
+    # After the package import (the products' main pictures): two demo comfy workers, their finished runs, the
+    # results of every main picture of default-europe and one pending derived picture. No ComfyUI needed.
+    docker exec -i -w "$SVC_DIR" "$CONTAINER" python manage.py shell < "$PACKAGE_ROOT/scripts/seed-comfy.py"
+fi
 if guard "Step 4b: Access Legacy Keys" django_access; then
     # Every fixture key (loaded above) becomes a legacy token; --check fails the seed on a key the import missed.
     docker exec -w "$SVC_DIR" "$CONTAINER" python manage.py access_import_legacy_keys --report

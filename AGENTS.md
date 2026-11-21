@@ -75,6 +75,7 @@ admin API (CRUD); runs as an external consumer against a running backend seeded 
 │   ├── installed-apps.py            # enabled app labels, one per line — the one app list of a seed run
 │   ├── seed-access.py               # seed.sh Step 3e — role staff users (docs/configuration.md); Step 4b imports legacy keys
 │   ├── seed-crm.py                  # seed.sh Step 4c — CRM config: mailboxes of manager/editor, event map, fields, deals
+│   ├── seed-comfy.py                # seed.sh Step 4d — Enricher picture checks demo: two comfy workers, results, a derived picture
 │   ├── secret_scan.py               # stdin → counts of ent_api_ tokens + legacy fixture keys (never a match); exit 1 on any
 │   └── seed-lookup.py               # seed.sh Step 6z — loads fixtures/lookup/, backfills, seeds one proposal
 ├── tests/                  # pytest for scripts/ (`uv run --extra e2e pytest tests/`)
